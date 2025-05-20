@@ -1,0 +1,4 @@
+pyautogui
+keyboard
+PyQt5
+watchdog 

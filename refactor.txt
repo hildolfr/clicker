@@ -1,0 +1,17 @@
+Refactor: Serialized, Human-like Automation Scheduling
+
+Summary of Major Changes:
+
+1. Replaced the old automation loop (which pressed keys in sequence with fixed delays) with a new scheduler using a single worker thread and a priority queue.
+2. Each keystroke from keystrokes.txt is now scheduled independently, but all keypresses are serialized: only one key is ever pressed at a time, even if their intervals overlap.
+3. The pause_time from settings.json is used as the initial delay before any key is pressed after activation.
+4. After each keypress, that key is rescheduled for its next interval, ensuring that the timing in keystrokes.txt is always obeyed.
+5. If two or more keys are due at the same time, they are queued and executed one after another, never simultaneously.
+6. The worker thread exits cleanly when automation is deactivated, and the schedule is cleared.
+
+Motivation:
+
+- The previous approach could result in unnatural, overlapping, or simultaneous keypresses if keystroke intervals were long and/or not harmonized.
+- This new approach ensures all keypresses are human-like: never overlapping, always respecting the intended timing, and never firing faster than a real user could.
+- The design is robust to any set of intervals, including long and short timers, and is easy to extend or maintain.
+- The rest of the app (tray, hotkey, file watching) is unchanged. 
