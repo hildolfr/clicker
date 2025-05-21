@@ -1,0 +1,85 @@
+# Clicker Application .gitignore
+
+# User-specific files
+clicker.log
+*.log
+clicker.lock
+.clicker_setup_done
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environment
+venv/
+env/
+ENV/
+.env
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# OS specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backup files
+*~
+*.bak
+*.tmp
+*.temp
+
+# Build output
+*.exe
+*.msi
+*.dll
+*.pyd
+
+# Custom user configurations that might differ between environments
+# Keep the template versions in git, but not individual user files
+user_settings.json
+custom_keystrokes.txt
+
+# PyInstaller specific files
+*.spec
+*.manifest
+*.toc
+warn-*.txt
+xref-*.html
+
+# Distribution package
+Clicker-Portable/
+
+# Build scripts (these contain paths that may expose personal info)
+build.bat
+build_alt.bat
+build.ps1 

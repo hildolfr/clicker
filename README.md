@@ -8,6 +8,14 @@ A modern, background Windows automation tool for sending keystrokes at human-lik
 
 **Version: 1.0.0** - Milestone Release
 
+## Installation
+
+### Option 1: Download the Executable (Recommended)
+Download the standalone executable from [Releases](https://github.com/[your-username]/clicker/releases). No installation required!
+
+### Option 2: Run from Source
+Follow the setup instructions below.
+
 ## Features
 - **Tray icon only:** No window, just a system tray icon for control.
 - **Global hotkey:** Toggle automation from anywhere.
