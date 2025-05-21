@@ -1,4 +1,6 @@
 Refactor: Serialized, Human-like Automation Scheduling
+Version: 1.0.0 (Milestone Release)
+Date: June 2023
 
 Summary of Major Changes:
 
@@ -8,10 +10,15 @@ Summary of Major Changes:
 4. After each keypress, that key is rescheduled for its next interval, ensuring that the timing in keystrokes.txt is always obeyed.
 5. If two or more keys are due at the same time, they are queued and executed one after another, never simultaneously.
 6. The worker thread exits cleanly when automation is deactivated, and the schedule is cleared.
+7. Added "order_obeyed" setting to control keystroke execution order: when true, keystrokes execute in the exact order from the file; when false, they're sorted by delay (lowest first).
+8. Enhanced comment handling in configuration files for better user documentation.
+9. Improved error handling for admin privileges and configuration file processing.
 
 Motivation:
 
 - The previous approach could result in unnatural, overlapping, or simultaneous keypresses if keystroke intervals were long and/or not harmonized.
 - This new approach ensures all keypresses are human-like: never overlapping, always respecting the intended timing, and never firing faster than a real user could.
 - The design is robust to any set of intervals, including long and short timers, and is easy to extend or maintain.
-- The rest of the app (tray, hotkey, file watching) is unchanged. 
+- The optional order_obeyed setting provides flexibility for different automation scenarios: either maintain exact file order or optimize by delay value.
+- Improved documentation and error handling makes the application more user-friendly and stable.
+- The rest of the app (tray, hotkey, file watching) remains unchanged while gaining this new customization capability. 

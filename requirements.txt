@@ -1,4 +1,8 @@
-pyautogui
-keyboard
-PyQt5
-watchdog 
+# Clicker Dependencies
+# Minimum required versions for stable operation
+
+pyautogui>=0.9.53
+keyboard>=0.13.5
+PyQt5>=5.15.0
+watchdog>=2.1.0
+pywin32>=300  # Required for Windows-specific functionality 

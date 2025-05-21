@@ -1,4 +1,5 @@
 {
-  "toggle_key": "~",
-  "pause_time": 0.5
-} 
+    "toggle_key": "~",
+    "pause_time": 0.5,
+    "order_obeyed": false
+}
