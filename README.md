@@ -11,7 +11,7 @@ A modern, background Windows automation tool for sending keystrokes at human-lik
 ## Installation
 
 ### Option 1: Download the Executable (Recommended)
-Download the standalone executable from [Releases](https://github.com/[your-username]/clicker/releases). No installation required!
+Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/1.0/Clicker.exe) (direct download link). No installation required!
 
 ### Option 2: Run from Source
 Follow the setup instructions below.
