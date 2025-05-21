@@ -2287,3 +2287,18 @@ SystemError: <class 'OSError'> returned a result with an exception set
 2025-05-21 11:30:40,363 - DEBUG - Automation worker received shutdown signal during wait
 2025-05-21 11:30:40,363 - DEBUG - Automation worker exiting
 2025-05-21 11:30:40,365 - INFO - Automation turned OFF
+2025-05-21 11:33:20,715 - INFO - Detected change in settings.json
+2025-05-21 11:33:20,717 - INFO - Reloading all settings and keystrokes
+2025-05-21 11:33:20,725 - ERROR - Invalid JSON in settings.json, recreating with defaults
+2025-05-21 11:33:20,727 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 11:33:20,729 - INFO - Loaded 4 keystroke configurations
+2025-05-21 11:33:20,729 - DEBUG - Removed previous hotkey: ~
+2025-05-21 11:33:20,729 - INFO - Hotkey bound to: ~
+2025-05-21 11:33:20,729 - INFO - Reload completed
+2025-05-21 11:33:32,782 - INFO - Detected change in keystrokes.txt
+2025-05-21 11:33:32,784 - INFO - Reloading all settings and keystrokes
+2025-05-21 11:33:32,792 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 11:33:32,792 - INFO - Loaded 4 keystroke configurations
+2025-05-21 11:33:32,792 - DEBUG - Removed previous hotkey: ~
+2025-05-21 11:33:32,792 - INFO - Hotkey bound to: ~
+2025-05-21 11:33:32,792 - INFO - Reload completed
