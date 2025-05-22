@@ -6,12 +6,12 @@
 
 A modern, background Windows automation tool for sending keystrokes at human-like intervals. Runs as a tray icon with no visible window. Configure your keystrokes and timing in simple text files, and control automation with a global hotkey.
 
-**Version: 1.2** - Performance Update
+**Version: 1.3** - Performance & Logging Update
 
 ## Installation
 
 ### Option 1: Download the Executable (Recommended)
-Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/1.2/Clicker.exe) (direct download link). No installation required!
+Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/1.3/Clicker.exe) (direct download link). No installation required!
 
 ### Option 2: Run from Source
 Follow the setup instructions below.
@@ -48,7 +48,8 @@ Follow the setup instructions below.
       "start_time_stagger": 1.7,
       "order_obeyed": false,
       "indicator_type": "gdi",
-      "global_cooldown": 1.5
+      "global_cooldown": 1.5,
+      "logging": true
     }
     ```
   - `toggle_key`: The global hotkey that toggles automation on/off
@@ -56,6 +57,7 @@ Follow the setup instructions below.
   - `order_obeyed`: When true, executes keystrokes in file order; when false, sorts by delay
   - `indicator_type`: Visual indicator type ('gdi' works in fullscreen, 'pygame' is window-based)
   - `global_cooldown`: Minimum time in seconds between any keystroke executions (global rate limit)
+  - `logging`: When true, enables detailed logging; when false, only logs warnings and errors (better performance)
 
 - **keystrokes.txt**
   ```
@@ -90,6 +92,11 @@ Follow the setup instructions below.
 - Windows only (uses Windows-specific APIs for reliable keystroke simulation).
 
 ## Changelog
+### v1.3
+- Added configurable logging control to improve performance
+- Set `"logging": false` in settings.json to disable detailed logging for better performance
+- Fixed issue with GDI overlay not appearing after toggling automation
+
 ### v1.2
 - Significant performance improvements, especially for first keypress after toggle
 - Added automatic randomization for keystrokes with identical timers for more natural input patterns

@@ -1,5 +1,5 @@
 Refactor: Serialized, Human-like Automation Scheduling with Visual Indicators
-Version: 1.2 (Performance Update)
+Version: 1.3 (Performance & Logging Update)
 Date: May 2025
 
 Summary of Major Changes:
@@ -20,6 +20,8 @@ Summary of Major Changes:
 11. Added "global_cooldown" setting to enforce a minimum time between any keystroke executions, regardless of individual delay settings, ensuring a global rate limit on key presses.
 12. Improved settings migration for backward compatibility when upgrading from previous versions.
 13. Enhanced build scripts for better deployment and distribution packaging.
+14. Reduced internal delays for faster keystroke execution.
+15. Added configurable logging control to improve performance by disabling detailed logging when not needed.
 
 Motivation:
 
@@ -65,8 +67,14 @@ Refactoring and Improvement Notes:
 18. Improved first keystroke performance with pre-parsing and caching.
 19. Enhanced memory efficiency through data structure pre-allocation.
 20. Reduced internal delays for faster keystroke execution.
+21. Added configurable logging control to improve performance by disabling detailed logging when not needed.
 
 Release Notes:
+
+v1.3:
+- Added configurable logging control to improve performance
+- Set "logging": false in settings.json to disable detailed logging for better performance
+- Fixed issue with GDI overlay not appearing after toggling automation
 
 v1.2:
 - Significant performance improvements, especially for first keypress responsiveness

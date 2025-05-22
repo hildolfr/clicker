@@ -3,7 +3,9 @@
 
 pyautogui>=0.9.53
 keyboard>=0.13.5
-PyQt5>=5.15.0
-watchdog>=2.1.0
-pywin32>=300  # Required for Windows-specific functionality 
-pygame>=2.0.0  # For visual indicator 
+pyqt5>=5.15.6
+pygame>=2.1.2
+watchdog>=2.1.9
+pywin32>=302
+requests>=2.28.0
+packaging>=21.3 

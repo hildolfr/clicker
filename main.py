@@ -22,6 +22,15 @@ import win32api
 import win32ui
 import random  # Added for random keystroke selection
 from logging.handlers import RotatingFileHandler
+import requests  # For GitHub API requests
+import tempfile  # For temporary file handling
+import subprocess  # For running update process
+from packaging.version import parse as parse_version  # For version comparison
+
+# Version and GitHub repository info
+VERSION = "1.3"
+GITHUB_OWNER = "hildolfr"  # Replace with actual GitHub username
+GITHUB_REPO = "clicker"  # Replace with actual repository name
 
 # Hide console window
 if sys.platform == 'win32':
@@ -457,6 +466,12 @@ class GDIIndicator:
                 if not self.hwnd or not win32gui.IsWindow(self.hwnd):
                     logging.warning("Window no longer valid, exiting render loop")
                     break
+                
+                # Check global menu_active flag - if menu is active, force window to hide
+                global menu_active
+                if menu_active and win32gui.IsWindowVisible(self.hwnd):
+                    win32gui.ShowWindow(self.hwnd, win32con.SW_HIDE)
+                    continue  # Skip the rest of the loop iteration
                     
                 current_time = time.time()
                 
@@ -604,7 +619,14 @@ DEFAULT_SETTINGS = {
     
     # Minimum time in seconds between any keystroke executions (global cooldown)
     # This ensures no keys are pressed faster than this value, regardless of their delay settings
-    'global_cooldown': 1.5
+    'global_cooldown': 1.5,
+    
+    # Auto-update settings
+    'check_updates_on_startup': True,  # Whether to check for updates on startup
+    'auto_install_updates': False,     # Whether to automatically install updates without asking
+    
+    # Logging control - enable/disable logging for better performance
+    'logging': True                    # Whether detailed logging is enabled
 }
 
 # Default keystrokes (example)
@@ -646,6 +668,365 @@ shutdown_event = threading.Event()  # Event to signal threads to shut down
 pygame_indicator = None  # Visual indicator instance
 gdi_indicator = None     # GDI-based indicator instance
 startup_warnings = []  # Warnings to show during startup
+menu_active = False    # Flag to track if menu is currently open
+
+# Add these global variables with the rest of the global state
+check_updates_on_startup = DEFAULT_SETTINGS['check_updates_on_startup']  # Whether to check for updates on startup
+auto_install_updates = DEFAULT_SETTINGS['auto_install_updates']          # Whether to auto-install updates
+logging_enabled = DEFAULT_SETTINGS['logging']                            # Whether detailed logging is enabled
+
+def update_logging_config():
+    """Update logging configuration based on the logging_enabled setting.
+    
+    When logging_enabled is True, logging level is set to DEBUG (detailed logging).
+    When logging_enabled is False, logging level is set to WARNING (minimal logging).
+    """
+    global logging_enabled
+    
+    # Get all loggers
+    root_logger = logging.getLogger()
+    
+    if logging_enabled:
+        # Enable detailed logging (DEBUG level)
+        root_logger.setLevel(logging.DEBUG)
+        logging.info("Detailed logging enabled")
+    else:
+        # Disable detailed logging, only show warnings and errors
+        root_logger.setLevel(logging.WARNING)
+        logging.warning("Detailed logging disabled - only warnings and errors will be shown")
+        
+    # Update handlers to match the root logger level
+    for handler in root_logger.handlers:
+        handler.setLevel(root_logger.level)
+
+# Apply initial logging configuration
+update_logging_config()
+
+# --- Auto-update functionality ---
+
+def hide_gdi_indicator():
+    """Hide the GDI indicator if it's active."""
+    if gdi_indicator and hasattr(gdi_indicator, 'hide_window'):
+        try:
+            gdi_indicator.hide_window()
+            return True
+        except Exception as e:
+            logging.error(f"Error hiding GDI indicator: {e}")
+    return False
+
+def show_gdi_indicator():
+    """Show the GDI indicator if it was hidden and no menu is active."""
+    global menu_active
+    
+    # Don't show the indicator if a menu is active
+    if menu_active:
+        logging.debug("Not showing GDI indicator because menu is active")
+        return False
+        
+    if gdi_indicator and hasattr(gdi_indicator, 'show_window'):
+        try:
+            gdi_indicator.show_window()
+            return True
+        except Exception as e:
+            logging.error(f"Error showing GDI indicator: {e}")
+    return False
+
+def show_dialog_with_gdi_handling(dialog_func, *args, **kwargs):
+    """Show a dialog with proper GDI indicator handling.
+    
+    Args:
+        dialog_func: Function to call (like QtWidgets.QMessageBox.information)
+        *args, **kwargs: Arguments to pass to the dialog function
+        
+    Returns:
+        Whatever the dialog function returns
+    """
+    # Hide GDI indicator
+    gdi_active = hide_gdi_indicator()
+    
+    try:
+        # Show dialog
+        result = dialog_func(*args, **kwargs)
+    finally:
+        # Always restore GDI indicator if it was active
+        if gdi_active:
+            show_gdi_indicator()
+    
+    return result
+
+def get_current_version():
+    """Get the current version of the application."""
+    return VERSION
+
+def check_for_updates(silent=False, auto_update=False):
+    """
+    Check for updates on GitHub.
+    
+    Args:
+        silent: If True, don't show messages for no updates or errors
+        auto_update: If True, automatically download and install the update
+    
+    Returns:
+        Tuple of (is_update_available, latest_version, download_url)
+    """
+    # Hide GDI indicator if active to prevent it from covering dialogs
+    gdi_active = hide_gdi_indicator()
+    
+    try:
+        # Get the current version
+        current_version = get_current_version()
+        logging.info(f"Checking for updates. Current version: {current_version}")
+        
+        # Get the latest release info from GitHub
+        response = requests.get(f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest", 
+                               timeout=5)  # 5 second timeout
+        response.raise_for_status()
+        
+        release_data = response.json()
+        latest_version = release_data["tag_name"].lstrip("v")
+        
+        logging.info(f"Latest version on GitHub: {latest_version}")
+        
+        # Compare versions
+        if parse_version(latest_version) > parse_version(current_version):
+            download_url = None
+            for asset in release_data["assets"]:
+                if asset["name"].endswith(".exe"):  # Look for the executable
+                    download_url = asset["browser_download_url"]
+                    break
+            
+            if not download_url:
+                logging.warning("Update available but no executable found in release assets")
+                if not silent:
+                    QtWidgets.QMessageBox.warning(
+                        None, 
+                        "Update Check", 
+                        f"Version {latest_version} is available but no executable was found."
+                    )
+                
+                # Restore GDI indicator
+                if gdi_active:
+                    show_gdi_indicator()
+                    
+                return False, latest_version, None
+            
+            logging.info(f"Update available: {latest_version} (current: {current_version})")
+            
+            if auto_update:
+                result = perform_update(download_url, latest_version)
+                
+                # No need to restore GDI indicator here as perform_update handles it
+                # and in the auto-update case, we'll be exiting the app anyway
+                
+                return True, latest_version, download_url
+            
+            # Ask user if they want to update
+            if not silent:
+                result = QtWidgets.QMessageBox.question(
+                    None,
+                    "Update Available",
+                    f"A new version ({latest_version}) is available. Would you like to update now?",
+                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                    QtWidgets.QMessageBox.Yes
+                )
+                
+                if result == QtWidgets.QMessageBox.Yes:
+                    perform_update(download_url, latest_version)
+                    # No need to restore GDI indicator here as perform_update handles it
+                    # and if update succeeds, we'll be exiting the app anyway
+                else:
+                    # User declined update, restore GDI indicator
+                    if gdi_active:
+                        show_gdi_indicator()
+            else:
+                # If silent and not auto-updating, restore GDI indicator
+                if gdi_active:
+                    show_gdi_indicator()
+            
+            return True, latest_version, download_url
+        else:
+            logging.info(f"No update available. Current version {current_version} is up to date.")
+            if not silent:
+                QtWidgets.QMessageBox.information(
+                    None,
+                    "No Updates",
+                    f"You're running the latest version ({current_version})."
+                )
+            
+            # Restore GDI indicator
+            if gdi_active:
+                show_gdi_indicator()
+                
+            return False, current_version, None
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Network error checking for updates: {e}")
+        if not silent:
+            QtWidgets.QMessageBox.warning(
+                None,
+                "Update Check Failed",
+                f"Could not check for updates due to network error: {e}"
+            )
+        
+        # Restore GDI indicator
+        if gdi_active:
+            show_gdi_indicator()
+            
+        return False, "unknown", None
+    except Exception as e:
+        logging.error(f"Error checking for updates: {e}")
+        logging.error(traceback.format_exc())
+        if not silent:
+            QtWidgets.QMessageBox.warning(
+                None,
+                "Update Check Failed",
+                f"An error occurred while checking for updates: {e}"
+            )
+        
+        # Restore GDI indicator
+        if gdi_active:
+            show_gdi_indicator()
+            
+        return False, "unknown", None
+
+def perform_update(download_url, version):
+    """
+    Download and install the update.
+    
+    Args:
+        download_url: URL to download the new version
+        version: Version string of the new version
+    
+    Returns:
+        bool: True if update process was initiated successfully
+    """
+    # Hide GDI indicator if active to prevent it from covering dialogs
+    gdi_active = hide_gdi_indicator()
+    
+    try:
+        logging.info(f"Starting update process to version {version}")
+        
+        # Create a progress dialog
+        progress = QtWidgets.QProgressDialog("Downloading update...", "Cancel", 0, 100)
+        progress.setWindowTitle(f"Updating to version {version}")
+        progress.setWindowModality(QtCore.Qt.WindowModal)
+        progress.setMinimumDuration(0)
+        progress.setValue(0)
+        progress.show()
+        
+        # Create a temporary directory for the download
+        temp_dir = tempfile.mkdtemp(prefix="clicker_update_")
+        temp_file = os.path.join(temp_dir, f"Clicker_v{version}.exe")
+        
+        # Download the new version with progress updates
+        response = requests.get(download_url, stream=True)
+        response.raise_for_status()
+        
+        # Get file size if available
+        total_size = int(response.headers.get('content-length', 0))
+        downloaded = 0
+        
+        # Open the file for writing
+        with open(temp_file, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                if progress.wasCanceled():
+                    logging.info("Update download canceled by user")
+                    progress.close()
+                    
+                    # Restore GDI indicator if download was canceled
+                    if gdi_active:
+                        show_gdi_indicator()
+                        
+                    return False
+                
+                if chunk:  # filter out keep-alive chunks
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    
+                    # Update progress if we know the total size
+                    if total_size > 0:
+                        percent = int(downloaded * 100 / total_size)
+                        progress.setValue(percent)
+                        QtWidgets.QApplication.processEvents()  # Keep UI responsive
+        
+        # Download complete
+        progress.setValue(100)
+        progress.setLabelText("Download complete. Installing update...")
+        QtWidgets.QApplication.processEvents()
+        
+        # Get the current executable path
+        current_exe = sys.executable
+        if getattr(sys, 'frozen', False):
+            # Running as bundled executable
+            app_path = current_exe
+        else:
+            # Running from source - this path won't be used for replacement,
+            # but we need to handle this case for development testing
+            app_path = os.path.abspath(sys.argv[0])
+            logging.warning("Running from source code - update will not replace current script")
+            
+        logging.info(f"Current executable: {app_path}")
+        
+        # Create a batch file to:
+        # 1. Wait for current process to exit
+        # 2. Copy the new executable over the old one
+        # 3. Start the new executable
+        # 4. Delete the temporary directory
+        
+        bat_path = os.path.join(temp_dir, "update.bat")
+        with open(bat_path, 'w') as f:
+            f.write(f'''@echo off
+echo Updating Clicker to version {version}...
+timeout /t 2 /nobreak > nul
+:retry
+copy /Y "{temp_file}" "{app_path}" > nul
+if errorlevel 1 (
+    echo Update failed, retrying...
+    timeout /t 1 /nobreak > nul
+    goto retry
+)
+echo Update successful!
+start "" "{app_path}"
+timeout /t 2 /nobreak > nul
+rd /s /q "{temp_dir}"
+exit
+''')
+        
+        # Close progress dialog
+        progress.close()
+        
+        # Show confirmation and then execute the batch file
+        QtWidgets.QMessageBox.information(
+            None,
+            "Update Ready",
+            f"Update to version {version} is ready. The application will now restart."
+        )
+        
+        # Execute the batch file and exit current process
+        logging.info(f"Launching update script: {bat_path}")
+        
+        # Use subprocess.Popen to start the batch file
+        subprocess.Popen(bat_path, shell=True)
+        
+        # Signal app to exit
+        cleanup_and_quit()
+        
+        return True
+    except Exception as e:
+        logging.error(f"Error performing update: {e}")
+        logging.error(traceback.format_exc())
+        
+        # Restore GDI indicator before showing error message
+        if gdi_active:
+            show_gdi_indicator()
+            
+        # Show error message
+        QtWidgets.QMessageBox.critical(
+            None,
+            "Update Failed",
+            f"Failed to update application: {e}"
+        )
+        
+        return False
 
 # --- File validation and creation ---
 
@@ -933,12 +1314,16 @@ def load_settings():
     - order_obeyed: Controls execution order (file order vs sorted by delay)
     - indicator_type: Type of visual indicator to use
     - global_cooldown: Minimum time between any keystroke executions
+    - check_updates_on_startup: Whether to check for updates on startup
+    - auto_install_updates: Whether to automatically install updates without asking
+    - logging: Whether detailed logging is enabled
     - Other settings used for UI and notifications
     
     Note: Field renaming (e.g., pause_time → start_time_stagger) is handled in validate_settings_file()
     which should be called before this function to ensure the settings file is properly updated.
     """
     global settings, toggle_key, start_time_stagger, order_obeyed, indicator_type, global_cooldown
+    global check_updates_on_startup, auto_install_updates, logging_enabled
     try:
         with lock:
             with open(SETTINGS_FILE, 'r') as f:
@@ -951,7 +1336,17 @@ def load_settings():
             indicator_type = settings.get('indicator_type', DEFAULT_SETTINGS['indicator_type'])
             global_cooldown = settings.get('global_cooldown', DEFAULT_SETTINGS['global_cooldown'])
             
-        logging.info(f"Settings loaded: toggle_key={toggle_key}, start_time_stagger={start_time_stagger}, order_obeyed={order_obeyed}, indicator_type={indicator_type}, global_cooldown={global_cooldown}")
+            # Auto-update settings
+            check_updates_on_startup = settings.get('check_updates_on_startup', DEFAULT_SETTINGS['check_updates_on_startup'])
+            auto_install_updates = settings.get('auto_install_updates', DEFAULT_SETTINGS['auto_install_updates'])
+            
+            # Logging setting
+            logging_enabled = settings.get('logging', DEFAULT_SETTINGS['logging'])
+            
+            # Apply logging configuration
+            update_logging_config()
+            
+        logging.info(f"Settings loaded: toggle_key={toggle_key}, start_time_stagger={start_time_stagger}, order_obeyed={order_obeyed}, indicator_type={indicator_type}, global_cooldown={global_cooldown}, check_updates_on_startup={check_updates_on_startup}, auto_install_updates={auto_install_updates}, logging={logging_enabled}")
         return True
     except json.JSONDecodeError:
         logging.error(f"Error parsing {SETTINGS_FILE} - invalid JSON format")
@@ -1525,6 +1920,11 @@ def toggle():
         start_automation()
         tray.setToolTip("Clicker: ON")
         logging.info("Automation turned ON")
+        
+        # Ensure GDI indicator is visible when toggling ON
+        # Only show it if no menu is active to prevent UI conflicts
+        if gdi_indicator and not menu_active:
+            show_gdi_indicator()
     
     # Visual indicator is already updated in start_automation and stop_automation
 
@@ -1630,6 +2030,7 @@ def reload_all():
     3. Reloads settings, including the order_obeyed preference
     4. Reloads keystroke configurations
     5. Rebinds the global hotkey
+    6. Updates logging configuration based on settings
     
     This ensures changes to configuration files take effect immediately
     without requiring an application restart.
@@ -1643,7 +2044,7 @@ def reload_all():
     validate_keystrokes_file()
     
     # Load settings and keystrokes
-    load_settings()
+    load_settings()  # This now calls update_logging_config() internally
     load_keystrokes()
     
     # Rebind hotkey
@@ -1812,6 +2213,9 @@ def main():
             logging.warning("Keystroke functionality may not work correctly without admin rights")
             
             # This is a more forceful warning since lack of admin rights is a common failure mode
+            # Hide GDI indicator first to make sure dialog is visible
+            hide_gdi_indicator()
+            
             result = QtWidgets.QMessageBox.warning(
                 None, 
                 "Administrator Rights Required",
@@ -1835,6 +2239,9 @@ def main():
                         f"Failed to restart with admin privileges: {e}\n\nContinuing without admin privileges.")
             else:
                 logging.info("User declined to restart with administrator privileges")
+            
+            # Restore GDI indicator
+            show_gdi_indicator()
         else:
             logging.info("Application is running with administrator privileges")
         
@@ -1858,12 +2265,16 @@ def main():
             logging.error(f"Failed to initialize pygame indicator: {e}")
             logging.error(traceback.format_exc())
             pygame_indicator = None
+            # Hide GDI indicator before showing error message (redundant at this point but safe)
+            hide_gdi_indicator()
             # Show error message to user
             QtWidgets.QMessageBox.warning(
                 None, 
                 "Visual Indicator Error",
                 f"Failed to initialize visual indicator: {e}\n\nThe application will work without a visual indicator."
             )
+            # Restore GDI indicator
+            show_gdi_indicator()
         
         # Create the icon
         if os.path.exists('icon.ico'):
@@ -1897,6 +2308,10 @@ def main():
         reload_action = menu.addAction('Reload settings/keystrokes')
         open_log_action = menu.addAction('View log file')
         
+        # Add check for updates action
+        menu.addSeparator()
+        check_updates_action = menu.addAction('Check for updates')
+        
         # Separator
         menu.addSeparator()
         
@@ -1916,10 +2331,29 @@ def main():
         open_settings_action.triggered.connect(lambda: open_file(SETTINGS_FILE))
         open_log_action.triggered.connect(lambda: open_file(log_file))
         reload_action.triggered.connect(reload_all)
+        check_updates_action.triggered.connect(lambda: check_for_updates(silent=False, auto_update=False))
         quit_action.triggered.connect(cleanup_and_quit)
         
         # Add double-click handler to toggle automation
-        tray.activated.connect(lambda reason: toggle() if reason == QtWidgets.QSystemTrayIcon.DoubleClick else None)
+        def on_tray_activated(reason):
+            global menu_active
+            
+            # If this is a context menu activation, set menu active flag
+            if reason == QtWidgets.QSystemTrayIcon.Context:
+                menu_active = True
+                logging.debug("Tray context menu activated, setting menu_active=True")
+                
+            # Hide GDI indicator when any interaction with tray happens
+            hide_gdi_indicator()
+            
+            # Double-click toggles automation
+            if reason == QtWidgets.QSystemTrayIcon.DoubleClick:
+                toggle()
+            
+            # For any other reason (context menu, etc), just leave it hidden
+            # It will be restored when menu hides via the aboutToHide connection
+            
+        tray.activated.connect(on_tray_activated)
         
         # Set context menu
         tray.setContextMenu(menu)
@@ -1939,6 +2373,23 @@ def main():
         status_timer.timeout.connect(update_tray_status)
         status_timer.start(1000)  # Update every second
         
+        # Create a timer to keep checking menu status and ensure GDI indicator
+        # is hidden while menus are active
+        def check_menu_state():
+            global menu_active
+            # If the menu is supposed to be active, make sure GDI is hidden
+            if menu_active and gdi_indicator:
+                # Force GDI to hide if it's somehow visible
+                if gdi_indicator and hasattr(gdi_indicator, 'hide_window'):
+                    try:
+                        gdi_indicator.hide_window()
+                    except Exception as e:
+                        logging.error(f"Error re-hiding GDI indicator: {e}")
+        
+        menu_check_timer = QtCore.QTimer()
+        menu_check_timer.timeout.connect(check_menu_state)
+        menu_check_timer.start(250)  # Check 4 times per second
+        
         # Bind hotkey
         rebind_hotkey()
         
@@ -1952,6 +2403,9 @@ def main():
         
         # Show startup message if first time or files were created
         if not os.path.exists(".clicker_setup_done"):
+            # Hide GDI indicator if it exists
+            hide_gdi_indicator()
+            
             # Show startup help message
             QtWidgets.QMessageBox.information(None, "Clicker Setup",
                 "Clicker is now running in the system tray.\n\n"
@@ -1962,11 +2416,21 @@ def main():
             # Mark setup as done
             with open(".clicker_setup_done", "w") as f:
                 f.write("1")
+            
+            # Restore GDI indicator if it was hidden
+            show_gdi_indicator()
         
         # Display any startup warnings that were collected
-        for title, message in startup_warnings:
-            QtWidgets.QMessageBox.warning(None, title, message)
-        startup_warnings.clear()
+        if startup_warnings:
+            # Hide GDI indicator if it exists
+            hide_gdi_indicator()
+            
+            for title, message in startup_warnings:
+                QtWidgets.QMessageBox.warning(None, title, message)
+            startup_warnings.clear()
+            
+            # Restore GDI indicator if it was hidden
+            show_gdi_indicator()
         
         # Initialize GDI indicator after first-run dialog is shown
         if indicator_type.lower() != 'pygame' and gdi_indicator is None:
@@ -1977,21 +2441,43 @@ def main():
                 logging.info("GDI indicator initialized successfully")
                 
                 # Connect GDI indicator to menu signals now that it's initialized
-                menu.aboutToShow.connect(lambda: gdi_indicator.hide_window() if gdi_indicator else None)
-                menu.aboutToHide.connect(lambda: gdi_indicator.show_window() if gdi_indicator else None)
+                def on_menu_about_to_show():
+                    global menu_active
+                    menu_active = True
+                    hide_gdi_indicator()
+                    
+                def on_menu_about_to_hide():
+                    global menu_active
+                    menu_active = False
+                    # Only show indicator if automation is active
+                    if running_flag['active']:
+                        show_gdi_indicator()
+                
+                menu.aboutToShow.connect(on_menu_about_to_show)
+                menu.aboutToHide.connect(on_menu_about_to_hide)
             except Exception as e:
                 logging.error(f"Failed to initialize GDI indicator: {e}")
                 logging.error(traceback.format_exc())
                 gdi_indicator = None
+                # Hide GDI indicator before showing error message (redundant but safe)
+                hide_gdi_indicator()
                 # Show error message to user
                 QtWidgets.QMessageBox.warning(
                     None, 
                     "Visual Indicator Error",
                     f"Failed to initialize visual indicator: {e}\n\nThe application will work without a visual indicator."
                 )
+                # No need to restore GDI indicator as it failed to initialize
         
         # Log successful startup
         logging.info("Clicker application started successfully")
+        
+        # Check for updates on startup if enabled
+        if check_updates_on_startup:
+            logging.info("Checking for updates on startup (settings enabled)")
+            QtCore.QTimer.singleShot(2000, lambda: check_for_updates(silent=True, auto_update=auto_install_updates))
+        else:
+            logging.info("Startup update check disabled in settings")
         
         # Run the application
         sys.exit(app.exec_())
@@ -2000,6 +2486,9 @@ def main():
         logging.error(f"Unexpected error in main: {e}")
         logging.error(traceback.format_exc())
         try:
+            # Hide GDI indicator if exists
+            hide_gdi_indicator()
+            
             QtWidgets.QMessageBox.critical(None, "Critical Error", 
                 f"An unexpected error occurred:\n{e}\n\nCheck the log file for details.")
         except:

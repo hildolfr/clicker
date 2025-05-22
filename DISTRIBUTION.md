@@ -1,4 +1,4 @@
-# Clicker Portable Distribution v1.2
+# Clicker Portable Distribution v1.3
 
 ## About This Distribution
 
@@ -35,10 +35,14 @@ When you run the application, it will create or use these files in the same dire
 
 You can modify the application's behavior by editing these files:
 
-1. **settings.json** - Controls general settings like the toggle key
+1. **settings.json** - Controls general settings like the toggle key and logging level
 2. **keystrokes.txt** - Defines what keys are pressed during automation
 
 See the main README.md file for detailed configuration instructions.
+
+## Performance Optimization
+
+For better performance, you can disable detailed logging by setting `"logging": false` in your settings.json file. This is especially helpful for long-running installations that work well without debugging information.
 
 ## Support
 
