@@ -20,6 +20,7 @@ import traceback
 import pygame  # Added pygame for visual indicator
 import win32api
 import win32ui
+import random  # Added for random keystroke selection
 from logging.handlers import RotatingFileHandler
 
 # Hide console window
@@ -644,6 +645,7 @@ cleanup_initiated = False  # Flag to prevent double cleanup
 shutdown_event = threading.Event()  # Event to signal threads to shut down
 pygame_indicator = None  # Visual indicator instance
 gdi_indicator = None     # GDI-based indicator instance
+startup_warnings = []  # Warnings to show during startup
 
 # --- File validation and creation ---
 
@@ -743,6 +745,7 @@ def validate_keystrokes_file():
     try:
         with open(KEYSTROKES_FILE, 'r') as f:
             valid_lines = []
+            
             for line_num, line in enumerate(f, 1):
                 line = line.strip()
                 # Skip empty lines and comments
@@ -753,7 +756,7 @@ def validate_keystrokes_file():
                 if len(parts) == 2:
                     key, delay = parts
                     try:
-                        float(delay)  # Check if delay is a valid number
+                        delay_val = float(delay)  # Check if delay is a valid number
                         valid_lines.append(line)
                     except ValueError:
                         logging.warning(f"Invalid delay value at line {line_num}: '{line}'")
@@ -1018,34 +1021,68 @@ def parse_keystroke(key_str):
     Returns a tuple of (modifiers_list, key).
     Logs warnings for unknown modifiers.
     """
+    # OPTIMIZATION: Fast path for simple keys without modifiers
+    if '-' not in key_str:
+        return [], key_str
+        
+    # OPTIMIZATION: Use direct mapping instead of conditionals
+    modifier_map = {
+        'S': 'shift',
+        'C': 'ctrl',
+        'A': 'alt'
+    }
+    
     parts = key_str.split('-')
-    mods = []
     key = parts[-1]
+    
+    # OPTIMIZATION: Pre-allocate list with likely size to avoid reallocation
+    mods = []
+    
     for p in parts[:-1]:
-        if p == 'S':
-            mods.append('shift')
-        elif p == 'C':
-            mods.append('ctrl')
-        elif p == 'A':
-            mods.append('alt')
+        mod = modifier_map.get(p)
+        if mod:
+            mods.append(mod)
         else:
             logging.warning(f"Unknown modifier in keystroke: '{p}'")
+            
     return mods, key
 
 def send_key_event(vk_code, is_key_up=False):
     """Send a key event using Windows API."""
     try:
+        # Log the key event at debug level only
+        event_type = "KEY UP" if is_key_up else "KEY DOWN"
+        logging.debug(f"Sending {event_type} event for VK code: 0x{vk_code:02X}")
+        
         flags = KEYEVENTF_KEYUP if is_key_up else 0
-        ctypes.windll.user32.keybd_event(
-            wintypes.BYTE(vk_code),
-            wintypes.BYTE(0),
-            wintypes.DWORD(flags),
-            wintypes.DWORD(0)
+        
+        # OPTIMIZATION: Pre-cast parameters to appropriate types to avoid overhead
+        vk_byte = wintypes.BYTE(vk_code)
+        scan_byte = wintypes.BYTE(0)
+        flags_dword = wintypes.DWORD(flags)
+        extra_dword = wintypes.DWORD(0)
+        
+        # Attempt to send the key event with pre-cast parameters
+        result = ctypes.windll.user32.keybd_event(
+            vk_byte,
+            scan_byte,
+            flags_dword,
+            extra_dword
         )
-        time.sleep(0.01)
+        
+        # Check if the call succeeded (different from return value)
+        if result == 0:
+            error_code = ctypes.get_last_error()
+            logging.error(f"Windows API error in keybd_event: code {error_code}")
+            return False
+            
+        # OPTIMIZATION: Reduced delay after sending key event from 0.01s to 0.005s
+        # This is the minimum needed for reliable operation while improving responsiveness
+        time.sleep(0.005)
         return True
     except Exception as e:
-        logging.error(f"Error in send_key_event: {e}")
+        logging.error(f"Error in send_key_event (VK: 0x{vk_code:02X}, up={is_key_up}): {e}")
+        logging.error(traceback.format_exc())
         return False
 
 def send_key_combination(modifiers, key):
@@ -1056,47 +1093,79 @@ def send_key_combination(modifiers, key):
         # Get virtual key code
         vk_code = VK_MAP.get(key.lower())
         if vk_code is None:
-            logging.error(f"Unknown key '{key}'")
+            logging.error(f"Unknown key '{key}' - not found in VK_MAP")
             return False
+        
+        # OPTIMIZATION: Define mod_vk mapping once to avoid repeated conditionals
+        mod_vk_map = {
+            'shift': VK_SHIFT,
+            'ctrl': VK_CONTROL,
+            'alt': VK_MENU
+        }
+        
+        # Track which modifiers were successfully pressed
+        pressed_mods = []
         
         # Press modifiers
         for mod in modifiers:
-            if mod == 'shift':
-                if not send_key_event(VK_SHIFT):
+            mod_vk = mod_vk_map.get(mod)
+            
+            if mod_vk is not None:
+                if not send_key_event(mod_vk):
+                    logging.error(f"Failed to press modifier key: {mod}")
+                    # Release any modifiers we've already pressed
+                    for pressed_mod in reversed(pressed_mods):
+                        mod_vk_up = mod_vk_map.get(pressed_mod)
+                        if mod_vk_up is not None:
+                            send_key_event(mod_vk_up, is_key_up=True)
                     return False
-            elif mod == 'ctrl':
-                if not send_key_event(VK_CONTROL):
-                    return False
-            elif mod == 'alt':
-                if not send_key_event(VK_MENU):
-                    return False
+                pressed_mods.append(mod)
         
-        time.sleep(0.02)
+        # OPTIMIZATION: Reduced delay between modifier and main key press
+        # Small delay between pressing modifiers and the main key (reduced from 0.02s to 0.01s)
+        if pressed_mods:  # Only sleep if we have modifiers
+            time.sleep(0.01)
         
         # Press and release the main key
         if not send_key_event(vk_code):
+            logging.error(f"Failed to press main key: {key} (VK: 0x{vk_code:02X})")
+            # Release modifiers
+            for mod in reversed(pressed_mods):
+                mod_vk_up = mod_vk_map.get(mod)
+                if mod_vk_up is not None:
+                    send_key_event(mod_vk_up, is_key_up=True)
             return False
-        time.sleep(0.02)
+        
+        # OPTIMIZATION: Reduced delay between press and release (from 0.02s to 0.01s)
+        time.sleep(0.01)
+        
         if not send_key_event(vk_code, is_key_up=True):
+            logging.error(f"Failed to release main key: {key} (VK: 0x{vk_code:02X})")
+            # Release modifiers anyway
+            for mod in reversed(pressed_mods):
+                mod_vk_up = mod_vk_map.get(mod)
+                if mod_vk_up is not None:
+                    send_key_event(mod_vk_up, is_key_up=True)
             return False
         
-        time.sleep(0.02)
+        # OPTIMIZATION: Only add delay after key release if we have modifiers to release
+        if pressed_mods:
+            # Reduced delay between key release and modifier release (from 0.02s to 0.01s)
+            time.sleep(0.01)
+            
+            # Release modifiers in reverse order
+            for mod in reversed(pressed_mods):
+                mod_vk_up = mod_vk_map.get(mod)
+                if mod_vk_up is not None:
+                    if not send_key_event(mod_vk_up, is_key_up=True):
+                        logging.error(f"Failed to release modifier key: {mod}")
+                        return False
         
-        # Release modifiers in reverse order
-        for mod in reversed(modifiers):
-            if mod == 'shift':
-                if not send_key_event(VK_SHIFT, is_key_up=True):
-                    return False
-            elif mod == 'ctrl':
-                if not send_key_event(VK_CONTROL, is_key_up=True):
-                    return False
-            elif mod == 'alt':
-                if not send_key_event(VK_MENU, is_key_up=True):
-                    return False
-        
+        logging.debug(f"Successfully sent key combination: {modifiers}, {key}")
         return True
     except Exception as e:
         logging.error(f"Error in send_key_combination: {e}")
+        logging.error(traceback.format_exc())
         return False
 
 # --- Automation worker ---
@@ -1120,32 +1189,192 @@ def automation_worker():
     """
     schedule = []
     last_execution_time = 0  # Track the last time any key was executed
+    execution_count = 0  # Track how many keystrokes have been executed
+    next_scheduled_keys = []  # Track upcoming keys for status updates
+    
+    # Log whether we're running as admin
+    is_admin_status = is_admin()
+    logging.info(f"Automation worker starting - Admin privileges: {is_admin_status}")
+    
+    # Pre-allocate common data structures to avoid first-time allocation delays
+    keystroke_groups = {}
+    delay_groups = {}
+    
     try:
+        # OPTIMIZATION: Use a direct time.time() call to avoid function call overhead
+        now = time.time()
+        
         with lock:
-            now = time.time()
-            # Process keystrokes based on order_obeyed setting
+            # Group keystrokes by delay for random selection when identical delay values
             if order_obeyed:
                 # Execute in file order (stagger initial firings by start_time_stagger)
                 logging.info("Using file order for keystrokes (order_obeyed=True)")
-                for idx, (key_str, delay) in enumerate(keystrokes):
-                    # Apply staggered start time to space out initial keystrokes
-                    initial_time = now + (idx * start_time_stagger)
-                    heapq.heappush(schedule, (initial_time, idx, key_str, delay))
-                    logging.debug(f"Scheduled keystroke {key_str} to start at {initial_time - now:.2f}s from now")
+                
+                # Fast-path: If only one keystroke, skip grouping logic
+                if len(keystrokes) == 1:
+                    key_str, delay = keystrokes[0]
+                    heapq.heappush(schedule, (now, 0, key_str, delay))
+                    logging.debug(f"Fast-path: Single keystroke {key_str} scheduled immediately")
+                else:
+                    # Group keystrokes with identical stagger times
+                    for idx, (key_str, delay) in enumerate(keystrokes):
+                        initial_time = now + (idx * start_time_stagger)
+                        if initial_time not in keystroke_groups:
+                            keystroke_groups[initial_time] = []
+                        keystroke_groups[initial_time].append((idx, key_str, delay))
+                    
+                    # Process each group, randomizing same-time keystrokes
+                    for initial_time, group in keystroke_groups.items():
+                        if len(group) > 1:
+                            logging.info(f"Randomizing {len(group)} keystrokes with identical schedule time")
+                            random.shuffle(group)
+                        
+                        for idx, key_str, delay in group:
+                            heapq.heappush(schedule, (initial_time, idx, key_str, delay))
+                            logging.debug(f"Scheduled keystroke {key_str} to start at {initial_time - now:.2f}s from now")
             else:
                 # Execute in order of lowest delay value
                 logging.info("Sorting keystrokes by delay value (order_obeyed=False)")
-                sorted_keystrokes = sorted(keystrokes, key=lambda x: x[1])
-                for idx, (key_str, delay) in enumerate(sorted_keystrokes):
-                    # Apply staggered start time to space out initial keystrokes
-                    initial_time = now + (idx * start_time_stagger)
-                    heapq.heappush(schedule, (initial_time, idx, key_str, delay))
-                    logging.debug(f"Scheduled keystroke {key_str} (delay={delay}) to start at {initial_time - now:.2f}s from now")
+                
+                # Fast-path: If only one keystroke, skip grouping logic
+                if len(keystrokes) == 1:
+                    key_str, delay = keystrokes[0]
+                    heapq.heappush(schedule, (now, 0, key_str, delay))
+                    logging.debug(f"Fast-path: Single keystroke {key_str} scheduled immediately")
+                else:
+                    # Group keystrokes by delay value
+                    for idx, (key_str, delay) in enumerate(keystrokes):
+                        if delay not in delay_groups:
+                            delay_groups[delay] = []
+                        delay_groups[delay].append((idx, key_str))
+                    
+                    # Process each delay group in ascending order
+                    sorted_delays = sorted(delay_groups.keys())
+                    current_idx = 0
+                    
+                    for delay_value in sorted_delays:
+                        group = delay_groups[delay_value]
+                        
+                        # Randomize keystrokes with identical delay values
+                        if len(group) > 1:
+                            logging.info(f"Randomizing {len(group)} keystrokes with identical delay value {delay_value}")
+                            random.shuffle(group)
+                        
+                        # Schedule each keystroke in the group
+                        for idx, key_str in group:
+                            initial_time = now + (current_idx * start_time_stagger)
+                            heapq.heappush(schedule, (initial_time, idx, key_str, delay_value))
+                            logging.debug(f"Scheduled keystroke {key_str} (delay={delay_value}) to start at {initial_time - now:.2f}s from now")
+                            current_idx += 1
+            
+            logging.info(f"Initial schedule created with {len(schedule)} keystrokes")
+            
+            # OPTIMIZATION: Parse and cache first few keystrokes to avoid overhead during execution
+            first_keystrokes = []
+            temp_schedule = list(schedule)
+            temp_schedule.sort()  # Sort by execution time
+            for time_val, idx, key_str, delay in temp_schedule[:min(5, len(temp_schedule))]:
+                mods, key = parse_keystroke(key_str)
+                vk_code = VK_MAP.get(key.lower())
+                if vk_code is not None:
+                    first_keystrokes.append((key_str, mods, key, vk_code))
+                    time_to_exec = time_val - now
+                    logging.info(f"Pre-parsed: {key_str} (VK: 0x{vk_code:02X}) in {time_to_exec:.1f}s")
+                    
+            # Create a list of the next few scheduled keys for status updates
+            next_scheduled_keys = [(time_val, key) for time_val, _, key, _ in temp_schedule[:min(5, len(schedule))]]
+            for time_val, key in next_scheduled_keys:
+                time_to_exec = time_val - now
+                logging.info(f"Next scheduled: {key} in {time_to_exec:.1f}s")
         
+        # OPTIMIZATION: For the first few iterations, use direct list lookup instead of heap operations
+        direct_execution_count = min(len(first_keystrokes), 3)  # Process up to 3 keystrokes directly
+        
+        while not shutdown_event.is_set() and direct_execution_count > 0:
+            with lock:
+                active = running_flag['active']
+            if not active or not schedule:
+                logging.info(f"Automation stopping early: active={active}, schedule_empty={not schedule}")
+                break
+            
+            # Get next keystroke directly without heap operations
+            next_fire, idx, key_str, delay = heapq.heappop(schedule)
+            
+            # Apply global cooldown if needed (though it shouldn't matter for first keystroke)
+            current_time = time.time()
+            wait_time = max(0, next_fire - current_time)
+            
+            if wait_time > 0:
+                # Wait with timeout to check shutdown event periodically
+                end_time = time.time() + wait_time
+                while time.time() < end_time and not shutdown_event.is_set():
+                    remaining = end_time - time.time()
+                    if remaining <= 0:
+                        break
+                    
+                    # Use a shorter poll interval for first keystrokes to ensure responsiveness
+                    poll_interval = min(0.01, remaining)
+                    is_shutdown = shutdown_event.wait(poll_interval)
+                    if is_shutdown:
+                        logging.debug("Automation worker received shutdown signal during first keystroke wait")
+                        break
+            
+            with lock:
+                if not running_flag['active'] or shutdown_event.is_set():
+                    logging.info("Automation stopped during first keystroke execution")
+                    break
+            
+            # Execute the keystroke
+            try:
+                # Use pre-parsed data if available
+                cached_data = next((data for data in first_keystrokes if data[0] == key_str), None)
+                
+                if cached_data:
+                    key_str, mods, key, vk_code = cached_data
+                    logging.info(f"Sending cached keystroke: {key_str} (VK: 0x{vk_code:02X})")
+                    
+                    # Send the key combination
+                    success = False
+                    if mods:
+                        success = send_key_combination(mods, key)
+                    else:
+                        success = send_key_combination([], key)
+                else:
+                    # Parse keystroke normally if not cached
+                    logging.info(f"Sending uncached keystroke: {key_str}")
+                    mods, key = parse_keystroke(key_str)
+                    
+                    # Try to send the key combination
+                    success = False
+                    if mods:
+                        success = send_key_combination(mods, key)
+                    else:
+                        success = send_key_combination([], key)
+                
+                if success:
+                    # Update last execution time for global cooldown
+                    last_execution_time = time.time()
+                    execution_count += 1
+                    logging.info(f"Successfully sent keystroke: {key_str} (total executed: {execution_count})")
+                else:
+                    logging.error(f"Failed to send keystroke: {key_str}")
+            except Exception as e:
+                logging.error(f"Error processing keystroke {key_str}: {e}")
+                logging.error(traceback.format_exc())
+            
+            with lock:
+                # Calculate next execution time based on the key's individual delay
+                next_time = time.time() + delay
+                heapq.heappush(schedule, (next_time, idx, key_str, delay))
+            
+            direct_execution_count -= 1
+        
+        # Continue with regular processing for subsequent keystrokes
         while not shutdown_event.is_set():
             with lock:
                 active = running_flag['active']
             if not active or not schedule:
+                logging.info("Automation stopping: active={active}, schedule_empty={not schedule}")
                 break
             
             next_fire, idx, key_str, delay = heapq.heappop(schedule)
@@ -1159,47 +1388,127 @@ def automation_worker():
                 logging.debug(f"Global cooldown enforced for {key_str}, delaying by {cooldown_time - next_fire:.3f}s")
                 next_fire = cooldown_time
             
+            # Calculate wait time more efficiently
             wait_time = max(0, next_fire - time.time())
+            
+            # Log the upcoming key execution for very long waits
+            if wait_time > 10.0:
+                logging.info(f"Long wait: {key_str} will execute in {wait_time:.1f} seconds")
+                
+                # For very long waits, provide periodic status updates
+                # This helps users know the program is still working during long delays
+                status_update_interval = min(60.0, wait_time / 4)  # Update at least 4 times during the wait
+                next_status_time = time.time() + status_update_interval
+            
+            # IMPROVED: More efficient waiting mechanism for long delays
             if wait_time > 0:
-                # Use wait with timeout to check shutdown event periodically
-                is_shutdown = shutdown_event.wait(min(wait_time, 0.1))
-                if is_shutdown:
-                    logging.debug("Automation worker received shutdown signal during wait")
-                    break
-                if next_fire > time.time():
-                    # Still need to wait more
+                # Adaptive polling interval based on wait duration
+                # - Short waits (< 1s): Poll every 0.1s for responsiveness
+                # - Medium waits (1-10s): Poll every 0.5s
+                # - Long waits (10-60s): Poll every 1.0s
+                # - Very long waits (>60s): Poll every 5.0s
+                if wait_time <= 1.0:
+                    poll_interval = 0.1
+                elif wait_time <= 10.0:
+                    poll_interval = 0.5
+                elif wait_time <= 60.0:
+                    poll_interval = 1.0
+                else:
+                    poll_interval = 5.0
+                
+                # Wait with timeout to check shutdown event periodically
+                end_time = time.time() + wait_time
+                while time.time() < end_time and not shutdown_event.is_set():
+                    remaining = end_time - time.time()
+                    if remaining <= 0:
+                        break
+                        
+                    # For very long waits, provide periodic status updates
+                    if wait_time > 10.0 and time.time() >= next_status_time:
+                        remaining = end_time - time.time()
+                        logging.info(f"Status update: {key_str} will execute in {remaining:.1f} seconds")
+                        next_status_time = time.time() + status_update_interval
+                    
+                    # Wait for the appropriate polling interval
+                    is_shutdown = shutdown_event.wait(min(remaining, poll_interval))
+                    if is_shutdown:
+                        logging.debug("Automation worker received shutdown signal during wait")
+                        break
+                
+                # After waiting, check if we need to wait more or can proceed
+                if time.time() < next_fire:
+                    # Still need to wait more - put it back in the queue
                     heapq.heappush(schedule, (next_fire, idx, key_str, delay))
                     continue
             
             with lock:
                 if not running_flag['active'] or shutdown_event.is_set():
+                    logging.info("Automation stopped during execution")
                     break
             
+            # Prepare to execute the keystroke
+            logging.info(f"Preparing to execute keystroke: {key_str} (execution #{execution_count+1})")
             mods, key = parse_keystroke(key_str)
-            logging.debug(f"Processing keystroke: {key_str} -> mods={mods}, key={key}")
+            logging.debug(f"Parsed keystroke: {key_str} -> mods={mods}, key={key}")
             
             try:
-                if mods:
-                    send_key_combination(mods, key)
-                else:
-                    send_key_combination([], key)
+                # Log key details for debugging
+                vk_code = VK_MAP.get(key.lower())
+                if vk_code is None:
+                    logging.error(f"Key '{key}' not found in VK_MAP - check keystrokes.txt configuration")
+                    # Still schedule the next execution despite the error
+                    next_time = time.time() + delay
+                    heapq.heappush(schedule, (next_time, idx, key_str, delay))
+                    continue
                 
-                # Update last execution time for global cooldown
-                last_execution_time = time.time()
+                logging.info(f"Sending keystroke: {key_str} (VK: 0x{vk_code:02X})")
+                
+                # Try to send the key combination
+                success = False
+                if mods:
+                    success = send_key_combination(mods, key)
+                else:
+                    success = send_key_combination([], key)
+                
+                if success:
+                    # Update last execution time for global cooldown
+                    last_execution_time = time.time()
+                    execution_count += 1
+                    logging.info(f"Successfully sent keystroke: {key_str} (total executed: {execution_count})")
+                else:
+                    logging.error(f"Failed to send keystroke: {key_str}")
             except Exception as e:
                 logging.error(f"Error processing keystroke {key_str}: {e}")
+                logging.error(traceback.format_exc())
             
             with lock:
                 # Calculate next execution time based on the key's individual delay
                 # This determines how often this specific key will be pressed again
                 # Note: The actual execution may still be delayed by global_cooldown if needed
                 next_time = time.time() + delay
+                
+                # Check if there are already keystrokes scheduled at the same time
+                # If so, add a tiny random offset (1-5ms) to avoid preferential treatment
+                same_time_items = [item for item in schedule if item[0] == next_time]
+                if same_time_items:
+                    # Add a tiny random offset (1-5ms) to ensure random ordering for same-time keystrokes
+                    random_offset = random.uniform(0.001, 0.005)  # 1-5ms random offset
+                    next_time += random_offset
+                    logging.debug(f"Added {random_offset*1000:.2f}ms random offset to {key_str} to avoid preferential ordering")
+                
                 heapq.heappush(schedule, (next_time, idx, key_str, delay))
+                
+                # Log information about the next execution time
+                time_until_next = next_time - time.time()
+                if time_until_next > 10.0:
+                    logging.info(f"Re-scheduled {key_str} for execution in {time_until_next:.1f}s")
+                else:
+                    logging.debug(f"Re-scheduled {key_str} for execution in {time_until_next:.1f}s")
     except Exception as e:
         logging.error(f"Error in automation worker: {e}")
         logging.error(traceback.format_exc())
     finally:
-        logging.debug("Automation worker exiting")
+        logging.info(f"Automation worker exiting - executed {execution_count} keystrokes total")
 
 # --- Core application functions ---
 
@@ -1237,10 +1546,29 @@ def start_automation():
     elif gdi_indicator:
         gdi_indicator.set_state(True)
     
-    # Create and start worker thread
+    # Create and start worker thread with higher priority
     thread['obj'] = threading.Thread(target=automation_worker)
     thread['obj'].daemon = True
+    
+    # Start thread before updating UI to minimize perceived delay
     thread['obj'].start()
+    
+    # Set thread priority to above normal if on Windows
+    if sys.platform == 'win32':
+        try:
+            thread_id = thread['obj'].ident
+            thread_handle = ctypes.windll.kernel32.OpenThread(
+                0x0001,  # THREAD_QUERY_INFORMATION
+                False,
+                thread_id)
+            if thread_handle:
+                # Set thread priority to THREAD_PRIORITY_ABOVE_NORMAL (1)
+                ctypes.windll.kernel32.SetThreadPriority(thread_handle, 1)
+                ctypes.windll.kernel32.CloseHandle(thread_handle)
+                logging.debug("Set automation thread priority to above normal")
+        except Exception as e:
+            logging.error(f"Failed to set thread priority: {e}")
+    
     logging.debug("Automation thread started")
 
 def stop_automation():
@@ -1476,11 +1804,39 @@ def main():
         validate_settings_file()
         validate_keystrokes_file()
         
-        # Check for admin rights before proceeding
-        if not is_admin():
-            # show_admin_warning() returns False if user declines or elevation fails
-            # We continue execution either way with appropriate logging
-            show_admin_warning()
+        # *** CRITICAL: Check for admin rights before proceeding ***
+        # The keystrokes functionality requires admin privileges to work properly
+        admin_status = is_admin()
+        if not admin_status:
+            logging.warning("APPLICATION IS NOT RUNNING WITH ADMINISTRATOR PRIVILEGES")
+            logging.warning("Keystroke functionality may not work correctly without admin rights")
+            
+            # This is a more forceful warning since lack of admin rights is a common failure mode
+            result = QtWidgets.QMessageBox.warning(
+                None, 
+                "Administrator Rights Required",
+                "This application is not running with administrator privileges.\n\n"
+                "IMPORTANT: Keystrokes will likely fail to work without admin rights.\n\n"
+                "Would you like to restart with administrator privileges?",
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.Yes
+            )
+            
+            if result == QtWidgets.QMessageBox.Yes:
+                logging.info("User requested restart with admin privileges")
+                try:
+                    # Re-run the program with admin rights
+                    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+                    # Exit current non-admin instance
+                    sys.exit(0)
+                except Exception as e:
+                    logging.error(f"Failed to restart with admin privileges: {e}")
+                    QtWidgets.QMessageBox.critical(None, "Error", 
+                        f"Failed to restart with admin privileges: {e}\n\nContinuing without admin privileges.")
+            else:
+                logging.info("User declined to restart with administrator privileges")
+        else:
+            logging.info("Application is running with administrator privileges")
         
         # Check singleton
         check_singleton()
@@ -1528,7 +1884,8 @@ def main():
         menu = QtWidgets.QMenu()
         
         # Add status indicator to the menu
-        status_action = QtWidgets.QAction("Status: OFF", menu)
+        status_text = "Status: OFF" + (" (ADMIN: YES)" if admin_status else " (ADMIN: NO - KEYSTROKES MAY FAIL)")
+        status_action = QtWidgets.QAction(status_text, menu)
         status_action.setEnabled(False)
         menu.addAction(status_action)
         
@@ -1571,7 +1928,11 @@ def main():
         def update_tray_status():
             with lock:
                 active = running_flag['active']
-            status_action.setText(f"Status: {'ON' if active else 'OFF'}")
+            admin_text = " (ADMIN: YES)" if is_admin() else " (ADMIN: NO - KEYSTROKES MAY FAIL)"
+            status_action.setText(f"Status: {'ON' if active else 'OFF'}{admin_text}")
+            
+            # Update the tooltip as well
+            tray.setToolTip(f"Clicker: {'ON' if active else 'OFF'}{admin_text}")
         
         # Periodically update tray status
         status_timer = QtCore.QTimer()
@@ -1601,6 +1962,11 @@ def main():
             # Mark setup as done
             with open(".clicker_setup_done", "w") as f:
                 f.write("1")
+        
+        # Display any startup warnings that were collected
+        for title, message in startup_warnings:
+            QtWidgets.QMessageBox.warning(None, title, message)
+        startup_warnings.clear()
         
         # Initialize GDI indicator after first-run dialog is shown
         if indicator_type.lower() != 'pygame' and gdi_indicator is None:

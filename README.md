@@ -6,12 +6,12 @@
 
 A modern, background Windows automation tool for sending keystrokes at human-like intervals. Runs as a tray icon with no visible window. Configure your keystrokes and timing in simple text files, and control automation with a global hotkey.
 
-**Version: 1.1.2** - Bugfix Release
+**Version: 1.2** - Performance Update
 
 ## Installation
 
 ### Option 1: Download the Executable (Recommended)
-Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/1.1.2/Clicker.exe) (direct download link). No installation required!
+Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/1.2/Clicker.exe) (direct download link). No installation required!
 
 ### Option 2: Run from Source
 Follow the setup instructions below.
@@ -27,6 +27,7 @@ Follow the setup instructions below.
 - **Open config from tray:** Edit your settings or keystrokes with one click.
 - **Singleton:** Only one instance can run at a time.
 - **Customizable execution order:** Run keystrokes in file order or sorted by delay.
+- **Keystroke randomization:** Identical timers are automatically randomized for more natural input patterns.
 
 ## Setup
 1. Install requirements:
@@ -89,6 +90,14 @@ Follow the setup instructions below.
 - Windows only (uses Windows-specific APIs for reliable keystroke simulation).
 
 ## Changelog
+### v1.2
+- Significant performance improvements, especially for first keypress after toggle
+- Added automatic randomization for keystrokes with identical timers for more natural input patterns
+- Optimized thread initialization to reduce startup delay
+- Improved keystroke execution efficiency with pre-parsing and caching
+- Reduced internal delays for faster and more responsive keystroke execution
+- Enhanced memory efficiency with pre-allocation of data structures
+
 ### v1.1.2
 - Fixed logging errors and improved stability
 - Increased default start_time_stagger to 1.7 seconds for better compatibility

@@ -10,6 +10,10 @@
 # Note: The order of keys in this file matters if "order_obeyed" is set to true
 # in settings.json. When order_obeyed is false, keys will be sorted by delay.
 #
+# When multiple keys have the exact same delay value, they will be selected randomly
+# to avoid preferential treatment. This randomization happens both during initial
+# scheduling and when re-scheduling keystrokes after execution.
+#
 # Lines starting with # are comments and will be ignored.
 # Empty lines are also ignored.
 #

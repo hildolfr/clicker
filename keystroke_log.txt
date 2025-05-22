@@ -1,0 +1,897 @@
+2025-05-21 12:40:19,903 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 12:40:19,923 - DEBUG - Using custom icon.ico
+2025-05-21 12:40:20,001 - INFO - Hotkey bound to: ~
+2025-05-21 12:40:28,129 - DEBUG - Automation stopped
+2025-05-21 12:40:28,129 - DEBUG - Stopping file observer
+2025-05-21 12:45:41,555 - INFO - User declined to restart with admin privileges
+2025-05-21 12:45:41,590 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 12:45:41,616 - DEBUG - Using custom icon.ico
+2025-05-21 12:45:41,720 - INFO - Hotkey bound to: ~
+2025-05-21 12:45:44,926 - DEBUG - Automation stopped
+2025-05-21 12:45:44,926 - DEBUG - Stopping file observer
+2025-05-21 13:47:11,439 - INFO - User declined to restart with admin privileges
+2025-05-21 13:47:11,472 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 13:47:11,496 - DEBUG - Using custom icon.ico
+2025-05-21 13:47:11,585 - INFO - Hotkey bound to: ~
+2025-05-21 13:47:12,267 - INFO - User declined to restart with admin privileges
+    check_singleton()
+  File "C:\Users\User\Documents\clicker\main.py", line 275, in check_singleton
+2025-05-21 13:51:12,736 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 13:51:12,755 - DEBUG - Using custom icon.ico
+2025-05-21 13:51:12,836 - INFO - Hotkey bound to: ~
+2025-05-21 13:51:23,835 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 13:51:23,852 - DEBUG - Using custom icon.ico
+2025-05-21 13:51:24,055 - INFO - Hotkey bound to: ~
+2025-05-21 13:51:33,044 - DEBUG - Automation stopped
+2025-05-21 13:51:33,044 - DEBUG - Stopping file observer
+2025-05-21 13:51:35,714 - DEBUG - Automation stopped
+2025-05-21 13:51:35,714 - DEBUG - Stopping file observer
+2025-05-21 13:53:47,754 - INFO - User declined to restart with admin privileges
+2025-05-21 13:53:47,782 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 13:53:47,802 - DEBUG - Using custom icon.ico
+2025-05-21 13:53:48,042 - INFO - Hotkey bound to: ~
+2025-05-21 13:53:48,602 - INFO - User declined to restart with admin privileges
+2025-05-21 13:53:50,595 - WARNING - Attempted to start while another instance (PID: 13864) is running
+2025-05-21 13:53:56,022 - DEBUG - Automation stopped
+2025-05-21 13:53:56,022 - DEBUG - Stopping file observer
+2025-05-21 15:03:06,521 - INFO - Settings loaded: toggle_key=~, pause_time=0.5, order_obeyed=False
+2025-05-21 15:03:06,541 - DEBUG - Using custom icon.ico
+2025-05-21 15:03:06,635 - INFO - Hotkey bound to: ~
+2025-05-21 15:03:09,768 - DEBUG - Automation thread started
+2025-05-21 15:03:09,769 - DEBUG - Scheduled keystroke 2 (delay=3.0) to start at 0.00s from now
+2025-05-21 15:03:09,769 - INFO - Automation turned ON
+2025-05-21 15:03:09,769 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 0.50s from now
+2025-05-21 15:03:09,770 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 1.00s from now
+2025-05-21 15:03:09,770 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 1.50s from now
+2025-05-21 15:03:14,515 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:03:14,516 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:03:14,516 - DEBUG - Automation worker exiting
+2025-05-21 15:03:14,517 - INFO - Automation turned OFF
+2025-05-21 15:03:32,081 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False
+2025-05-21 15:03:32,082 - INFO - Hotkey bound to: ~
+2025-05-21 15:03:34,855 - DEBUG - Automation thread started
+2025-05-21 15:03:34,856 - DEBUG - Scheduled keystroke 2 (delay=3.0) to start at 0.00s from now
+2025-05-21 15:03:34,857 - INFO - Automation turned ON
+2025-05-21 15:03:34,857 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 1.50s from now
+2025-05-21 15:03:34,859 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 3.00s from now
+2025-05-21 15:03:34,859 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:03:38,140 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:03:38,141 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:03:38,141 - DEBUG - Automation worker exiting
+2025-05-21 15:03:38,142 - INFO - Automation turned OFF
+2025-05-21 15:08:31,228 - DEBUG - Automation thread started
+2025-05-21 15:08:31,228 - DEBUG - Scheduled keystroke 2 (delay=3.0) to start at 0.00s from now
+2025-05-21 15:08:31,231 - INFO - Automation turned ON
+2025-05-21 15:08:31,231 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 1.50s from now
+2025-05-21 15:08:31,232 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 3.00s from now
+2025-05-21 15:08:31,232 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:11:30,306 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:11:30,306 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:11:30,306 - DEBUG - Automation worker exiting
+2025-05-21 15:11:30,308 - INFO - Automation turned OFF
+2025-05-21 15:11:51,605 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False
+2025-05-21 15:11:51,605 - INFO - Hotkey bound to: ~
+2025-05-21 15:12:36,457 - DEBUG - Automation thread started
+2025-05-21 15:12:36,458 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:12:36,459 - INFO - Automation turned ON
+2025-05-21 15:12:36,459 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:12:36,460 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 3.00s from now
+2025-05-21 15:12:36,460 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:12:36,460 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:30:59,196 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:30:59,196 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:30:59,197 - DEBUG - Automation worker exiting
+2025-05-21 15:30:59,199 - INFO - Automation turned OFF
+2025-05-21 15:31:24,520 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False
+2025-05-21 15:31:24,521 - INFO - Hotkey bound to: ~
+2025-05-21 15:31:25,680 - DEBUG - Automation thread started
+2025-05-21 15:31:25,680 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:31:25,681 - INFO - Automation turned ON
+2025-05-21 15:31:25,681 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:31:25,682 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:31:25,682 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:31:25,682 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:31:25,683 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:33:56,858 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:33:56,858 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:33:56,859 - DEBUG - Automation worker exiting
+2025-05-21 15:33:56,860 - INFO - Automation turned OFF
+2025-05-21 15:34:29,079 - DEBUG - Automation thread started
+2025-05-21 15:34:29,079 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:34:29,081 - INFO - Automation turned ON
+2025-05-21 15:34:29,081 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:34:29,082 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:34:29,082 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:34:29,082 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:34:29,082 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:35:37,637 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:35:37,637 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:35:37,638 - DEBUG - Automation worker exiting
+2025-05-21 15:35:37,639 - INFO - Automation turned OFF
+2025-05-21 15:36:27,611 - DEBUG - Automation thread started
+2025-05-21 15:36:27,611 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:36:27,614 - INFO - Automation turned ON
+2025-05-21 15:36:27,614 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:36:27,615 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:36:27,615 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:36:27,615 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:36:27,616 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:41:44,460 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:41:44,485 - DEBUG - Automation worker exiting
+2025-05-21 15:41:44,487 - INFO - Automation turned OFF
+2025-05-21 15:43:18,692 - DEBUG - Automation thread started
+2025-05-21 15:43:18,692 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:43:18,694 - INFO - Automation turned ON
+2025-05-21 15:43:18,696 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:43:18,696 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:43:18,696 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:43:18,697 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:43:18,697 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:49:21,778 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:49:21,778 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:49:21,779 - DEBUG - Automation worker exiting
+2025-05-21 15:49:21,780 - INFO - Automation turned OFF
+2025-05-21 15:49:33,636 - DEBUG - Automation thread started
+2025-05-21 15:49:33,636 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:49:33,638 - INFO - Automation turned ON
+2025-05-21 15:49:33,638 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:49:33,639 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:49:33,639 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:49:33,639 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:49:33,639 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:49:53,548 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:49:53,548 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:49:53,549 - DEBUG - Automation worker exiting
+2025-05-21 15:49:53,551 - INFO - Automation turned OFF
+2025-05-21 15:50:26,107 - DEBUG - Automation thread started
+2025-05-21 15:50:26,107 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:50:26,109 - INFO - Automation turned ON
+2025-05-21 15:50:26,109 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:50:26,109 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:50:26,109 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:50:26,110 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:50:26,110 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:51:33,809 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:51:33,809 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:51:33,810 - DEBUG - Automation worker exiting
+2025-05-21 15:51:33,813 - INFO - Automation turned OFF
+2025-05-21 15:51:50,213 - DEBUG - Automation thread started
+2025-05-21 15:51:50,213 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:51:50,214 - INFO - Automation turned ON
+2025-05-21 15:51:50,214 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:51:50,215 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:51:50,215 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:51:50,215 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:51:50,216 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:52:44,370 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:52:44,370 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:52:44,370 - DEBUG - Automation worker exiting
+2025-05-21 15:52:44,372 - INFO - Automation turned OFF
+2025-05-21 15:53:13,013 - DEBUG - Automation thread started
+2025-05-21 15:53:13,013 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:53:13,014 - INFO - Automation turned ON
+2025-05-21 15:53:13,014 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:53:13,014 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:53:13,016 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:53:13,016 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:53:13,016 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:57:11,988 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:57:11,989 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:57:11,989 - DEBUG - Automation worker exiting
+2025-05-21 15:57:11,992 - INFO - Automation turned OFF
+2025-05-21 15:57:20,225 - DEBUG - Automation thread started
+2025-05-21 15:57:20,225 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:57:20,227 - INFO - Automation turned ON
+2025-05-21 15:57:20,227 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:57:20,228 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:57:20,228 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:57:20,228 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:57:20,228 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 15:59:09,914 - DEBUG - Waiting for automation thread to exit
+2025-05-21 15:59:09,914 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 15:59:09,916 - DEBUG - Automation worker exiting
+2025-05-21 15:59:09,920 - INFO - Automation turned OFF
+2025-05-21 15:59:14,145 - DEBUG - Automation thread started
+2025-05-21 15:59:14,145 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 15:59:14,146 - INFO - Automation turned ON
+2025-05-21 15:59:14,146 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 15:59:14,147 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 15:59:14,147 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 15:59:14,147 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 15:59:14,147 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:16:43,564 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:16:43,564 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 16:16:43,565 - DEBUG - Automation worker exiting
+2025-05-21 16:16:43,566 - INFO - Automation turned OFF
+2025-05-21 16:17:02,982 - DEBUG - Automation thread started
+2025-05-21 16:17:02,982 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:17:02,985 - INFO - Automation turned ON
+2025-05-21 16:17:02,986 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:17:02,986 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:17:02,986 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:17:02,987 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:17:02,987 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:17:03,244 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:17:03,244 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 16:17:03,245 - DEBUG - Automation worker exiting
+2025-05-21 16:17:03,246 - INFO - Automation turned OFF
+2025-05-21 16:17:03,276 - DEBUG - Automation thread started
+2025-05-21 16:17:03,276 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:17:03,278 - INFO - Automation turned ON
+2025-05-21 16:17:03,278 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:17:03,279 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:17:03,279 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:17:03,279 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:17:03,279 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:17:03,337 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:17:03,363 - DEBUG - Automation worker exiting
+2025-05-21 16:17:03,364 - INFO - Automation turned OFF
+2025-05-21 16:17:03,369 - DEBUG - Automation thread started
+2025-05-21 16:17:03,369 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:17:03,370 - INFO - Automation turned ON
+2025-05-21 16:17:03,370 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:17:03,372 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:17:03,372 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:17:03,372 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:17:03,372 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:17:03,431 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:17:03,457 - DEBUG - Automation worker exiting
+2025-05-21 16:17:03,458 - INFO - Automation turned OFF
+2025-05-21 16:17:03,476 - DEBUG - Automation thread started
+2025-05-21 16:17:03,477 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:17:03,479 - INFO - Automation turned ON
+2025-05-21 16:17:03,479 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:17:03,480 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:17:03,480 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:17:03,480 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:17:03,480 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:17:03,538 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:17:03,565 - DEBUG - Automation worker exiting
+2025-05-21 16:17:03,567 - INFO - Automation turned OFF
+2025-05-21 16:17:03,570 - DEBUG - Automation thread started
+2025-05-21 16:17:03,570 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:17:03,571 - INFO - Automation turned ON
+2025-05-21 16:17:03,572 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:17:03,572 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:17:03,573 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:17:03,573 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:17:03,573 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:17:03,630 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:17:03,656 - DEBUG - Automation worker exiting
+2025-05-21 16:17:03,657 - INFO - Automation turned OFF
+2025-05-21 16:17:03,663 - DEBUG - Automation thread started
+2025-05-21 16:17:03,663 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:17:03,664 - INFO - Automation turned ON
+2025-05-21 16:17:03,665 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:17:03,665 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:17:03,666 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:17:03,666 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:17:03,666 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:17:03,740 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:17:03,750 - DEBUG - Automation worker exiting
+2025-05-21 16:17:03,751 - INFO - Automation turned OFF
+2025-05-21 16:17:03,773 - DEBUG - Automation thread started
+2025-05-21 16:17:03,773 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:17:03,774 - INFO - Automation turned ON
+2025-05-21 16:17:03,775 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:17:03,775 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:17:03,775 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:17:03,776 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:17:03,776 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:18:56,630 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:18:56,630 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 16:18:56,631 - DEBUG - Automation worker exiting
+2025-05-21 16:18:56,632 - INFO - Automation turned OFF
+2025-05-21 16:19:00,547 - DEBUG - Automation thread started
+2025-05-21 16:19:00,547 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:19:00,549 - INFO - Automation turned ON
+2025-05-21 16:19:00,549 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:19:00,550 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:19:00,550 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:19:00,550 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:19:00,550 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:19:29,773 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:19:29,773 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 16:19:29,774 - DEBUG - Automation worker exiting
+2025-05-21 16:19:29,776 - INFO - Automation turned OFF
+2025-05-21 16:19:31,596 - DEBUG - Automation thread started
+2025-05-21 16:19:31,596 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:19:31,597 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:19:31,598 - INFO - Automation turned ON
+2025-05-21 16:19:31,598 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:19:31,599 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:19:31,599 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:19:31,599 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:24:29,612 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:24:29,613 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 16:24:29,613 - DEBUG - Automation worker exiting
+2025-05-21 16:24:29,615 - INFO - Automation turned OFF
+2025-05-21 16:24:38,524 - DEBUG - Automation thread started
+2025-05-21 16:24:38,524 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:24:38,525 - INFO - Automation turned ON
+2025-05-21 16:24:38,526 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:24:38,526 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:24:38,526 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:24:38,526 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:24:38,527 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:26:46,076 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:26:46,077 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 16:26:46,077 - DEBUG - Automation worker exiting
+2025-05-21 16:26:46,079 - INFO - Automation turned OFF
+2025-05-21 16:26:48,193 - DEBUG - Automation thread started
+2025-05-21 16:26:48,193 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:26:48,195 - INFO - Automation turned ON
+2025-05-21 16:26:48,196 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:26:48,196 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:26:48,196 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:26:48,197 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:26:48,197 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 16:58:15,250 - DEBUG - Waiting for automation thread to exit
+2025-05-21 16:58:15,250 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 16:58:15,250 - DEBUG - Automation worker exiting
+2025-05-21 16:58:15,253 - INFO - Automation turned OFF
+2025-05-21 16:58:25,894 - DEBUG - Automation thread started
+2025-05-21 16:58:25,894 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 16:58:25,896 - INFO - Automation turned ON
+2025-05-21 16:58:25,896 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 16:58:25,897 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 16:58:25,897 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 16:58:25,897 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 16:58:25,898 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:17:50,598 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:17:50,598 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:17:50,599 - DEBUG - Automation worker exiting
+2025-05-21 17:17:50,600 - INFO - Automation turned OFF
+2025-05-21 17:17:52,713 - DEBUG - Automation thread started
+2025-05-21 17:17:52,714 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:17:52,714 - INFO - Automation turned ON
+2025-05-21 17:17:52,715 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:17:52,715 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:17:52,715 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:17:52,715 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:17:52,715 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:18:10,510 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:18:10,510 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:18:10,511 - DEBUG - Automation worker exiting
+2025-05-21 17:18:10,512 - INFO - Automation turned OFF
+2025-05-21 17:18:22,841 - DEBUG - Automation thread started
+2025-05-21 17:18:22,841 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:18:22,842 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:18:22,842 - INFO - Automation turned ON
+2025-05-21 17:18:22,843 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:18:22,843 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:18:22,843 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:18:22,843 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:18:26,620 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:18:26,621 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:18:26,621 - DEBUG - Automation worker exiting
+2025-05-21 17:18:26,623 - INFO - Automation turned OFF
+2025-05-21 17:20:18,583 - DEBUG - Automation thread started
+2025-05-21 17:20:18,583 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:20:18,584 - INFO - Automation turned ON
+2025-05-21 17:20:18,585 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:20:18,585 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:20:18,585 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:20:18,585 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:20:18,585 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:40:22,998 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:40:22,998 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:40:22,999 - DEBUG - Automation worker exiting
+2025-05-21 17:40:23,001 - INFO - Automation turned OFF
+2025-05-21 17:40:25,473 - DEBUG - Automation thread started
+2025-05-21 17:40:25,474 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:40:25,475 - INFO - Automation turned ON
+2025-05-21 17:40:25,475 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:40:25,476 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:40:25,476 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:40:25,476 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:40:25,476 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:43:07,272 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:43:07,272 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:43:07,273 - DEBUG - Automation worker exiting
+2025-05-21 17:43:07,275 - INFO - Automation turned OFF
+2025-05-21 17:46:30,087 - DEBUG - Automation stopped
+2025-05-21 17:46:30,087 - DEBUG - Stopping file observer
+2025-05-21 17:52:12,823 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False
+2025-05-21 17:52:13,088 - ERROR - Failed to initialize pygame indicator: (87, 'SetLayeredWindowAttributes', 'The parameter is incorrect.')
+2025-05-21 17:52:13,115 - DEBUG - Using custom icon.ico
+2025-05-21 17:52:13,211 - INFO - Hotkey bound to: ~
+2025-05-21 17:52:19,149 - DEBUG - Automation thread started
+2025-05-21 17:52:19,149 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:52:19,151 - INFO - Automation turned ON
+2025-05-21 17:52:19,151 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:52:19,151 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:52:19,151 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:52:19,152 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:52:19,152 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:52:19,868 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:52:19,869 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:52:19,869 - DEBUG - Automation worker exiting
+2025-05-21 17:52:19,870 - INFO - Automation turned OFF
+2025-05-21 17:52:33,122 - DEBUG - Automation thread started
+2025-05-21 17:52:33,123 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:52:33,124 - INFO - Automation turned ON
+2025-05-21 17:52:33,124 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:52:33,126 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:52:33,126 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:52:33,126 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:52:33,126 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:52:35,866 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:52:35,866 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:52:35,867 - DEBUG - Automation worker exiting
+2025-05-21 17:52:35,868 - INFO - Automation turned OFF
+2025-05-21 17:52:51,323 - DEBUG - Automation stopped
+2025-05-21 17:52:51,323 - DEBUG - Stopping file observer
+2025-05-21 17:54:18,006 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False
+2025-05-21 17:54:18,006 - INFO - Initializing pygame visual indicator
+2025-05-21 17:54:18,239 - INFO - Pygame visual indicator started
+2025-05-21 17:54:18,240 - INFO - Pygame indicator initialized successfully
+2025-05-21 17:54:18,260 - DEBUG - Using custom icon.ico
+2025-05-21 17:54:18,348 - INFO - Hotkey bound to: ~
+2025-05-21 17:54:21,978 - DEBUG - Automation thread started
+2025-05-21 17:54:21,978 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:54:21,980 - INFO - Automation turned ON
+2025-05-21 17:54:21,980 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:54:21,981 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:54:21,981 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:54:21,981 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:54:21,981 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:54:24,025 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:54:24,025 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:54:24,025 - DEBUG - Automation worker exiting
+2025-05-21 17:54:24,027 - INFO - Automation turned OFF
+2025-05-21 17:54:30,685 - DEBUG - Automation thread started
+2025-05-21 17:54:30,686 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:54:30,688 - INFO - Automation turned ON
+2025-05-21 17:54:30,688 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:54:30,689 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:54:30,689 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:54:30,689 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:54:30,689 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:54:36,670 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:54:36,670 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:54:36,671 - DEBUG - Automation worker exiting
+2025-05-21 17:54:36,673 - INFO - Automation turned OFF
+2025-05-21 17:54:43,938 - DEBUG - Automation thread started
+2025-05-21 17:54:43,938 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:54:43,941 - INFO - Automation turned ON
+2025-05-21 17:54:43,941 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:54:43,942 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:54:43,942 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:54:43,942 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:54:43,942 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:54:44,365 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:54:44,365 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:54:44,365 - DEBUG - Automation worker exiting
+2025-05-21 17:54:44,368 - INFO - Automation turned OFF
+2025-05-21 17:55:02,800 - DEBUG - Automation stopped
+2025-05-21 17:55:02,800 - DEBUG - Stopping pygame indicator
+2025-05-21 17:55:02,861 - INFO - Pygame visual indicator stopped
+2025-05-21 17:55:02,862 - DEBUG - Stopping file observer
+2025-05-21 17:59:08,038 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False
+2025-05-21 17:59:08,039 - INFO - Initializing pygame visual indicator
+2025-05-21 17:59:08,213 - INFO - Pygame visual indicator started
+2025-05-21 17:59:08,213 - INFO - Pygame indicator initialized successfully
+2025-05-21 17:59:08,237 - DEBUG - Using custom icon.ico
+2025-05-21 17:59:08,414 - INFO - Hotkey bound to: ~
+2025-05-21 17:59:13,381 - DEBUG - Automation stopped
+2025-05-21 17:59:13,381 - DEBUG - Stopping pygame indicator
+2025-05-21 17:59:13,463 - INFO - Pygame visual indicator stopped
+2025-05-21 17:59:13,463 - DEBUG - Stopping file observer
+2025-05-21 17:59:18,031 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False
+2025-05-21 17:59:18,031 - INFO - Initializing pygame visual indicator
+2025-05-21 17:59:18,272 - INFO - Pygame visual indicator started
+2025-05-21 17:59:18,272 - INFO - Pygame indicator initialized successfully
+2025-05-21 17:59:18,294 - DEBUG - Using custom icon.ico
+2025-05-21 17:59:18,387 - INFO - Hotkey bound to: ~
+2025-05-21 17:59:20,334 - DEBUG - Automation stopped
+2025-05-21 17:59:20,334 - DEBUG - Stopping pygame indicator
+2025-05-21 17:59:20,403 - INFO - Pygame visual indicator stopped
+2025-05-21 17:59:20,404 - DEBUG - Stopping file observer
+2025-05-21 17:59:32,893 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False
+2025-05-21 17:59:32,893 - INFO - Initializing pygame visual indicator
+2025-05-21 17:59:33,140 - INFO - Pygame visual indicator started
+2025-05-21 17:59:33,140 - INFO - Pygame indicator initialized successfully
+2025-05-21 17:59:33,161 - DEBUG - Using custom icon.ico
+2025-05-21 17:59:33,585 - INFO - Hotkey bound to: ~
+2025-05-21 17:59:39,637 - DEBUG - Automation thread started
+2025-05-21 17:59:39,638 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:59:39,639 - INFO - Automation turned ON
+2025-05-21 17:59:39,639 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:59:39,639 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:59:39,639 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:59:39,639 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:59:39,639 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 17:59:42,427 - DEBUG - Waiting for automation thread to exit
+2025-05-21 17:59:42,427 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 17:59:42,427 - DEBUG - Automation worker exiting
+2025-05-21 17:59:42,428 - INFO - Automation turned OFF
+2025-05-21 17:59:53,025 - DEBUG - Automation thread started
+2025-05-21 17:59:53,025 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 17:59:53,027 - INFO - Automation turned ON
+2025-05-21 17:59:53,027 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 17:59:53,027 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 17:59:53,028 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 17:59:53,028 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 17:59:53,028 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:00:05,804 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:00:05,804 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:00:05,805 - DEBUG - Automation worker exiting
+2025-05-21 18:00:05,807 - INFO - Automation turned OFF
+2025-05-21 18:00:30,841 - DEBUG - Automation stopped
+2025-05-21 18:00:30,841 - DEBUG - Stopping pygame indicator
+2025-05-21 18:00:30,904 - INFO - Pygame visual indicator stopped
+2025-05-21 18:00:30,904 - DEBUG - Stopping file observer
+2025-05-21 18:03:01,982 - WARNING - Missing key 'indicator_type' in settings file, adding default: gdi
+2025-05-21 18:05:40,153 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:05:40,153 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:05:40,153 - INFO - GDI indicator initialized
+2025-05-21 18:05:40,154 - INFO - GDI visual indicator started
+2025-05-21 18:05:40,155 - INFO - GDI indicator initialized successfully
+2025-05-21 18:05:40,179 - DEBUG - Using custom icon.ico
+2025-05-21 18:05:40,292 - INFO - Hotkey bound to: ~
+2025-05-21 18:05:42,970 - DEBUG - Automation thread started
+2025-05-21 18:05:42,971 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:05:42,972 - INFO - Automation turned ON
+2025-05-21 18:05:42,972 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:05:42,973 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:05:42,973 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:05:42,973 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:05:42,973 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:05:44,116 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:05:44,117 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:05:44,117 - DEBUG - Automation worker exiting
+2025-05-21 18:05:44,119 - INFO - Automation turned OFF
+2025-05-21 18:05:45,625 - DEBUG - Automation thread started
+2025-05-21 18:05:45,625 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:05:45,627 - INFO - Automation turned ON
+2025-05-21 18:05:45,627 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:05:45,628 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:05:45,628 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:05:45,628 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:05:45,628 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:05:46,165 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:05:46,165 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:05:46,166 - DEBUG - Automation worker exiting
+2025-05-21 18:05:46,167 - INFO - Automation turned OFF
+2025-05-21 18:05:47,200 - DEBUG - Automation thread started
+2025-05-21 18:05:47,200 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:05:47,202 - INFO - Automation turned ON
+2025-05-21 18:05:47,202 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:05:47,203 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:05:47,203 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:05:47,203 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:05:47,203 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:05:47,605 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:05:47,605 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:05:47,606 - DEBUG - Automation worker exiting
+2025-05-21 18:05:47,608 - INFO - Automation turned OFF
+2025-05-21 18:05:50,958 - DEBUG - Automation thread started
+2025-05-21 18:05:50,959 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:05:50,960 - INFO - Automation turned ON
+2025-05-21 18:05:50,960 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:05:50,961 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:05:50,961 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:05:50,962 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:05:50,962 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:06:03,062 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:06:03,062 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:06:03,063 - DEBUG - Automation worker exiting
+2025-05-21 18:06:03,064 - INFO - Automation turned OFF
+2025-05-21 18:06:29,199 - DEBUG - Automation stopped
+2025-05-21 18:06:29,199 - DEBUG - Stopping GDI indicator
+2025-05-21 18:06:29,199 - INFO - GDI visual indicator stopped
+2025-05-21 18:06:29,200 - DEBUG - Stopping file observer
+2025-05-21 18:06:32,896 - INFO - User declined to restart with admin privileges
+2025-05-21 18:06:32,898 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:06:32,898 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:06:32,899 - INFO - GDI indicator initialized
+2025-05-21 18:06:32,899 - INFO - GDI visual indicator started
+2025-05-21 18:06:32,900 - INFO - GDI indicator initialized successfully
+2025-05-21 18:06:32,925 - DEBUG - Using custom icon.ico
+2025-05-21 18:06:33,047 - INFO - Hotkey bound to: ~
+2025-05-21 18:06:36,007 - INFO - User declined to restart with admin privileges
+2025-05-21 18:06:42,145 - DEBUG - Automation stopped
+2025-05-21 18:06:42,146 - DEBUG - Stopping GDI indicator
+2025-05-21 18:06:42,146 - INFO - GDI visual indicator stopped
+2025-05-21 18:06:42,147 - DEBUG - Stopping file observer
+2025-05-21 18:06:54,384 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:06:54,385 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:06:54,385 - INFO - GDI indicator initialized
+2025-05-21 18:06:54,386 - INFO - GDI visual indicator started
+2025-05-21 18:06:54,386 - INFO - GDI indicator initialized successfully
+2025-05-21 18:06:54,407 - DEBUG - Using custom icon.ico
+2025-05-21 18:06:54,502 - INFO - Hotkey bound to: ~
+2025-05-21 18:07:01,429 - DEBUG - Automation thread started
+2025-05-21 18:07:01,429 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:07:01,430 - INFO - Automation turned ON
+2025-05-21 18:07:01,431 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:07:01,431 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:07:01,431 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:07:01,431 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:07:01,431 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:07:07,975 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:07:07,976 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:07:07,976 - DEBUG - Automation worker exiting
+2025-05-21 18:07:07,977 - INFO - Automation turned OFF
+2025-05-21 18:07:39,828 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=pygame
+2025-05-21 18:07:39,831 - INFO - Hotkey bound to: ~
+2025-05-21 18:07:52,122 - DEBUG - Automation thread started
+2025-05-21 18:07:52,122 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:07:52,124 - INFO - Automation turned ON
+2025-05-21 18:07:52,124 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:07:52,125 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:07:52,125 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:07:52,126 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:07:52,126 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:07:54,393 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:07:54,393 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:07:54,394 - DEBUG - Automation worker exiting
+2025-05-21 18:07:54,395 - INFO - Automation turned OFF
+2025-05-21 18:07:57,914 - DEBUG - Automation stopped
+2025-05-21 18:07:57,914 - DEBUG - Stopping GDI indicator
+2025-05-21 18:07:57,914 - INFO - GDI visual indicator stopped
+2025-05-21 18:07:57,914 - DEBUG - Stopping file observer
+2025-05-21 18:08:39,700 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:08:39,701 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:08:39,745 - INFO - GDI indicator initialized
+2025-05-21 18:08:39,745 - INFO - GDI visual indicator started
+2025-05-21 18:08:39,746 - INFO - GDI indicator initialized successfully
+2025-05-21 18:08:39,765 - DEBUG - Using custom icon.ico
+2025-05-21 18:08:39,863 - INFO - Hotkey bound to: ~
+2025-05-21 18:08:44,998 - DEBUG - Automation thread started
+2025-05-21 18:08:44,998 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:08:44,999 - INFO - Automation turned ON
+2025-05-21 18:08:44,999 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:08:45,001 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:08:45,001 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:08:45,001 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:08:45,001 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:08:47,157 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:08:47,157 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:08:47,158 - DEBUG - Automation worker exiting
+2025-05-21 18:08:47,160 - INFO - Automation turned OFF
+2025-05-21 18:08:54,425 - DEBUG - Automation thread started
+2025-05-21 18:08:54,425 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:08:54,426 - INFO - Automation turned ON
+2025-05-21 18:08:54,427 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:08:54,427 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:08:54,428 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:08:54,428 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:08:54,428 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:08:59,645 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:08:59,645 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:08:59,646 - DEBUG - Automation worker exiting
+2025-05-21 18:08:59,647 - INFO - Automation turned OFF
+2025-05-21 18:09:43,153 - DEBUG - Automation stopped
+2025-05-21 18:09:43,153 - DEBUG - Stopping GDI indicator
+2025-05-21 18:09:43,160 - INFO - GDI visual indicator stopped
+2025-05-21 18:09:43,160 - DEBUG - Stopping file observer
+2025-05-21 18:10:50,479 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:10:50,480 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:10:50,498 - INFO - GDI indicator initialized
+2025-05-21 18:10:50,498 - INFO - GDI visual indicator started
+2025-05-21 18:10:50,499 - INFO - GDI indicator initialized successfully
+2025-05-21 18:10:50,523 - DEBUG - Using custom icon.ico
+2025-05-21 18:10:50,857 - INFO - Hotkey bound to: ~
+2025-05-21 18:10:53,653 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:10:53,656 - DEBUG - Automation thread started
+2025-05-21 18:10:53,656 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:10:53,658 - INFO - Automation turned ON
+2025-05-21 18:10:53,658 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:10:53,659 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:10:53,660 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:10:53,660 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:10:53,660 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:10:57,230 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:10:57,233 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:10:57,233 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:10:57,233 - DEBUG - Automation worker exiting
+2025-05-21 18:10:57,235 - INFO - Automation turned OFF
+2025-05-21 18:11:30,733 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:11:30,737 - DEBUG - Automation thread started
+2025-05-21 18:11:30,737 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:11:30,740 - INFO - Automation turned ON
+2025-05-21 18:11:30,740 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:11:30,741 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:11:30,741 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:11:30,742 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:11:30,742 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:11:31,565 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:11:31,566 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:11:31,568 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:11:31,568 - DEBUG - Automation worker exiting
+2025-05-21 18:11:31,570 - INFO - Automation turned OFF
+2025-05-21 18:11:37,056 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:11:37,059 - DEBUG - Automation thread started
+2025-05-21 18:11:37,059 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:11:37,060 - INFO - Automation turned ON
+2025-05-21 18:11:37,061 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:11:37,061 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:11:37,062 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:11:37,062 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:11:37,064 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:11:38,158 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:11:38,161 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:11:38,161 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:11:38,161 - DEBUG - Automation worker exiting
+2025-05-21 18:11:38,163 - INFO - Automation turned OFF
+2025-05-21 18:11:39,936 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:11:39,940 - DEBUG - Automation thread started
+2025-05-21 18:11:39,941 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:11:39,941 - INFO - Automation turned ON
+2025-05-21 18:11:39,942 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:11:39,942 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:11:39,942 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:11:39,943 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:11:39,943 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:11:40,453 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:11:40,456 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:11:40,456 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:11:40,457 - DEBUG - Automation worker exiting
+2025-05-21 18:11:40,458 - INFO - Automation turned OFF
+2025-05-21 18:11:43,517 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:11:43,519 - DEBUG - Automation thread started
+2025-05-21 18:11:43,519 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:11:43,520 - INFO - Automation turned ON
+2025-05-21 18:11:43,520 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:11:43,520 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:11:43,521 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:11:43,521 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:11:43,522 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:11:43,804 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:11:43,805 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:11:43,806 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:11:43,806 - DEBUG - Automation worker exiting
+2025-05-21 18:11:43,808 - INFO - Automation turned OFF
+2025-05-21 18:16:35,800 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:16:35,801 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:16:35,840 - INFO - GDI indicator initialized
+2025-05-21 18:16:35,841 - INFO - GDI visual indicator started
+2025-05-21 18:16:35,841 - INFO - GDI indicator initialized successfully
+2025-05-21 18:16:35,865 - DEBUG - Using custom icon.ico
+2025-05-21 18:16:35,954 - INFO - Hotkey bound to: ~
+2025-05-21 18:16:42,294 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:16:42,297 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:16:42,297 - DEBUG - Automation thread started
+2025-05-21 18:16:42,299 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:16:42,300 - INFO - Automation turned ON
+2025-05-21 18:16:42,300 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:16:42,301 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:16:42,302 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:16:42,302 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:17:03,603 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:17:03,605 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:17:03,605 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:17:03,606 - DEBUG - Automation worker exiting
+2025-05-21 18:17:03,607 - INFO - Automation turned OFF
+2025-05-21 18:19:38,135 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:19:38,136 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:19:38,166 - INFO - GDI indicator initialized
+2025-05-21 18:19:38,167 - INFO - GDI visual indicator started
+2025-05-21 18:19:38,167 - INFO - GDI indicator initialized successfully
+2025-05-21 18:19:38,189 - DEBUG - Using custom icon.ico
+2025-05-21 18:19:38,293 - INFO - Hotkey bound to: ~
+2025-05-21 18:19:44,569 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:19:44,571 - DEBUG - Automation thread started
+2025-05-21 18:19:44,572 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:19:44,572 - INFO - Automation turned ON
+2025-05-21 18:19:44,574 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:19:44,575 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:19:44,575 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:19:44,576 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:19:44,576 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:19:49,924 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:19:49,926 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:19:49,927 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:19:49,928 - DEBUG - Automation worker exiting
+2025-05-21 18:19:49,930 - INFO - Automation turned OFF
+2025-05-21 18:21:58,703 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:21:58,703 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:21:58,758 - INFO - GDI indicator initialized
+2025-05-21 18:21:58,759 - INFO - GDI visual indicator started
+2025-05-21 18:21:58,759 - INFO - GDI indicator initialized successfully
+2025-05-21 18:21:58,781 - DEBUG - Using custom icon.ico
+2025-05-21 18:21:58,965 - INFO - Hotkey bound to: ~
+2025-05-21 18:22:01,416 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:22:01,420 - DEBUG - Automation thread started
+2025-05-21 18:22:01,420 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:22:01,421 - INFO - Automation turned ON
+2025-05-21 18:22:01,421 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:22:01,422 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:22:01,423 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:22:01,423 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:22:01,423 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:22:07,580 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:22:07,584 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:22:07,584 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:22:07,585 - DEBUG - Automation worker exiting
+2025-05-21 18:22:07,586 - INFO - Automation turned OFF
+2025-05-21 18:31:01,245 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:31:01,246 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:31:01,259 - INFO - GDI indicator initialized
+2025-05-21 18:31:01,260 - INFO - GDI visual indicator started
+2025-05-21 18:31:01,260 - INFO - GDI indicator initialized successfully
+2025-05-21 18:31:01,280 - DEBUG - Using custom icon.ico
+2025-05-21 18:31:01,369 - INFO - Hotkey bound to: ~
+2025-05-21 18:31:03,829 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:31:03,832 - DEBUG - Automation thread started
+2025-05-21 18:31:03,832 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:31:03,834 - INFO - Automation turned ON
+2025-05-21 18:31:03,834 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:31:03,835 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:31:03,835 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:31:03,835 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:31:03,836 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:31:08,846 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:31:08,848 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:31:08,848 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:31:08,849 - DEBUG - Automation worker exiting
+2025-05-21 18:31:08,851 - INFO - Automation turned OFF
+2025-05-21 18:33:39,925 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:33:39,925 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:33:39,931 - INFO - GDI indicator initialized
+2025-05-21 18:33:39,931 - INFO - GDI visual indicator started
+2025-05-21 18:33:39,931 - INFO - GDI indicator initialized successfully
+2025-05-21 18:33:39,952 - DEBUG - Using custom icon.ico
+2025-05-21 18:33:40,119 - INFO - Hotkey bound to: ~
+2025-05-21 18:33:43,941 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:33:43,943 - DEBUG - Automation thread started
+2025-05-21 18:33:43,943 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:33:43,944 - INFO - Automation turned ON
+2025-05-21 18:33:43,945 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:33:43,947 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:33:43,947 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:33:43,948 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:33:43,948 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:33:49,768 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:33:49,770 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:33:49,770 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:33:49,771 - DEBUG - Automation worker exiting
+2025-05-21 18:33:49,772 - INFO - Automation turned OFF
+2025-05-21 18:38:02,016 - INFO - Settings loaded: toggle_key=~, pause_time=1.5, order_obeyed=False, indicator_type=gdi
+2025-05-21 18:38:02,017 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:38:02,032 - INFO - GDI indicator initialized
+2025-05-21 18:38:02,032 - INFO - GDI visual indicator started
+2025-05-21 18:38:02,032 - INFO - GDI indicator initialized successfully
+2025-05-21 18:38:02,052 - DEBUG - Using custom icon.ico
+2025-05-21 18:38:02,155 - INFO - Hotkey bound to: ~
+2025-05-21 18:38:05,215 - INFO - Setting GDI indicator state to: True
+2025-05-21 18:38:05,217 - DEBUG - Automation thread started
+2025-05-21 18:38:05,217 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 18:38:05,218 - INFO - Automation turned ON
+2025-05-21 18:38:05,218 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.50s from now
+2025-05-21 18:38:05,219 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.00s from now
+2025-05-21 18:38:05,219 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 4.50s from now
+2025-05-21 18:38:05,220 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.00s from now
+2025-05-21 18:38:05,220 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 7.50s from now
+2025-05-21 18:38:06,451 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:38:06,453 - DEBUG - Waiting for automation thread to exit
+2025-05-21 18:38:06,453 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 18:38:06,454 - DEBUG - Automation worker exiting
+2025-05-21 18:38:06,455 - INFO - Automation turned OFF
+2025-05-21 18:38:10,641 - DEBUG - GDI indicator hidden for menu interaction
+2025-05-21 18:38:15,473 - DEBUG - GDI indicator shown after menu interaction
+2025-05-21 18:38:15,474 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:38:15,475 - DEBUG - Automation stopped
+2025-05-21 18:38:15,475 - DEBUG - Stopping GDI indicator
+2025-05-21 18:38:15,475 - DEBUG - Stopping GDI indicator
+2025-05-21 18:38:15,479 - INFO - GDI visual indicator stopped
+2025-05-21 18:38:15,479 - DEBUG - Stopping file observer
+2025-05-21 18:56:24,226 - WARNING - Renaming legacy field 'pause_time' to 'start_time_stagger' with value: 2.0
+2025-05-21 18:56:24,226 - WARNING - Missing key 'indicator_type' in settings file, adding default: gdi
+2025-05-21 18:56:30,356 - INFO - Settings loaded: toggle_key=~, start_time_stagger=1.5, order_obeyed=False, indicator_type=gdi, global_cooldown=0.1
+2025-05-21 18:56:30,357 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 18:56:30,362 - INFO - GDI indicator initialized
+2025-05-21 18:56:30,363 - INFO - GDI visual indicator started
+2025-05-21 18:56:30,364 - INFO - GDI indicator initialized successfully
+2025-05-21 18:56:30,385 - DEBUG - Using custom icon.ico
+2025-05-21 18:56:30,472 - INFO - Hotkey bound to: ~
+2025-05-21 18:56:40,496 - DEBUG - GDI indicator hidden for menu interaction
+2025-05-21 18:56:42,099 - DEBUG - GDI indicator shown after menu interaction
+2025-05-21 18:56:42,100 - INFO - Setting GDI indicator state to: False
+2025-05-21 18:56:42,102 - DEBUG - Automation stopped
+2025-05-21 18:56:42,102 - DEBUG - Stopping GDI indicator
+2025-05-21 18:56:42,102 - DEBUG - Stopping GDI indicator
+2025-05-21 18:56:42,106 - INFO - GDI visual indicator stopped
+2025-05-21 18:56:42,106 - DEBUG - Stopping file observer

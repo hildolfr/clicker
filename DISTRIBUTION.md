@@ -1,4 +1,4 @@
-# Clicker Portable Distribution v1.1.2
+# Clicker Portable Distribution v1.2
 
 ## About This Distribution
 

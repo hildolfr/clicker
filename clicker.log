@@ -16206,3 +16206,179 @@ AttributeError: 'PyCBrush' object has no attribute 'DeleteObject'
 2025-05-21 18:56:42,107 - DEBUG - Cleanup: Removing lockfile
 2025-05-21 18:56:42,107 - INFO - All resources cleaned up
 2025-05-21 18:56:42,107 - INFO - Exiting application
+2025-05-21 21:23:47,072 - INFO - Starting Clicker application, Python 3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)], PyQt5 5.15.2
+2025-05-21 21:23:47,090 - WARNING - APPLICATION IS NOT RUNNING WITH ADMINISTRATOR PRIVILEGES
+2025-05-21 21:23:47,091 - WARNING - Keystroke functionality may not work correctly without admin rights
+2025-05-21 21:23:51,467 - INFO - User requested restart with admin privileges
+2025-05-21 21:23:54,408 - INFO - Starting Clicker application, Python 3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)], PyQt5 5.15.2
+2025-05-21 21:23:54,442 - INFO - Application is running with administrator privileges
+2025-05-21 21:23:54,443 - DEBUG - Created lock file with PID: 15448
+2025-05-21 21:23:54,444 - INFO - Settings loaded: toggle_key=~, start_time_stagger=1.7, order_obeyed=False, indicator_type=gdi, global_cooldown=1.5
+2025-05-21 21:23:54,445 - INFO - Loaded 6 keystroke configurations
+2025-05-21 21:23:54,467 - DEBUG - Using custom icon.ico
+2025-05-21 21:23:54,774 - INFO - Hotkey bound to: ~
+2025-05-21 21:23:54,775 - DEBUG - File change observer started
+2025-05-21 21:23:54,776 - INFO - Initializing GDI visual indicator (fullscreen compatible)
+2025-05-21 21:23:54,777 - INFO - Registered window class: ClickerGDIOverlay
+2025-05-21 21:23:54,782 - INFO - Created overlay window at position (2510, 1390)
+2025-05-21 21:23:54,782 - INFO - Window handle: 1836688
+2025-05-21 21:23:54,783 - INFO - GDI indicator initialized
+2025-05-21 21:23:54,784 - INFO - GDI visual indicator started
+2025-05-21 21:23:54,785 - INFO - GDI indicator initialized successfully
+2025-05-21 21:23:54,786 - INFO - Clicker application started successfully
+2025-05-21 21:23:58,919 - INFO - Setting GDI indicator state to: True
+2025-05-21 21:23:58,922 - INFO - Automation worker starting - Admin privileges: 1
+2025-05-21 21:23:58,922 - DEBUG - Set automation thread priority to above normal
+2025-05-21 21:23:58,924 - INFO - Sorting keystrokes by delay value (order_obeyed=False)
+2025-05-21 21:23:58,924 - DEBUG - Automation thread started
+2025-05-21 21:23:58,925 - DEBUG - Scheduled keystroke 2 (delay=2.2) to start at 0.00s from now
+2025-05-21 21:23:58,926 - INFO - Automation turned ON
+2025-05-21 21:23:58,928 - DEBUG - Scheduled keystroke 3 (delay=9.0) to start at 1.70s from now
+2025-05-21 21:23:58,929 - DEBUG - Scheduled keystroke 4 (delay=11.0) to start at 3.40s from now
+2025-05-21 21:23:58,930 - INFO - Randomizing 3 keystrokes with identical delay value 50.0
+2025-05-21 21:23:58,931 - DEBUG - Scheduled keystroke S-2 (delay=50.0) to start at 5.10s from now
+2025-05-21 21:23:58,933 - DEBUG - Scheduled keystroke C-5 (delay=50.0) to start at 6.80s from now
+2025-05-21 21:23:58,933 - DEBUG - Scheduled keystroke 6 (delay=50.0) to start at 8.50s from now
+2025-05-21 21:23:58,934 - INFO - Initial schedule created with 6 keystrokes
+2025-05-21 21:23:58,935 - INFO - Pre-parsed: 2 (VK: 0x32) in 0.0s
+2025-05-21 21:23:58,936 - INFO - Pre-parsed: 3 (VK: 0x33) in 1.7s
+2025-05-21 21:23:58,937 - INFO - Pre-parsed: 4 (VK: 0x34) in 3.4s
+2025-05-21 21:23:58,937 - INFO - Pre-parsed: S-2 (VK: 0x32) in 5.1s
+2025-05-21 21:23:58,938 - INFO - Pre-parsed: C-5 (VK: 0x35) in 6.8s
+2025-05-21 21:23:58,940 - INFO - Next scheduled: 2 in 0.0s
+2025-05-21 21:23:58,941 - INFO - Next scheduled: 3 in 1.7s
+2025-05-21 21:23:58,942 - INFO - Next scheduled: 4 in 3.4s
+2025-05-21 21:23:58,943 - INFO - Next scheduled: S-2 in 5.1s
+2025-05-21 21:23:58,943 - INFO - Next scheduled: C-5 in 6.8s
+2025-05-21 21:23:58,944 - INFO - Sending cached keystroke: 2 (VK: 0x32)
+2025-05-21 21:23:58,945 - DEBUG - Sending key combination: modifiers=[], key=2
+2025-05-21 21:23:58,946 - DEBUG - Sending KEY DOWN event for VK code: 0x32
+2025-05-21 21:23:58,963 - DEBUG - Sending KEY UP event for VK code: 0x32
+2025-05-21 21:23:58,970 - DEBUG - Successfully sent key combination: [], 2
+2025-05-21 21:23:58,970 - INFO - Successfully sent keystroke: 2 (total executed: 1)
+2025-05-21 21:24:00,632 - INFO - Sending cached keystroke: 3 (VK: 0x33)
+2025-05-21 21:24:00,633 - DEBUG - Sending key combination: modifiers=[], key=3
+2025-05-21 21:24:00,633 - DEBUG - Sending KEY DOWN event for VK code: 0x33
+2025-05-21 21:24:00,651 - DEBUG - Sending KEY UP event for VK code: 0x33
+2025-05-21 21:24:00,657 - DEBUG - Successfully sent key combination: [], 3
+2025-05-21 21:24:00,658 - INFO - Successfully sent keystroke: 3 (total executed: 2)
+2025-05-21 21:24:01,174 - INFO - Sending cached keystroke: 2 (VK: 0x32)
+2025-05-21 21:24:01,174 - DEBUG - Sending key combination: modifiers=[], key=2
+2025-05-21 21:24:01,176 - DEBUG - Sending KEY DOWN event for VK code: 0x32
+2025-05-21 21:24:01,193 - DEBUG - Sending KEY UP event for VK code: 0x32
+2025-05-21 21:24:01,199 - DEBUG - Successfully sent key combination: [], 2
+2025-05-21 21:24:01,201 - INFO - Successfully sent keystroke: 2 (total executed: 3)
+2025-05-21 21:24:01,201 - DEBUG - Global cooldown enforced for 4, delaying by 0.377s
+2025-05-21 21:24:02,711 - INFO - Preparing to execute keystroke: 4 (execution #4)
+2025-05-21 21:24:02,711 - DEBUG - Parsed keystroke: 4 -> mods=[], key=4
+2025-05-21 21:24:02,713 - INFO - Sending keystroke: 4 (VK: 0x34)
+2025-05-21 21:24:02,714 - DEBUG - Sending key combination: modifiers=[], key=4
+2025-05-21 21:24:02,715 - DEBUG - Sending KEY DOWN event for VK code: 0x34
+2025-05-21 21:24:02,732 - DEBUG - Sending KEY UP event for VK code: 0x34
+2025-05-21 21:24:02,738 - DEBUG - Successfully sent key combination: [], 4
+2025-05-21 21:24:02,738 - INFO - Successfully sent keystroke: 4 (total executed: 4)
+2025-05-21 21:24:02,739 - INFO - Re-scheduled 4 for execution in 11.0s
+2025-05-21 21:24:02,740 - DEBUG - Global cooldown enforced for 2, delaying by 0.837s
+2025-05-21 21:24:04,247 - INFO - Preparing to execute keystroke: 2 (execution #5)
+2025-05-21 21:24:04,247 - DEBUG - Parsed keystroke: 2 -> mods=[], key=2
+2025-05-21 21:24:04,248 - INFO - Sending keystroke: 2 (VK: 0x32)
+2025-05-21 21:24:04,249 - DEBUG - Sending key combination: modifiers=[], key=2
+2025-05-21 21:24:04,250 - DEBUG - Sending KEY DOWN event for VK code: 0x32
+2025-05-21 21:24:04,268 - DEBUG - Sending KEY UP event for VK code: 0x32
+2025-05-21 21:24:04,274 - DEBUG - Successfully sent key combination: [], 2
+2025-05-21 21:24:04,275 - INFO - Successfully sent keystroke: 2 (total executed: 5)
+2025-05-21 21:24:04,276 - DEBUG - Re-scheduled 2 for execution in 2.2s
+2025-05-21 21:24:04,277 - DEBUG - Global cooldown enforced for S-2, delaying by 1.750s
+2025-05-21 21:24:05,783 - INFO - Preparing to execute keystroke: S-2 (execution #6)
+2025-05-21 21:24:05,784 - DEBUG - Parsed keystroke: S-2 -> mods=['shift'], key=2
+2025-05-21 21:24:05,785 - INFO - Sending keystroke: S-2 (VK: 0x32)
+2025-05-21 21:24:05,786 - DEBUG - Sending key combination: modifiers=['shift'], key=2
+2025-05-21 21:24:05,787 - DEBUG - Sending KEY DOWN event for VK code: 0x10
+2025-05-21 21:24:05,804 - DEBUG - Sending KEY DOWN event for VK code: 0x32
+2025-05-21 21:24:05,821 - DEBUG - Sending KEY UP event for VK code: 0x32
+2025-05-21 21:24:05,838 - DEBUG - Sending KEY UP event for VK code: 0x10
+2025-05-21 21:24:05,844 - DEBUG - Successfully sent key combination: ['shift'], 2
+2025-05-21 21:24:05,845 - INFO - Successfully sent keystroke: S-2 (total executed: 6)
+2025-05-21 21:24:05,846 - INFO - Re-scheduled S-2 for execution in 50.0s
+2025-05-21 21:24:05,847 - DEBUG - Global cooldown enforced for C-5, delaying by 1.621s
+2025-05-21 21:24:07,350 - INFO - Preparing to execute keystroke: C-5 (execution #7)
+2025-05-21 21:24:07,350 - DEBUG - Parsed keystroke: C-5 -> mods=['ctrl'], key=5
+2025-05-21 21:24:07,352 - INFO - Sending keystroke: C-5 (VK: 0x35)
+2025-05-21 21:24:07,353 - DEBUG - Sending key combination: modifiers=['ctrl'], key=5
+2025-05-21 21:24:07,353 - DEBUG - Sending KEY DOWN event for VK code: 0x11
+2025-05-21 21:24:07,371 - DEBUG - Sending KEY DOWN event for VK code: 0x35
+2025-05-21 21:24:07,387 - DEBUG - Sending KEY UP event for VK code: 0x35
+2025-05-21 21:24:07,406 - DEBUG - Sending KEY UP event for VK code: 0x11
+2025-05-21 21:24:07,413 - DEBUG - Successfully sent key combination: ['ctrl'], 5
+2025-05-21 21:24:07,413 - INFO - Successfully sent keystroke: C-5 (total executed: 7)
+2025-05-21 21:24:07,415 - INFO - Re-scheduled C-5 for execution in 50.0s
+2025-05-21 21:24:07,415 - DEBUG - Global cooldown enforced for 2, delaying by 2.437s
+2025-05-21 21:24:08,916 - INFO - Preparing to execute keystroke: 2 (execution #8)
+2025-05-21 21:24:08,917 - DEBUG - Parsed keystroke: 2 -> mods=[], key=2
+2025-05-21 21:24:08,918 - INFO - Sending keystroke: 2 (VK: 0x32)
+2025-05-21 21:24:08,919 - DEBUG - Sending key combination: modifiers=[], key=2
+2025-05-21 21:24:08,920 - DEBUG - Sending KEY DOWN event for VK code: 0x32
+2025-05-21 21:24:08,937 - DEBUG - Sending KEY UP event for VK code: 0x32
+2025-05-21 21:24:08,943 - DEBUG - Successfully sent key combination: [], 2
+2025-05-21 21:24:08,944 - INFO - Successfully sent keystroke: 2 (total executed: 8)
+2025-05-21 21:24:08,945 - DEBUG - Re-scheduled 2 for execution in 2.2s
+2025-05-21 21:24:08,946 - DEBUG - Global cooldown enforced for 6, delaying by 3.020s
+2025-05-21 21:24:10,453 - INFO - Preparing to execute keystroke: 6 (execution #9)
+2025-05-21 21:24:10,454 - DEBUG - Parsed keystroke: 6 -> mods=[], key=6
+2025-05-21 21:24:10,455 - INFO - Sending keystroke: 6 (VK: 0x36)
+2025-05-21 21:24:10,456 - DEBUG - Sending key combination: modifiers=[], key=6
+2025-05-21 21:24:10,456 - DEBUG - Sending KEY DOWN event for VK code: 0x36
+2025-05-21 21:24:10,474 - DEBUG - Sending KEY UP event for VK code: 0x36
+2025-05-21 21:24:10,481 - DEBUG - Successfully sent key combination: [], 6
+2025-05-21 21:24:10,482 - INFO - Successfully sent keystroke: 6 (total executed: 9)
+2025-05-21 21:24:10,484 - INFO - Re-scheduled 6 for execution in 50.0s
+2025-05-21 21:24:10,484 - DEBUG - Global cooldown enforced for 3, delaying by 2.323s
+2025-05-21 21:24:11,989 - INFO - Preparing to execute keystroke: 3 (execution #10)
+2025-05-21 21:24:11,990 - DEBUG - Parsed keystroke: 3 -> mods=[], key=3
+2025-05-21 21:24:11,990 - INFO - Sending keystroke: 3 (VK: 0x33)
+2025-05-21 21:24:11,992 - DEBUG - Sending key combination: modifiers=[], key=3
+2025-05-21 21:24:11,993 - DEBUG - Sending KEY DOWN event for VK code: 0x33
+2025-05-21 21:24:12,010 - DEBUG - Sending KEY UP event for VK code: 0x33
+2025-05-21 21:24:12,017 - DEBUG - Successfully sent key combination: [], 3
+2025-05-21 21:24:12,019 - INFO - Successfully sent keystroke: 3 (total executed: 10)
+2025-05-21 21:24:12,019 - DEBUG - Re-scheduled 3 for execution in 9.0s
+2025-05-21 21:24:12,020 - DEBUG - Global cooldown enforced for 2, delaying by 2.373s
+2025-05-21 21:24:13,527 - INFO - Preparing to execute keystroke: 2 (execution #11)
+2025-05-21 21:24:13,527 - DEBUG - Parsed keystroke: 2 -> mods=[], key=2
+2025-05-21 21:24:13,530 - INFO - Sending keystroke: 2 (VK: 0x32)
+2025-05-21 21:24:13,531 - DEBUG - Sending key combination: modifiers=[], key=2
+2025-05-21 21:24:13,532 - DEBUG - Sending KEY DOWN event for VK code: 0x32
+2025-05-21 21:24:13,549 - DEBUG - Sending KEY UP event for VK code: 0x32
+2025-05-21 21:24:13,555 - DEBUG - Successfully sent key combination: [], 2
+2025-05-21 21:24:13,557 - INFO - Successfully sent keystroke: 2 (total executed: 11)
+2025-05-21 21:24:13,557 - DEBUG - Re-scheduled 2 for execution in 2.2s
+2025-05-21 21:24:13,558 - DEBUG - Global cooldown enforced for 4, delaying by 1.317s
+2025-05-21 21:24:15,061 - INFO - Preparing to execute keystroke: 4 (execution #12)
+2025-05-21 21:24:15,061 - DEBUG - Parsed keystroke: 4 -> mods=[], key=4
+2025-05-21 21:24:15,063 - INFO - Sending keystroke: 4 (VK: 0x34)
+2025-05-21 21:24:15,063 - DEBUG - Sending key combination: modifiers=[], key=4
+2025-05-21 21:24:15,064 - DEBUG - Sending KEY DOWN event for VK code: 0x34
+2025-05-21 21:24:15,081 - DEBUG - Sending KEY UP event for VK code: 0x34
+2025-05-21 21:24:15,088 - DEBUG - Successfully sent key combination: [], 4
+2025-05-21 21:24:15,090 - INFO - Successfully sent keystroke: 4 (total executed: 12)
+2025-05-21 21:24:15,090 - INFO - Re-scheduled 4 for execution in 11.0s
+2025-05-21 21:24:15,091 - DEBUG - Global cooldown enforced for 2, delaying by 0.833s
+2025-05-21 21:24:15,929 - INFO - Setting GDI indicator state to: False
+2025-05-21 21:24:15,931 - DEBUG - Waiting for automation thread to exit
+2025-05-21 21:24:15,931 - DEBUG - Automation worker received shutdown signal during wait
+2025-05-21 21:24:15,932 - INFO - Automation worker exiting - executed 12 keystrokes total
+2025-05-21 21:24:15,934 - INFO - Automation turned OFF
+2025-05-21 21:24:19,805 - DEBUG - GDI indicator hidden for menu interaction
+2025-05-21 21:24:23,450 - DEBUG - GDI indicator shown after menu interaction
+2025-05-21 21:24:23,451 - INFO - Starting application cleanup for exit
+2025-05-21 21:24:23,452 - INFO - Setting GDI indicator state to: False
+2025-05-21 21:24:23,455 - DEBUG - Automation stopped
+2025-05-21 21:24:23,456 - DEBUG - Stopping GDI indicator
+2025-05-21 21:24:23,457 - DEBUG - Stopping GDI indicator
+2025-05-21 21:24:23,457 - DEBUG - GDI render loop exiting
+2025-05-21 21:24:23,465 - INFO - GDI visual indicator stopped
+2025-05-21 21:24:23,465 - DEBUG - Stopping file observer
+2025-05-21 21:24:23,467 - DEBUG - Observer thread joined
+2025-05-21 21:24:23,467 - DEBUG - Cleanup: Removing lockfile
+2025-05-21 21:24:23,468 - INFO - All resources cleaned up
+2025-05-21 21:24:23,468 - INFO - Exiting application

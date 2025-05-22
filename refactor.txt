@@ -1,5 +1,5 @@
 Refactor: Serialized, Human-like Automation Scheduling with Visual Indicators
-Version: 1.1.2 (Bugfix Release)
+Version: 1.2 (Performance Update)
 Date: May 2025
 
 Summary of Major Changes:
@@ -42,3 +42,45 @@ v1.1.2:
 v1.1.1:
 - Fixed a bug where the GDI overlay was drawn on top of the first-run dialogue for new users, making it difficult to see and interact with the setup instructions.
 - The fix delays initialization of the GDI indicator until after the first-run dialogue is dismissed, ensuring new users have a smooth onboarding experience. 
+
+Refactoring and Improvement Notes:
+
+1. Made entire codebase more error-resistant with extensive try/except blocks.
+2. Improved system tray behavior with proper cleanup on exit.
+3. Added enhanced visual indicators - both windowed (pygame) and fullscreen (GDI).
+4. Added file watching to detect and reload configuration changes.
+5. Added proper thread management with cleanup and safety measures.
+6. Added PID check for singleton behavior.
+7. Added memory-efficient keystroke scheduling system.
+8. Added heap-based scheduling system for keystroke timing precision.
+9. Added start_time_stagger and global_cooldown timing controls.
+10. Added order_obeyed parameter to control keystroke execution order.
+11. Improved logging with rotation and detailed status information.
+12. Improved settings migration for backward compatibility when upgrading from previous versions.
+13. Added keyboard hook handling with automatic restart on hotkey change.
+14. Added detailed comments throughout to explain complex behaviors.
+15. Added error recovery mechanisms to prevent crashes in corner cases.
+16. Implemented automated randomization for keystrokes with identical timers.
+17. Optimized thread initialization and execution for faster responsiveness.
+18. Improved first keystroke performance with pre-parsing and caching.
+19. Enhanced memory efficiency through data structure pre-allocation.
+20. Reduced internal delays for faster keystroke execution.
+
+Release Notes:
+
+v1.2:
+- Significant performance improvements, especially for first keypress responsiveness
+- Added automatic randomization for keystrokes with identical timers
+- Optimized thread initialization to reduce startup delay
+- Improved keystroke execution efficiency with pre-parsing and caching
+- Reduced internal delays for faster and more responsive keystroke execution
+- Enhanced memory efficiency with pre-allocation of data structures
+
+v1.1.2:
+- Fixed logging errors and improved stability
+- Increased default start_time_stagger to 1.7 seconds for better compatibility
+- Increased default global_cooldown to 1.5 seconds for more human-like interactions
+
+v1.1.1:
+- Fixed bug where GDI overlay was drawn on top of the first-run dialogue for new users.
+- Fixed minor UI issues. 
