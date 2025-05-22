@@ -1,5 +1,7 @@
 {
     "toggle_key": "~",
-    "pause_time": 0.5,
-    "order_obeyed": false
+    "start_time_stagger": 1.5,
+    "order_obeyed": false,
+    "indicator_type": "gdi",
+    "global_cooldown": 0.1
 }

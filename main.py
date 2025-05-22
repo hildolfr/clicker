@@ -17,6 +17,9 @@ import logging
 import win32gui
 import win32con
 import traceback
+import pygame  # Added pygame for visual indicator
+import win32api
+import win32ui
 
 # Hide console window
 if sys.platform == 'win32':
@@ -45,6 +48,473 @@ logging.info(f"Starting Clicker application, Python {sys.version}, PyQt5 {QtCore
 SETTINGS_FILE = 'settings.json'
 KEYSTROKES_FILE = 'keystrokes.txt'
 LOCKFILE = 'clicker.lock'
+
+# Pygame Visual Indicator
+class PygameIndicator:
+    """Visual indicator using Pygame to show automation status."""
+    def __init__(self):
+        # Position window in the middle-right of the screen (must be set before pygame.init())
+        screen_width, screen_height = pyautogui.size()
+        self.width, self.height = 150, 50
+        position_x = screen_width - self.width - 20
+        position_y = (screen_height // 2) - (self.height // 2)  # Center vertically
+        os.environ['SDL_VIDEO_WINDOW_POS'] = f"{position_x},{position_y}"
+        
+        # Initialize pygame
+        pygame.init()
+        
+        # Create a small transparent window
+        self.screen = pygame.display.set_mode((self.width, self.height), pygame.NOFRAME)
+        pygame.display.set_caption('Clicker Status')
+        
+        # Make window always on top and semi-transparent
+        hwnd = pygame.display.get_wm_info()['window']
+        
+        # Set window style: layered, topmost, and transparent to mouse clicks
+        style = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        style |= win32con.WS_EX_LAYERED | win32con.WS_EX_TRANSPARENT
+        win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE, style)
+        
+        # Set window position to ensure it's in the right location
+        win32gui.SetWindowPos(
+            hwnd, 
+            win32con.HWND_TOPMOST,
+            position_x, position_y, 
+            self.width, self.height, 
+            win32con.SWP_SHOWWINDOW
+        )
+        
+        # Set window transparency (initially 80% opaque)
+        self.hwnd = hwnd
+        self.alpha = 204  # Initial alpha (80% of 255)
+        win32gui.SetLayeredWindowAttributes(hwnd, 0, self.alpha, win32con.LWA_ALPHA)
+        
+        # Initialize font
+        pygame.font.init()
+        self.font = pygame.font.SysFont('Arial', 14)
+        if not self.font:
+            # Fallback to default font if Arial is not available
+            self.font = pygame.font.Font(None, 14)
+        
+        self.active = False
+        self.running = True
+        self.thread = None
+        self.update_timer = 0
+        self.flash_state = False
+        
+        # Fade effect variables
+        self.last_activity_time = pygame.time.get_ticks()
+        self.fade_start_delay = 3000  # Start fading after 3 seconds of no activity
+        self.fade_duration = 2000     # Complete fade over 2 seconds
+        self.min_alpha = 51           # Minimum alpha (20% visibility)
+        self.is_fading = False
+        
+    def start(self):
+        """Start the indicator thread."""
+        self.running = True
+        self.thread = threading.Thread(target=self._render_loop)
+        self.thread.daemon = True
+        self.thread.start()
+        logging.info("Pygame visual indicator started")
+        
+    def stop(self):
+        """Stop the indicator thread."""
+        self.running = False
+        if self.thread and self.thread.is_alive():
+            self.thread.join(timeout=0.5)
+        pygame.quit()
+        logging.info("Pygame visual indicator stopped")
+        
+    def set_state(self, active):
+        """Set the indicator's active state."""
+        # Reset fade effect and restore full visibility when state changes
+        if self.active != active:
+            self.alpha = 204  # Reset to full visibility
+            win32gui.SetLayeredWindowAttributes(self.hwnd, 0, self.alpha, win32con.LWA_ALPHA)
+            self.is_fading = False
+            self.last_activity_time = pygame.time.get_ticks()
+        
+        self.active = active
+        
+    def _render_loop(self):
+        """Main rendering loop for the indicator."""
+        clock = pygame.time.Clock()
+        
+        try:
+            while self.running:
+                current_time = pygame.time.get_ticks()
+                
+                # Handle events to prevent window from becoming unresponsive
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.running = False
+                
+                # Clear screen with a base color
+                bg_color = (30, 30, 30)  # Dark gray background
+                self.screen.fill(bg_color)
+                
+                # Update flash state every 500ms when active
+                if self.active and current_time - self.update_timer > 500:
+                    self.flash_state = not self.flash_state
+                    self.update_timer = current_time
+                    # Reset fade timer when flashing
+                    self.last_activity_time = current_time
+                    self.is_fading = False
+                    self.alpha = 204  # Reset to full visibility
+                
+                # Handle fade effect when not active or after period of inactivity
+                if not self.active and current_time - self.last_activity_time > self.fade_start_delay:
+                    if not self.is_fading:
+                        self.is_fading = True
+                        self.fade_start_time = current_time
+                    
+                    # Calculate fade progress
+                    fade_progress = min(1.0, (current_time - self.fade_start_time) / self.fade_duration)
+                    # Linear interpolation from full alpha to min_alpha
+                    self.alpha = int(204 - (204 - self.min_alpha) * fade_progress)
+                    
+                    # Apply new alpha
+                    win32gui.SetLayeredWindowAttributes(self.hwnd, 0, self.alpha, win32con.LWA_ALPHA)
+                
+                # Draw status indicator
+                if self.active:
+                    # Draw flashing green indicator when active
+                    indicator_color = (0, 255, 0) if self.flash_state else (0, 200, 0)
+                    pygame.draw.circle(self.screen, indicator_color, (30, self.height // 2), 15)
+                    
+                    # Draw "AUTOMATION ON" text
+                    text = self.font.render("AUTOMATION ON", True, (255, 255, 255))
+                    self.screen.blit(text, (55, self.height // 2 - 7))
+                else:
+                    # Draw gray indicator when inactive
+                    pygame.draw.circle(self.screen, (100, 100, 100), (30, self.height // 2), 15)
+                    
+                    # Draw "AUTOMATION OFF" text
+                    text = self.font.render("AUTOMATION OFF", True, (200, 200, 200))
+                    self.screen.blit(text, (55, self.height // 2 - 7))
+                
+                # Update display
+                pygame.display.flip()
+                
+                # Cap at 30 FPS to save CPU
+                clock.tick(30)
+        except Exception as e:
+            logging.error(f"Error in pygame render loop: {e}")
+            logging.error(traceback.format_exc())
+
+# GDI-based Indicator for Fullscreen Games
+class GDIIndicator:
+    """GDI-based visual indicator that can overlay on fullscreen applications."""
+    def __init__(self):
+        # Configuration
+        self.width = 30  # Smaller width for simple rectangle
+        self.height = 30  # Square shape
+        self.active = False
+        self.running = True
+        self.thread = None
+        self.flash_state = False
+        self.last_update_time = 0
+        self.last_activity_time = time.time()
+        self.fade_start_delay = 1.0  # Start fading after 1 second of inactivity
+        self.fade_duration = 1.5     # Complete fade over 1.5 seconds
+        self.alpha = 204             # Initial alpha (80% of 255)
+        self.min_alpha = 0           # Fade completely away
+        self.is_fading = False
+        self.hwnd = None
+        self.hdc = None
+        self.hidden_for_menu = False  # Track if we've hidden the window for menu interaction
+        
+        # Position in bottom-right of primary screen
+        screen_width = win32api.GetSystemMetrics(win32con.SM_CXSCREEN)
+        screen_height = win32api.GetSystemMetrics(win32con.SM_CYSCREEN)
+        self.position_x = screen_width - self.width - 20
+        self.position_y = screen_height - self.height - 20
+        
+        # Thread synchronization
+        self.exit_event = threading.Event()
+        
+        # Create an overlay window
+        self._create_overlay_window()
+        logging.info("GDI indicator initialized")
+    
+    def _create_overlay_window(self):
+        """Create a layered window that can overlay on fullscreen applications."""
+        try:
+            # Define window class name
+            class_name = "ClickerGDIOverlay"
+            
+            # First check if the class is already registered
+            try:
+                wndclass = win32gui.GetClassInfo(0, class_name)
+                # Class exists, use existing
+                logging.info("Using existing window class")
+            except:
+                # Class doesn't exist, register it
+                wc = win32gui.WNDCLASS()
+                wc.lpszClassName = class_name
+                wc.style = win32con.CS_HREDRAW | win32con.CS_VREDRAW
+                wc.hCursor = win32gui.LoadCursor(0, win32con.IDC_ARROW)
+                hinst = win32api.GetModuleHandle(None)
+                wc.hInstance = hinst
+                wc.hbrBackground = win32con.COLOR_WINDOW + 1
+                wc.lpfnWndProc = self._wnd_proc
+                
+                # Register class
+                self.atom = win32gui.RegisterClass(wc)
+                logging.info(f"Registered window class: {class_name}")
+            
+            # Create window (layered, topmost, with no visible frame)
+            style = win32con.WS_POPUP
+            
+            # Important: Use WS_EX_NOACTIVATE to prevent the window from stealing focus
+            # and WS_EX_TRANSPARENT to allow mouse events to pass through
+            ex_style = (win32con.WS_EX_LAYERED | 
+                       win32con.WS_EX_TOPMOST | 
+                       win32con.WS_EX_TRANSPARENT | 
+                       win32con.WS_EX_TOOLWINDOW |
+                       win32con.WS_EX_NOACTIVATE)
+            
+            hinst = win32api.GetModuleHandle(None)
+            self.hwnd = win32gui.CreateWindowEx(
+                ex_style,
+                class_name,
+                "Clicker Indicator",
+                style,
+                self.position_x, self.position_y,
+                self.width, self.height,
+                0, 0, hinst, None
+            )
+            
+            if not self.hwnd:
+                logging.error("Failed to create window!")
+                raise Exception("Failed to create window")
+            
+            # Make it transparent
+            win32gui.SetLayeredWindowAttributes(
+                self.hwnd, 0, self.alpha, win32con.LWA_ALPHA
+            )
+            
+            # Make window click-through by setting the extended transparency style
+            # This ensures mouse events pass through to windows beneath
+            current_ex_style = win32gui.GetWindowLong(self.hwnd, win32con.GWL_EXSTYLE)
+            win32gui.SetWindowLong(
+                self.hwnd, 
+                win32con.GWL_EXSTYLE, 
+                current_ex_style | win32con.WS_EX_TRANSPARENT | win32con.WS_EX_NOACTIVATE
+            )
+            
+            # Show the window without activating it
+            win32gui.ShowWindow(self.hwnd, win32con.SW_SHOWNA)
+            
+            # Store handle to device context (will be released in stop())
+            self.hdc = win32gui.GetDC(self.hwnd)
+            
+            logging.info(f"Created overlay window at position ({self.position_x}, {self.position_y})")
+            logging.info(f"Window handle: {self.hwnd}")
+        except Exception as e:
+            logging.error(f"Error creating overlay window: {e}")
+            logging.error(traceback.format_exc())
+            raise
+    
+    def hide_window(self):
+        """Hide the indicator window."""
+        if self.hwnd and win32gui.IsWindow(self.hwnd):
+            win32gui.ShowWindow(self.hwnd, win32con.SW_HIDE)
+            self.hidden_for_menu = True
+            logging.debug("GDI indicator hidden for menu interaction")
+    
+    def show_window(self):
+        """Show the indicator window if it was hidden."""
+        if self.hwnd and win32gui.IsWindow(self.hwnd) and self.hidden_for_menu:
+            win32gui.ShowWindow(self.hwnd, win32con.SW_SHOWNA)
+            self.hidden_for_menu = False
+            logging.debug("GDI indicator shown after menu interaction")
+    
+    def _wnd_proc(self, hwnd, msg, wparam, lparam):
+        """Window procedure for the overlay window."""
+        if msg == win32con.WM_PAINT:
+            # Handle paint message
+            ps = win32gui.PAINTSTRUCT()
+            hdc = win32gui.BeginPaint(hwnd, ps)
+            self._draw(hdc)
+            win32gui.EndPaint(hwnd, ps)
+            return 0
+        elif msg == win32con.WM_CLOSE:
+            win32gui.DestroyWindow(hwnd)
+            return 0
+        elif msg == win32con.WM_DESTROY:
+            win32gui.PostQuitMessage(0)
+            return 0
+        # Make sure we don't process any mouse messages
+        elif msg >= win32con.WM_MOUSEFIRST and msg <= win32con.WM_MOUSELAST:
+            return 0
+        else:
+            return win32gui.DefWindowProc(hwnd, msg, wparam, lparam)
+    
+    def _draw(self, hdc):
+        """Direct drawing to the window during WM_PAINT."""
+        # Get client rect
+        rect = win32gui.GetClientRect(self.hwnd)
+        
+        if self.active:
+            # Draw bright red rectangle when active
+            rect_color = win32api.RGB(255, 50, 50) if self.flash_state else win32api.RGB(220, 30, 30)
+            brush = win32gui.CreateSolidBrush(rect_color)
+            win32gui.FillRect(hdc, rect, brush)
+            win32gui.DeleteObject(brush)
+        else:
+            # Draw nothing when inactive (it will fade away)
+            # This is just a placeholder for the paint message
+            brush = win32gui.CreateSolidBrush(win32api.RGB(0, 0, 0))
+            win32gui.FillRect(hdc, rect, brush)
+            win32gui.DeleteObject(brush)
+        
+    def start(self):
+        """Start the indicator thread."""
+        if self.thread and self.thread.is_alive():
+            logging.warning("Indicator thread already running")
+            return
+            
+        self.running = True
+        self.exit_event.clear()
+        self.thread = threading.Thread(target=self._render_loop, name="GDIIndicatorThread")
+        self.thread.daemon = True
+        self.thread.start()
+        logging.info("GDI visual indicator started")
+        
+    def stop(self):
+        """Stop the indicator thread."""
+        logging.debug("Stopping GDI indicator")
+        
+        # Signal the thread to exit and wait
+        self.running = False
+        self.exit_event.set()
+        
+        if self.thread and self.thread.is_alive():
+            try:
+                self.thread.join(timeout=1.0)  # Wait longer to ensure thread exits
+                if self.thread.is_alive():
+                    logging.warning("GDI indicator thread did not exit in time")
+            except Exception as e:
+                logging.error(f"Error joining indicator thread: {e}")
+        
+        # Clean up window resources
+        try:
+            if self.hwnd and win32gui.IsWindow(self.hwnd):
+                # Release device context if we have one
+                if self.hdc:
+                    win32gui.ReleaseDC(self.hwnd, self.hdc)
+                    self.hdc = None
+                
+                # Destroy window
+                win32gui.DestroyWindow(self.hwnd)
+                self.hwnd = None
+        except Exception as e:
+            logging.error(f"Error cleaning up GDI window: {e}")
+            
+        self.thread = None
+        logging.info("GDI visual indicator stopped")
+        
+    def set_state(self, active):
+        """Set the indicator's active state."""
+        if not self.hwnd or not win32gui.IsWindow(self.hwnd):
+            logging.warning("Cannot set indicator state - window not available")
+            return
+            
+        logging.info(f"Setting GDI indicator state to: {active}")
+        
+        # Reset fade effect and restore full visibility when activated
+        if active:
+            self.alpha = 204  # Reset to full visibility
+            if self.hwnd and win32gui.IsWindow(self.hwnd):
+                win32gui.SetLayeredWindowAttributes(self.hwnd, 0, self.alpha, win32con.LWA_ALPHA)
+        
+        self.is_fading = False
+        self.last_activity_time = time.time()
+        self.active = active
+        
+        # Force window redraw
+        if self.hwnd and win32gui.IsWindow(self.hwnd):
+            win32gui.InvalidateRect(self.hwnd, None, True)
+            win32gui.UpdateWindow(self.hwnd)
+        
+    def _render_loop(self):
+        """Main rendering loop for the indicator."""
+        try:
+            # Set thread name for easier debugging
+            threading.current_thread().name = "GDIIndicatorThread"
+            
+            last_render_time = time.time()
+            
+            while self.running:
+                # Check if window is still valid
+                if not self.hwnd or not win32gui.IsWindow(self.hwnd):
+                    logging.warning("Window no longer valid, exiting render loop")
+                    break
+                    
+                current_time = time.time()
+                
+                # Use a more selective message pump to avoid interfering with Qt
+                # Only process paint and system messages, skip input messages
+                try:
+                    msg = wintypes.MSG()
+                    while win32gui.PeekMessage(msg, 0, 0, 0, win32con.PM_REMOVE):
+                        # Skip mouse/keyboard messages to prevent interference with Qt
+                        if not ((msg.message >= win32con.WM_MOUSEFIRST and msg.message <= win32con.WM_MOUSELAST) or 
+                                (msg.message >= win32con.WM_KEYFIRST and msg.message <= win32con.WM_KEYLAST)):
+                            win32gui.TranslateMessage(msg)
+                            win32gui.DispatchMessage(msg)
+                except Exception as e:
+                    logging.error(f"Error in message pump: {e}")
+                
+                # Only update visuals at most 16 times per second (62.5ms)
+                if current_time - last_render_time < 0.0625:
+                    # Check for exit signal
+                    if self.exit_event.wait(0.01):  # Short sleep to not hog CPU
+                        break
+                    continue
+                
+                last_render_time = current_time
+                
+                # Update flash state every 500ms when active
+                state_changed = False
+                if self.active:
+                    if current_time - self.last_update_time > 0.5:  # 500ms
+                        self.flash_state = not self.flash_state
+                        self.last_update_time = current_time
+                        state_changed = True
+                
+                # Handle fade effect when not active
+                if not self.active:
+                    if current_time - self.last_activity_time > self.fade_start_delay:
+                        if not self.is_fading:
+                            self.is_fading = True
+                            self.fade_start_time = current_time
+                        
+                        # Calculate fade progress
+                        fade_progress = min(1.0, (current_time - self.fade_start_time) / self.fade_duration)
+                        # Linear interpolation from full alpha to min_alpha (zero)
+                        new_alpha = int(204 * (1 - fade_progress))
+                        
+                        # Only update if alpha changed significantly and window still exists
+                        if abs(new_alpha - self.alpha) > 4 and win32gui.IsWindow(self.hwnd):
+                            self.alpha = new_alpha
+                            win32gui.SetLayeredWindowAttributes(self.hwnd, 0, self.alpha, win32con.LWA_ALPHA)
+                
+                # Force window redraw only if state changed and window still exists
+                if state_changed and win32gui.IsWindow(self.hwnd):
+                    win32gui.InvalidateRect(self.hwnd, None, True)
+                    win32gui.UpdateWindow(self.hwnd)
+                
+                # Check for exit signal
+                if self.exit_event.wait(0.02):  # Wait with timeout to check exit signal
+                    break
+        
+        except Exception as e:
+            logging.error(f"Error in GDI render loop: {e}")
+            logging.error(traceback.format_exc())
+        finally:
+            logging.debug("GDI render loop exiting")
 
 # Windows API constants
 KEYEVENTF_KEYUP = 0x0002
@@ -113,12 +583,20 @@ DEFAULT_SETTINGS = {
     # Key used as global hotkey to toggle automation on/off
     'toggle_key': '~',
     
-    # Time in seconds between initial keystrokes when automation starts
-    'pause_time': 0.5,
+    # Time in seconds to stagger initial keystroke scheduling when automation starts
+    # This creates an initial spacing between keystrokes but does not affect subsequent executions
+    'start_time_stagger': 0.5,
     
     # When True: execute keystrokes in file order 
     # When False: sort keystrokes by delay (lowest first)
-    'order_obeyed': False
+    'order_obeyed': False,
+    
+    # Visual indicator type: 'pygame' (window-based) or 'gdi' (works in fullscreen)
+    'indicator_type': 'gdi',
+    
+    # Minimum time in seconds between any keystroke executions (global cooldown)
+    # This ensures no keys are pressed faster than this value, regardless of their delay settings
+    'global_cooldown': 0.1
 }
 
 # Default keystrokes (example)
@@ -146,8 +624,10 @@ DEFAULT_KEYSTROKES = [
 settings = {}
 keystrokes = []
 toggle_key = DEFAULT_SETTINGS['toggle_key']
-pause_time = DEFAULT_SETTINGS['pause_time']
+start_time_stagger = DEFAULT_SETTINGS['start_time_stagger']  # Renamed from pause_time
 order_obeyed = DEFAULT_SETTINGS['order_obeyed']
+indicator_type = DEFAULT_SETTINGS['indicator_type']
+global_cooldown = DEFAULT_SETTINGS['global_cooldown']
 running_flag = {'active': False}
 thread = {'obj': None}
 observer = None
@@ -155,6 +635,8 @@ hotkey_ref = {'key': None}
 lock = threading.Lock()
 cleanup_initiated = False  # Flag to prevent double cleanup
 shutdown_event = threading.Event()  # Event to signal threads to shut down
+pygame_indicator = None  # Visual indicator instance
+gdi_indicator = None     # GDI-based indicator instance
 
 # --- File validation and creation ---
 
@@ -184,25 +666,45 @@ def validate_settings_file():
     If missing, the file is created with default values.
     If the file exists but keys are missing, they are added with default values.
     
-    This ensures backward compatibility when new settings are added to newer versions.
+    This function also handles renaming of fields for backward compatibility:
+    - 'pause_time' → 'start_time_stagger'
+    
+    This ensures backward compatibility when new settings are added or renamed in newer versions.
     """
     was_created = ensure_file_exists(SETTINGS_FILE, DEFAULT_SETTINGS)
+    needs_update = False
     
     try:
         with open(SETTINGS_FILE, 'r') as f:
             data = json.load(f)
+        
+        # Handle renamed fields
+        field_renames = {
+            'pause_time': 'start_time_stagger'  # Old field name -> New field name
+        }
+        
+        # Process field renames
+        for old_field, new_field in field_renames.items():
+            if old_field in data and new_field not in data:
+                old_value = data[old_field]
+                logging.warning(f"Renaming legacy field '{old_field}' to '{new_field}' with value: {old_value}")
+                data[new_field] = old_value
+                del data[old_field]
+                needs_update = True
         
         # Check for required keys
         for key, default_value in DEFAULT_SETTINGS.items():
             if key not in data:
                 logging.warning(f"Missing key '{key}' in settings file, adding default: {default_value}")
                 data[key] = default_value
-                was_created = True
+                needs_update = True
         
         # Write updated settings if needed
-        if was_created:
+        if was_created or needs_update:
             with open(SETTINGS_FILE, 'w') as f:
                 json.dump(data, f, indent=4)
+                if needs_update:
+                    logging.info("Updated settings.json with renamed/new fields")
                 
         return True
     except json.JSONDecodeError:
@@ -264,32 +766,122 @@ def validate_keystrokes_file():
 
 # --- Singleton check ---
 
+def is_process_running(pid):
+    """Check if a process with given PID is still running on Windows."""
+    try:
+        # Use a more reliable method to check process existence
+        import ctypes
+        import ctypes.wintypes
+
+        TH32CS_SNAPPROCESS = 0x00000002
+        INVALID_HANDLE_VALUE = -1
+
+        class PROCESSENTRY32(ctypes.Structure):
+            _fields_ = [
+                ("dwSize", ctypes.wintypes.DWORD),
+                ("cntUsage", ctypes.wintypes.DWORD),
+                ("th32ProcessID", ctypes.wintypes.DWORD),
+                ("th32DefaultHeapID", ctypes.POINTER(ctypes.wintypes.ULONG)),
+                ("th32ModuleID", ctypes.wintypes.DWORD),
+                ("cntThreads", ctypes.wintypes.DWORD),
+                ("th32ParentProcessID", ctypes.wintypes.DWORD),
+                ("pcPriClassBase", ctypes.wintypes.LONG),
+                ("dwFlags", ctypes.wintypes.DWORD),
+                ("szExeFile", ctypes.c_char * 260)
+            ]
+
+        # Create a snapshot of the system processes
+        hProcessSnap = ctypes.windll.kernel32.CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
+        if hProcessSnap == INVALID_HANDLE_VALUE:
+            return False
+
+        pe32 = PROCESSENTRY32()
+        pe32.dwSize = ctypes.sizeof(PROCESSENTRY32)
+
+        # Get the first process from the snapshot
+        if not ctypes.windll.kernel32.Process32First(hProcessSnap, ctypes.byref(pe32)):
+            ctypes.windll.kernel32.CloseHandle(hProcessSnap)
+            return False
+
+        # Iterate through all processes
+        found = False
+        while True:
+            if pe32.th32ProcessID == pid:
+                found = True
+                break
+            
+            if not ctypes.windll.kernel32.Process32Next(hProcessSnap, ctypes.byref(pe32)):
+                break
+
+        # Clean up the snapshot handle
+        ctypes.windll.kernel32.CloseHandle(hProcessSnap)
+        return found
+    except Exception as e:
+        logging.error(f"Error checking process existence: {e}")
+        logging.error(traceback.format_exc())
+        # Fall back to the simpler method if the complex one fails
+        try:
+            handle = ctypes.windll.kernel32.OpenProcess(0x0400, False, pid)
+            if handle:
+                ctypes.windll.kernel32.CloseHandle(handle)
+                return True
+            return False
+        except Exception as e2:
+            logging.error(f"Fallback process check also failed: {e2}")
+            return False
+
 def check_singleton():
     """Ensure only one instance of the application is running."""
+    # Create a unique mutex (named object) first - this is more reliable than file locks
+    try:
+        mutex_name = "Global\\ClickerSingletonMutex"
+        mutex = ctypes.windll.kernel32.CreateMutexW(None, False, mutex_name)
+        last_error = ctypes.windll.kernel32.GetLastError()
+        
+        if last_error == 183:  # ERROR_ALREADY_EXISTS
+            logging.warning("Mutex already exists - another instance is running")
+            QtWidgets.QMessageBox.critical(None, 'Already running', 'Another instance of Clicker is already running.')
+            sys.exit(1)
+            
+        # Even if we got the mutex, still do the file check as a secondary measure
+    except Exception as e:
+        logging.error(f"Error creating mutex: {e}")
+        # Continue with file-based detection as fallback
+    
     if os.path.exists(LOCKFILE):
         try:
             with open(LOCKFILE, 'r') as f:
-                pid = int(f.read().strip())
-            # Check if the process is still running
+                content = f.read().strip()
+                try:
+                    pid = int(content)
+                    logging.debug(f"Found lock file with PID: {pid}")
+                    
+                    # Check if the process is still running using Windows-specific code
+                    if is_process_running(pid):
+                        logging.warning(f"Process with PID {pid} is still running")
+                        QtWidgets.QMessageBox.critical(None, 'Already running', 'Another instance of Clicker is already running.')
+                        sys.exit(1)
+                    else:
+                        logging.info(f"Removing stale lock file for process {pid}")
+                        os.remove(LOCKFILE)
+                except ValueError:
+                    # If PID is not an integer, file is corrupted
+                    logging.warning(f"Lock file contains invalid PID: '{content}'")
+                    os.remove(LOCKFILE)
+        except (IOError, OSError) as e:
+            # If we can't read the lock file, remove it
+            logging.warning(f"Error reading lock file: {e}")
             try:
-                os.kill(pid, 0)
-                QtWidgets.QMessageBox.critical(None, 'Already running', 'Another instance of Clicker is already running.')
-                logging.warning(f"Attempted to start while another instance (PID: {pid}) is running")
-                sys.exit(1)
-            except OSError:
-                # Process is not running, we can safely remove the lock file
-                logging.info(f"Removing stale lock file for process {pid}")
                 os.remove(LOCKFILE)
-        except (ValueError, IOError) as e:
-            # If we can't read the lock file or it's invalid, remove it
-            logging.warning(f"Invalid lock file: {e}")
-            os.remove(LOCKFILE)
+            except Exception as e2:
+                logging.error(f"Failed to remove invalid lock file: {e2}")
     
     # Write our PID to the lock file
     try:
         with open(LOCKFILE, 'w') as f:
-            f.write(str(os.getpid()))
-        logging.debug(f"Created lock file with PID: {os.getpid()}")
+            current_pid = os.getpid()
+            f.write(str(current_pid))
+            logging.debug(f"Created lock file with PID: {current_pid}")
     except Exception as e:
         logging.error(f"Failed to create lock file: {e}")
 
@@ -299,6 +891,17 @@ def cleanup():
         if os.path.exists(LOCKFILE):
             logging.debug("Cleanup: Removing lockfile")
             os.remove(LOCKFILE)
+        
+        # Shut down pygame indicator if active
+        global pygame_indicator, gdi_indicator
+        if pygame_indicator:
+            pygame_indicator.stop()
+            pygame_indicator = None
+            
+        # Shut down GDI indicator if active
+        if gdi_indicator:
+            gdi_indicator.stop()
+            gdi_indicator = None
     except Exception as e:
         logging.error(f"Cleanup error: {e}")
 
@@ -316,21 +919,29 @@ def load_settings():
     
     Loads:
     - toggle_key: Global hotkey to activate/deactivate automation
-    - pause_time: Time between initial keystrokes
+    - start_time_stagger: Time to stagger initial keystroke scheduling
     - order_obeyed: Controls execution order (file order vs sorted by delay)
+    - indicator_type: Type of visual indicator to use
+    - global_cooldown: Minimum time between any keystroke executions
     - Other settings used for UI and notifications
     
-    Handles JSON parsing errors and missing keys gracefully.
+    Note: Field renaming (e.g., pause_time → start_time_stagger) is handled in validate_settings_file()
+    which should be called before this function to ensure the settings file is properly updated.
     """
-    global settings, toggle_key, pause_time, order_obeyed
+    global settings, toggle_key, start_time_stagger, order_obeyed, indicator_type, global_cooldown
     try:
         with lock:
             with open(SETTINGS_FILE, 'r') as f:
                 settings = json.load(f)
+            
+            # Load all settings with fallbacks to defaults
             toggle_key = settings.get('toggle_key', DEFAULT_SETTINGS['toggle_key'])
-            pause_time = settings.get('pause_time', DEFAULT_SETTINGS['pause_time'])
+            start_time_stagger = settings.get('start_time_stagger', DEFAULT_SETTINGS['start_time_stagger'])
             order_obeyed = settings.get('order_obeyed', DEFAULT_SETTINGS['order_obeyed'])
-        logging.info(f"Settings loaded: toggle_key={toggle_key}, pause_time={pause_time}, order_obeyed={order_obeyed}")
+            indicator_type = settings.get('indicator_type', DEFAULT_SETTINGS['indicator_type'])
+            global_cooldown = settings.get('global_cooldown', DEFAULT_SETTINGS['global_cooldown'])
+            
+        logging.info(f"Settings loaded: toggle_key={toggle_key}, start_time_stagger={start_time_stagger}, order_obeyed={order_obeyed}, indicator_type={indicator_type}, global_cooldown={global_cooldown}")
         return True
     except json.JSONDecodeError:
         logging.error(f"Error parsing {SETTINGS_FILE} - invalid JSON format")
@@ -492,17 +1103,26 @@ def automation_worker():
     
     Uses a priority queue to manage the execution timing, ensuring keystrokes
     never overlap and maintain their intended timing intervals.
+    
+    Timing mechanisms:
+    - start_time_stagger: Controls the initial spacing between keystrokes when automation starts
+                         (only affects the first execution of each key)
+    - global_cooldown: Minimum time between ANY keystroke executions (global rate limiting)
+    - per-key delay: Individual delay time for each keystroke specified in keystrokes.txt
+                     (controls how often each specific key repeats)
     """
     schedule = []
+    last_execution_time = 0  # Track the last time any key was executed
     try:
         with lock:
             now = time.time()
             # Process keystrokes based on order_obeyed setting
             if order_obeyed:
-                # Execute in file order (stagger initial firings by pause_time)
+                # Execute in file order (stagger initial firings by start_time_stagger)
                 logging.info("Using file order for keystrokes (order_obeyed=True)")
                 for idx, (key_str, delay) in enumerate(keystrokes):
-                    initial_time = now + (idx * pause_time)
+                    # Apply staggered start time to space out initial keystrokes
+                    initial_time = now + (idx * start_time_stagger)
                     heapq.heappush(schedule, (initial_time, idx, key_str, delay))
                     logging.debug(f"Scheduled keystroke {key_str} to start at {initial_time - now:.2f}s from now")
             else:
@@ -510,7 +1130,8 @@ def automation_worker():
                 logging.info("Sorting keystrokes by delay value (order_obeyed=False)")
                 sorted_keystrokes = sorted(keystrokes, key=lambda x: x[1])
                 for idx, (key_str, delay) in enumerate(sorted_keystrokes):
-                    initial_time = now + (idx * pause_time)
+                    # Apply staggered start time to space out initial keystrokes
+                    initial_time = now + (idx * start_time_stagger)
                     heapq.heappush(schedule, (initial_time, idx, key_str, delay))
                     logging.debug(f"Scheduled keystroke {key_str} (delay={delay}) to start at {initial_time - now:.2f}s from now")
         
@@ -521,6 +1142,16 @@ def automation_worker():
                 break
             
             next_fire, idx, key_str, delay = heapq.heappop(schedule)
+            
+            # Apply global cooldown if needed
+            current_time = time.time()
+            cooldown_time = last_execution_time + global_cooldown
+            if cooldown_time > current_time and cooldown_time > next_fire:
+                # Global cooldown not satisfied yet - this ensures minimum time between ANY keystrokes
+                # This takes precedence over the per-key delay from the keystrokes file
+                logging.debug(f"Global cooldown enforced for {key_str}, delaying by {cooldown_time - next_fire:.3f}s")
+                next_fire = cooldown_time
+            
             wait_time = max(0, next_fire - time.time())
             if wait_time > 0:
                 # Use wait with timeout to check shutdown event periodically
@@ -545,11 +1176,18 @@ def automation_worker():
                     send_key_combination(mods, key)
                 else:
                     send_key_combination([], key)
+                
+                # Update last execution time for global cooldown
+                last_execution_time = time.time()
             except Exception as e:
                 logging.error(f"Error processing keystroke {key_str}: {e}")
             
             with lock:
-                heapq.heappush(schedule, (time.time() + delay, idx, key_str, delay))
+                # Calculate next execution time based on the key's individual delay
+                # This determines how often this specific key will be pressed again
+                # Note: The actual execution may still be delayed by global_cooldown if needed
+                next_time = time.time() + delay
+                heapq.heappush(schedule, (next_time, idx, key_str, delay))
     except Exception as e:
         logging.error(f"Error in automation worker: {e}")
         logging.error(traceback.format_exc())
@@ -571,6 +1209,8 @@ def toggle():
         start_automation()
         tray.setToolTip("Clicker: ON")
         logging.info("Automation turned ON")
+    
+    # Visual indicator is already updated in start_automation and stop_automation
 
 def start_automation():
     """Start the automation thread with better thread safety."""
@@ -584,6 +1224,12 @@ def start_automation():
     # Reset shutdown event
     shutdown_event.clear()
     
+    # Update the active indicator
+    if pygame_indicator and indicator_type.lower() == 'pygame':
+        pygame_indicator.set_state(True)
+    elif gdi_indicator:
+        gdi_indicator.set_state(True)
+    
     # Create and start worker thread
     thread['obj'] = threading.Thread(target=automation_worker)
     thread['obj'].daemon = True
@@ -594,6 +1240,12 @@ def stop_automation():
     """Stop automation with graceful thread shutdown."""
     with lock:
         running_flag['active'] = False
+    
+    # Update the active indicator
+    if pygame_indicator and indicator_type.lower() == 'pygame':
+        pygame_indicator.set_state(False)
+    elif gdi_indicator:
+        gdi_indicator.set_state(False)
     
     # Signal worker thread to exit
     shutdown_event.set()
@@ -681,7 +1333,7 @@ class FileChangeHandler(FileSystemEventHandler):
 
 def cleanup_and_quit():
     """Clean up resources and quit the application."""
-    global cleanup_initiated, app, tray, observer
+    global cleanup_initiated, app, tray, observer, pygame_indicator, gdi_indicator
     
     if cleanup_initiated:
         logging.debug("Cleanup already initiated, returning")
@@ -696,6 +1348,24 @@ def cleanup_and_quit():
     # Stop automation thread
     stop_automation()
     logging.debug("Automation stopped")
+    
+    # Stop Pygame indicator if it's running
+    if pygame_indicator:
+        try:
+            logging.debug("Stopping pygame indicator")
+            pygame_indicator.stop()
+            pygame_indicator = None
+        except Exception as e:
+            logging.error(f"Error stopping pygame indicator: {e}")
+    
+    # Stop GDI indicator if it's running
+    if gdi_indicator:
+        try:
+            logging.debug("Stopping GDI indicator")
+            gdi_indicator.stop()
+            gdi_indicator = None
+        except Exception as e:
+            logging.error(f"Error stopping GDI indicator: {e}")
     
     # Stop watchdog observer
     if observer:
@@ -788,7 +1458,7 @@ def main():
     Uses multiple layers of error handling to ensure graceful behavior
     even when configuration files are invalid or missing.
     """
-    global app, tray, observer
+    global app, tray, observer, pygame_indicator, gdi_indicator
     
     try:
         # Create application instance
@@ -811,6 +1481,30 @@ def main():
         # Load settings and keystrokes
         load_settings()
         load_keystrokes()
+        
+        # Initialize visual indicator based on settings
+        try:
+            if indicator_type.lower() == 'pygame':
+                logging.info("Initializing pygame visual indicator")
+                pygame_indicator = PygameIndicator()
+                pygame_indicator.start()
+                logging.info("Pygame indicator initialized successfully")
+            else:  # Default to GDI indicator for fullscreen compatibility
+                logging.info("Initializing GDI visual indicator (fullscreen compatible)")
+                gdi_indicator = GDIIndicator()
+                gdi_indicator.start()
+                logging.info("GDI indicator initialized successfully")
+        except Exception as e:
+            logging.error(f"Failed to initialize visual indicator: {e}")
+            logging.error(traceback.format_exc())
+            pygame_indicator = None
+            gdi_indicator = None
+            # Show error message to user
+            QtWidgets.QMessageBox.warning(
+                None, 
+                "Visual Indicator Error",
+                f"Failed to initialize visual indicator: {e}\n\nThe application will work without a visual indicator."
+            )
         
         # Create the icon
         if os.path.exists('icon.ico'):
@@ -863,6 +1557,12 @@ def main():
         open_log_action.triggered.connect(lambda: open_file(log_file))
         reload_action.triggered.connect(reload_all)
         quit_action.triggered.connect(cleanup_and_quit)
+        
+        # Hide GDI indicator when context menu is about to be shown
+        menu.aboutToShow.connect(lambda: gdi_indicator.hide_window() if gdi_indicator else None)
+        
+        # Show GDI indicator when context menu is closed
+        menu.aboutToHide.connect(lambda: gdi_indicator.show_window() if gdi_indicator else None)
         
         # Add double-click handler to toggle automation
         tray.activated.connect(lambda reason: toggle() if reason == QtWidgets.QSystemTrayIcon.DoubleClick else None)

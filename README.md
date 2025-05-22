@@ -6,7 +6,7 @@
 
 A modern, background Windows automation tool for sending keystrokes at human-like intervals. Runs as a tray icon with no visible window. Configure your keystrokes and timing in simple text files, and control automation with a global hotkey.
 
-**Version: 1.0.0** - Milestone Release
+**Version: 1.1.0** - Release Candidate
 
 ## Installation
 
@@ -20,6 +20,8 @@ Follow the setup instructions below.
 - **Tray icon only:** No window, just a system tray icon for control.
 - **Global hotkey:** Toggle automation from anywhere.
 - **Human-like automation:** Keystrokes are serialized and never overlap, even with complex timing.
+- **Visual indicators:** See automation status with GDI (fullscreen) or Pygame (windowed) indicators.
+- **Global cooldown:** Enforce minimum time between any keystroke executions, enhancing human-like behavior.
 - **Configurable:** Edit `keystrokes.txt` and `settings.json` to control behavior.
 - **Auto-reload:** Changes to config files are detected instantly.
 - **Open config from tray:** Edit your settings or keystrokes with one click.
@@ -39,20 +41,20 @@ Follow the setup instructions below.
 
 ## Configuration
 - **settings.json**
-  ```json
-  {
-    "toggle_key": "~",
-    "pause_time": 0.5,
-    "flash_count": 3,
-    "flash_interval": 200,
-    "order_obeyed": false
-  }
-  ```
+    ```json
+    {
+      "toggle_key": "~",
+      "start_time_stagger": 0.5,
+      "order_obeyed": false,
+      "indicator_type": "gdi",
+      "global_cooldown": 0.1
+    }
+    ```
   - `toggle_key`: The global hotkey that toggles automation on/off
-  - `pause_time`: Time in seconds between initial keystrokes
-  - `flash_count`: Number of times to flash the tray icon when toggling
-  - `flash_interval`: Milliseconds between icon flashes
+  - `start_time_stagger`: Time in seconds to stagger initial keystroke scheduling (doesn't affect repeat timing)
   - `order_obeyed`: When true, executes keystrokes in file order; when false, sorts by delay
+  - `indicator_type`: Visual indicator type ('gdi' works in fullscreen, 'pygame' is window-based)
+  - `global_cooldown`: Minimum time in seconds between any keystroke executions (global rate limit)
 
 - **keystrokes.txt**
   ```

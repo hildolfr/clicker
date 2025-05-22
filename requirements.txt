@@ -6,3 +6,4 @@ keyboard>=0.13.5
 PyQt5>=5.15.0
 watchdog>=2.1.0
 pywin32>=300  # Required for Windows-specific functionality 
+pygame>=2.0.0  # For visual indicator 
