@@ -20,6 +20,7 @@ import traceback
 import pygame  # Added pygame for visual indicator
 import win32api
 import win32ui
+from logging.handlers import RotatingFileHandler
 
 # Hide console window
 if sys.platform == 'win32':
@@ -36,7 +37,11 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(log_file),
+        RotatingFileHandler(
+            log_file,
+            maxBytes=1024*1024*5,  # 5MB max file size
+            backupCount=3          # Keep 3 backup files
+        ),
         logging.StreamHandler()
     ]
 )
@@ -457,13 +462,15 @@ class GDIIndicator:
                 # Use a more selective message pump to avoid interfering with Qt
                 # Only process paint and system messages, skip input messages
                 try:
+                    # Use ctypes directly for PeekMessage with PM_REMOVE flag
                     msg = wintypes.MSG()
-                    while win32gui.PeekMessage(msg, 0, 0, 0, win32con.PM_REMOVE):
+                    # Process all waiting messages
+                    while user32.PeekMessageW(ctypes.byref(msg), None, 0, 0, win32con.PM_REMOVE):
                         # Skip mouse/keyboard messages to prevent interference with Qt
                         if not ((msg.message >= win32con.WM_MOUSEFIRST and msg.message <= win32con.WM_MOUSELAST) or 
                                 (msg.message >= win32con.WM_KEYFIRST and msg.message <= win32con.WM_KEYLAST)):
-                            win32gui.TranslateMessage(msg)
-                            win32gui.DispatchMessage(msg)
+                            user32.TranslateMessage(ctypes.byref(msg))
+                            user32.DispatchMessageW(ctypes.byref(msg))
                 except Exception as e:
                     logging.error(f"Error in message pump: {e}")
                 
@@ -585,7 +592,7 @@ DEFAULT_SETTINGS = {
     
     # Time in seconds to stagger initial keystroke scheduling when automation starts
     # This creates an initial spacing between keystrokes but does not affect subsequent executions
-    'start_time_stagger': 0.5,
+    'start_time_stagger': 1.7,
     
     # When True: execute keystrokes in file order 
     # When False: sort keystrokes by delay (lowest first)
@@ -596,7 +603,7 @@ DEFAULT_SETTINGS = {
     
     # Minimum time in seconds between any keystroke executions (global cooldown)
     # This ensures no keys are pressed faster than this value, regardless of their delay settings
-    'global_cooldown': 0.1
+    'global_cooldown': 1.5
 }
 
 # Default keystrokes (example)

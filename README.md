@@ -6,12 +6,12 @@
 
 A modern, background Windows automation tool for sending keystrokes at human-like intervals. Runs as a tray icon with no visible window. Configure your keystrokes and timing in simple text files, and control automation with a global hotkey.
 
-**Version: 1.1.1** - Release Candidate
+**Version: 1.1.2** - Bugfix Release
 
 ## Installation
 
 ### Option 1: Download the Executable (Recommended)
-Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/1.1.1/Clicker.exe) (direct download link). No installation required!
+Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/1.1.2/Clicker.exe) (direct download link). No installation required!
 
 ### Option 2: Run from Source
 Follow the setup instructions below.
@@ -44,10 +44,10 @@ Follow the setup instructions below.
     ```json
     {
       "toggle_key": "~",
-      "start_time_stagger": 0.5,
+      "start_time_stagger": 1.7,
       "order_obeyed": false,
       "indicator_type": "gdi",
-      "global_cooldown": 0.1
+      "global_cooldown": 1.5
     }
     ```
   - `toggle_key`: The global hotkey that toggles automation on/off
@@ -89,6 +89,11 @@ Follow the setup instructions below.
 - Windows only (uses Windows-specific APIs for reliable keystroke simulation).
 
 ## Changelog
+### v1.1.2
+- Fixed logging errors and improved stability
+- Increased default start_time_stagger to 1.7 seconds for better compatibility
+- Increased default global_cooldown to 1.5 seconds for more human-like interactions
+
 ### v1.1.1
 - Fixed bug where GDI overlay was drawn on top of the first-run dialogue for new users.
 

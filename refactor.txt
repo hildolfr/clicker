@@ -1,5 +1,5 @@
 Refactor: Serialized, Human-like Automation Scheduling with Visual Indicators
-Version: 1.1.1 (Release Candidate)
+Version: 1.1.2 (Bugfix Release)
 Date: May 2025
 
 Summary of Major Changes:
@@ -33,6 +33,11 @@ Motivation:
 - The rest of the app (tray, hotkey, file watching) remains unchanged while gaining this new customization capability. 
 
 Recent Fixes:
+
+v1.1.2:
+- Fixed logging errors and improved error handling
+- Increased default start_time_stagger to 1.7 seconds for better compatibility
+- Increased default global_cooldown to 1.5 seconds for more human-like interactions
 
 v1.1.1:
 - Fixed a bug where the GDI overlay was drawn on top of the first-run dialogue for new users, making it difficult to see and interact with the setup instructions.
