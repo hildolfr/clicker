@@ -1482,23 +1482,19 @@ def main():
         load_settings()
         load_keystrokes()
         
-        # Initialize visual indicator based on settings
+        # Initialize pygame indicator here if selected (no overlay issues with dialogs)
+        pygame_indicator = None
+        gdi_indicator = None
         try:
             if indicator_type.lower() == 'pygame':
                 logging.info("Initializing pygame visual indicator")
                 pygame_indicator = PygameIndicator()
                 pygame_indicator.start()
                 logging.info("Pygame indicator initialized successfully")
-            else:  # Default to GDI indicator for fullscreen compatibility
-                logging.info("Initializing GDI visual indicator (fullscreen compatible)")
-                gdi_indicator = GDIIndicator()
-                gdi_indicator.start()
-                logging.info("GDI indicator initialized successfully")
         except Exception as e:
-            logging.error(f"Failed to initialize visual indicator: {e}")
+            logging.error(f"Failed to initialize pygame indicator: {e}")
             logging.error(traceback.format_exc())
             pygame_indicator = None
-            gdi_indicator = None
             # Show error message to user
             QtWidgets.QMessageBox.warning(
                 None, 
@@ -1558,12 +1554,6 @@ def main():
         reload_action.triggered.connect(reload_all)
         quit_action.triggered.connect(cleanup_and_quit)
         
-        # Hide GDI indicator when context menu is about to be shown
-        menu.aboutToShow.connect(lambda: gdi_indicator.hide_window() if gdi_indicator else None)
-        
-        # Show GDI indicator when context menu is closed
-        menu.aboutToHide.connect(lambda: gdi_indicator.show_window() if gdi_indicator else None)
-        
         # Add double-click handler to toggle automation
         tray.activated.connect(lambda reason: toggle() if reason == QtWidgets.QSystemTrayIcon.DoubleClick else None)
         
@@ -1604,6 +1594,28 @@ def main():
             # Mark setup as done
             with open(".clicker_setup_done", "w") as f:
                 f.write("1")
+        
+        # Initialize GDI indicator after first-run dialog is shown
+        if indicator_type.lower() != 'pygame' and gdi_indicator is None:
+            try:
+                logging.info("Initializing GDI visual indicator (fullscreen compatible)")
+                gdi_indicator = GDIIndicator()
+                gdi_indicator.start()
+                logging.info("GDI indicator initialized successfully")
+                
+                # Connect GDI indicator to menu signals now that it's initialized
+                menu.aboutToShow.connect(lambda: gdi_indicator.hide_window() if gdi_indicator else None)
+                menu.aboutToHide.connect(lambda: gdi_indicator.show_window() if gdi_indicator else None)
+            except Exception as e:
+                logging.error(f"Failed to initialize GDI indicator: {e}")
+                logging.error(traceback.format_exc())
+                gdi_indicator = None
+                # Show error message to user
+                QtWidgets.QMessageBox.warning(
+                    None, 
+                    "Visual Indicator Error",
+                    f"Failed to initialize visual indicator: {e}\n\nThe application will work without a visual indicator."
+                )
         
         # Log successful startup
         logging.info("Clicker application started successfully")

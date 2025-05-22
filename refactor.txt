@@ -1,5 +1,5 @@
 Refactor: Serialized, Human-like Automation Scheduling with Visual Indicators
-Version: 1.1.0 (Release Candidate)
+Version: 1.1.1 (Release Candidate)
 Date: May 2025
 
 Summary of Major Changes:
@@ -31,3 +31,9 @@ Motivation:
 - The global_cooldown feature adds an additional layer of rate limiting to prevent keypresses from occurring too rapidly in succession, enhancing the human-like behavior.
 - Improved documentation and error handling makes the application more user-friendly and stable.
 - The rest of the app (tray, hotkey, file watching) remains unchanged while gaining this new customization capability. 
+
+Recent Fixes:
+
+v1.1.1:
+- Fixed a bug where the GDI overlay was drawn on top of the first-run dialogue for new users, making it difficult to see and interact with the setup instructions.
+- The fix delays initialization of the GDI indicator until after the first-run dialogue is dismissed, ensuring new users have a smooth onboarding experience. 

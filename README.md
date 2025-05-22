@@ -6,7 +6,7 @@
 
 A modern, background Windows automation tool for sending keystrokes at human-like intervals. Runs as a tray icon with no visible window. Configure your keystrokes and timing in simple text files, and control automation with a global hotkey.
 
-**Version: 1.1.0** - Release Candidate
+**Version: 1.1.1** - Release Candidate
 
 ## Installation
 
@@ -87,6 +87,13 @@ Follow the setup instructions below.
 
 ## Platform
 - Windows only (uses Windows-specific APIs for reliable keystroke simulation).
+
+## Changelog
+### v1.1.1
+- Fixed bug where GDI overlay was drawn on top of the first-run dialogue for new users.
+
+### v1.1.0
+- Initial release candidate.
 
 ## License
 This project is licensed under the GNU General Public License v3.0. See [LICENSE](LICENSE) for details. 
