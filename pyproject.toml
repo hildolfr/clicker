@@ -1,0 +1,156 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clicker"
+version = "2.0.0"
+description = "Professional Windows automation tool with modern architecture"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Clicker Team", email = "contact@clicker.dev"}
+]
+keywords = ["automation", "windows", "keystroke", "productivity"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Desktop Environment",
+    "Topic :: System :: Systems Administration",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "PyQt5>=5.15.0",
+    "keyboard>=0.13.5",
+    "pyautogui>=0.9.54",
+    "watchdog>=2.1.9",
+    "pygame>=2.1.0",
+    "pywin32>=304",
+    "requests>=2.28.0",
+    "packaging>=21.3",
+    "jsonschema>=4.17.0",
+    "typing-extensions>=4.4.0",
+    "dataclasses; python_version<'3.7'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.2.0",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=22.10.0",
+    "mypy>=0.991",
+    "flake8>=5.0.4",
+    "isort>=5.11.4",
+    "pre-commit>=2.20.0",
+]
+test = [
+    "pytest>=7.2.0",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.10.0",
+]
+docs = [
+    "sphinx>=5.3.0",
+    "sphinx-rtd-theme>=1.1.1",
+    "myst-parser>=0.18.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/hildolfr/clicker"
+Documentation = "https://clicker.readthedocs.io"
+Repository = "https://github.com/hildolfr/clicker"
+"Bug Tracker" = "https://github.com/hildolfr/clicker/issues"
+
+[project.scripts]
+clicker = "clicker.app:main"
+
+[tool.setuptools.packages.find]
+include = ["clicker*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["clicker"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pygame.*",
+    "keyboard.*",
+    "pyautogui.*",
+    "win32gui.*",
+    "win32con.*",
+    "win32api.*",
+    "win32ui.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["clicker"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "setup.py",
+    "clicker/__main__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+] 
