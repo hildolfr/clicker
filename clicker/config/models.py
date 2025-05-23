@@ -257,6 +257,7 @@ class AppSettings:
     fail_safe_enabled: bool = True
     max_execution_time: float = 3600.0  # 1 hour
     emergency_stop_key: str = 'ctrl+shift+esc'
+    prompt_for_admin_privileges: bool = True  # Whether to show admin privilege dialog
     
     # Update settings
     check_updates_on_startup: bool = True
@@ -434,7 +435,7 @@ class AppSettings:
         boolean_fields = [
             'order_obeyed', 'show_notifications', 'minimize_to_tray',
             'high_performance_mode', 'logging_enabled', 'fail_safe_enabled',
-            'check_updates_on_startup', 'auto_install_updates'
+            'check_updates_on_startup', 'auto_install_updates', 'prompt_for_admin_privileges'
         ]
         
         for field in boolean_fields:
@@ -490,7 +491,7 @@ class AppSettings:
             'toggle_key', 'start_time_stagger', 'order_obeyed', 'global_cooldown',
             'indicator_type', 'show_notifications', 'minimize_to_tray',
             'keystroke_method', 'high_performance_mode', 'logging_enabled',
-            'fail_safe_enabled', 'max_execution_time', 'emergency_stop_key',
+            'fail_safe_enabled', 'max_execution_time', 'emergency_stop_key', 'prompt_for_admin_privileges',
             'check_updates_on_startup', 'auto_install_updates', 'update_channel',
             'thread_pool_size', 'memory_limit_mb', 'log_retention_days', 'config_backup_count'
         }

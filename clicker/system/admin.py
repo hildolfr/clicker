@@ -56,23 +56,33 @@ class AdminChecker:
         """
         try:
             msg = QtWidgets.QMessageBox(parent)
-            msg.setIcon(QtWidgets.QMessageBox.Warning)
-            msg.setWindowTitle("Administrator Rights Required")
-            msg.setText("This application is not running with administrator privileges.")
+            msg.setIcon(QtWidgets.QMessageBox.Information)
+            msg.setWindowTitle("Administrator Rights Recommended")
+            msg.setText("This application will work better with administrator privileges.")
             msg.setInformativeText(
-                "Some applications may not receive keystrokes properly. "
-                "Would you like to restart with administrator privileges?"
+                "Clicker can send keystrokes to more applications when running as administrator.\n\n"
+                "Click 'Restart as Admin' to close this window and restart with elevated privileges.\n"
+                "Click 'Continue Anyway' to keep using the app without admin rights."
             )
             msg.setDetailedText(
-                "When sending keystrokes to applications running with elevated privileges, "
+                "When sending keystrokes to applications running with elevated privileges "
+                "(like games, system utilities, or other admin-required programs), "
                 "Clicker needs to run as administrator too. Without admin rights, keystrokes "
-                "may only work with non-elevated applications."
+                "may only work with non-elevated applications.\n\n"
+                "Note: When you click 'Restart as Admin', this window will close and Windows "
+                "may show a User Account Control (UAC) prompt. After you approve it, "
+                "Clicker will restart automatically with administrator privileges."
             )
-            msg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-            msg.setDefaultButton(QtWidgets.QMessageBox.Yes)
+            
+            # Create custom buttons to be more explicit
+            restart_button = msg.addButton("Restart as Admin", QtWidgets.QMessageBox.AcceptRole)
+            continue_button = msg.addButton("Continue Anyway", QtWidgets.QMessageBox.RejectRole)
+            msg.setDefaultButton(restart_button)
             
             choice = msg.exec_()
-            if choice == QtWidgets.QMessageBox.Yes:
+            clicked_button = msg.clickedButton()
+            
+            if clicked_button == restart_button:
                 self.logger.info("User requested restart with admin privileges")
                 return self._restart_with_admin()
             else:
@@ -93,6 +103,22 @@ class AdminChecker:
         try:
             self.logger.info("Initiating restart with admin privileges")
             
+            # Show a brief notification that restart is happening
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Information)
+            msg.setWindowTitle("Restarting...")
+            msg.setText("Restarting Clicker with administrator privileges...")
+            msg.setInformativeText("This window will close automatically.")
+            msg.setStandardButtons(QtWidgets.QMessageBox.NoButton)
+            msg.show()
+            
+            # Process events to ensure message shows
+            QtWidgets.QApplication.processEvents()
+            
+            # Brief delay to let user see the message
+            import time
+            time.sleep(1.5)
+            
             # Use ShellExecute with "runas" to restart with admin privileges
             result = ctypes.windll.shell32.ShellExecuteW(
                 None, 
@@ -110,6 +136,7 @@ class AdminChecker:
                 sys.exit(0)
             else:
                 self.logger.error(f"ShellExecute failed with result: {result}")
+                msg.close()
                 raise Exception(f"ShellExecute returned error code: {result}")
                 
         except Exception as e:

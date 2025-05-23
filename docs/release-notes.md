@@ -1,12 +1,23 @@
 # Clicker Release Notes
 
-## Current Version: 2.1.1
+## Current Version: 2.1.2
 
 Welcome to the Clicker release notes! This document provides comprehensive information about all versions, including new features, improvements, bug fixes, and important notes for each release.
 
 ---
 
-### Version 2.1.1 (Current) - Bugfix Release
+### Version 2.1.2 (Current) - Maintenance Release
+**Release Date**: January 2025  
+**Type**: Maintenance & Version Consistency Release
+
+- 🔄 **Version Consistency**: Unified version references across all components
+- 📦 **Download Links**: Standardized to v2.1.2 tag format
+- 🛡️ **Latest Fixes**: Incorporates recent bug fixes and stability improvements
+- 📚 **Documentation**: Enhanced documentation accuracy and consistency
+
+[View detailed 2.1.2 release notes →](RELEASE_NOTES_v2.1.2.md)
+
+### Version 2.1.1 - Bugfix Release
 **Release Date**: May 23, 2025  
 **Type**: Critical Bugfix Release
 
@@ -30,7 +41,7 @@ Welcome to the Clicker release notes! This document provides comprehensive infor
 
 ## Version History
 
-### Version 2.1.0 (Current)
+### Version 2.1.2 (Current)
 - **Release Date**: 2025
 - **Type**: Major bugfix and reorganization release
 - **Highlights**: 
@@ -78,7 +89,7 @@ Version 2.0+ is a complete rewrite. Manual migration of settings is required:
 
 ## System Requirements
 
-### Current Requirements (v2.1.1)
+### Current Requirements (v2.1.2)
 
 **System Requirements:**
 - Windows 10/11 (64-bit recommended)
@@ -96,7 +107,7 @@ Version 2.0+ is a complete rewrite. Manual migration of settings is required:
 - Plugin architecture for extensibility
 
 **Current Status:**
-- **Version**: 2.1.1
+- **Version**: 2.1.2
 
 ### Legacy Requirements
 - **v2.0.x**: Python 3.9+, Windows 10+
@@ -105,7 +116,7 @@ Version 2.0+ is a complete rewrite. Manual migration of settings is required:
 ## Download Information
 
 ### Current Release
-- **Version**: 2.1.0
+- **Version**: 2.1.2
 - **Download**: Clone from repository
 - **Installation**: `pip install -r requirements.txt`
 - **Documentation**: Full documentation in `docs/` folder

@@ -27,7 +27,7 @@ from clicker.core.events import EventSystem, AutomationEvent, EventType
 from clicker.ui.gui.system_tray import SystemTrayManager
 from clicker.ui.indicators import VisualIndicator, PygameIndicator, GDIIndicator, IndicatorManager
 from clicker.ui.indicators.base import IndicatorState
-from clicker.ui.indicators.manager import set_indicator, show_dialog_with_indicator_handling
+from clicker.ui.indicators.manager import set_indicator, show_dialog_with_indicator_handling, hide_indicator
 from clicker.utils.exceptions import ClickerError, ConfigurationError
 from clicker.system.hotkeys import HotkeyManager
 from clicker.utils.file_watcher import FileWatcher
@@ -45,7 +45,7 @@ class ClickerApp:
     """
     
     # Application version for auto-updater
-    VERSION = "2.1.1"
+    VERSION = "2.1.2"
     
     def __init__(self, config_dir: Optional[Path] = None):
         # Initialize logger first, before any other operations
@@ -333,13 +333,21 @@ class ClickerApp:
     
     def _check_admin_privileges(self) -> None:
         """Check and potentially request admin privileges."""
+        settings = self.config_manager.settings
+        
         if not self.admin_checker.is_admin():
-            self.logger.warning("Application is not running with administrator privileges")
-            
-            # Use the AdminChecker's unified dialog instead of duplicating
-            if self.admin_checker.request_admin_restart():
-                # The request_admin_restart will handle sys.exit() if user accepts
-                pass
+            if settings.prompt_for_admin_privileges:
+                self.logger.warning("Application is not running with administrator privileges")
+                
+                # Hide GDI indicator before showing admin dialog
+                hide_indicator()
+                
+                # Use the AdminChecker's unified dialog instead of duplicating
+                if self.admin_checker.request_admin_restart():
+                    # The request_admin_restart will handle sys.exit() if user accepts
+                    pass
+            else:
+                self.logger.info("Application is not running with administrator privileges (prompts disabled)")
         else:
             self.logger.info("Application is running with administrator privileges")
     
@@ -406,9 +414,58 @@ class ClickerApp:
             
             self.logger.info("System tray created successfully")
             
+            # Show new user dialog if this is the first run
+            self._show_new_user_dialog_if_needed()
+            
         except Exception as e:
             self.logger.error(f"Failed to create system tray: {e}")
             raise ClickerError(f"System tray creation failed: {e}")
+    
+    def _is_new_user(self) -> bool:
+        """
+        Simplified new user detection without requiring extra files.
+        User is considered new if both settings.json and keystrokes.txt don't exist.
+        """
+        settings_exists = self.config_manager.settings_file.exists()
+        keystrokes_exists = self.config_manager.keystrokes_file.exists()
+        
+        # New user if neither config file exists initially
+        # This is checked before the files are created by ConfigManager.load()
+        return not (settings_exists and keystrokes_exists)
+    
+    def _show_new_user_dialog_if_needed(self) -> None:
+        """Show a helpful dialog for new users, but only if actually needed."""
+        # Simple detection: if we just created default files, user is likely new
+        # But don't show dialog if user has existing config files
+        try:
+            settings = self.config_manager.settings
+            
+            # Only show if both files were missing (indicating truly new user)
+            # We detect this by checking if we're using all default values
+            if (settings.toggle_key == "~" and  # Default toggle key
+                len(self.config_manager.keystrokes) <= 3 and  # Only default keystrokes
+                all(ks.description.startswith("Example") for ks in self.config_manager.keystrokes)):
+                
+                self.logger.info("New user detected, showing welcome dialog")
+                
+                # Hide GDI indicator during dialog
+                hide_indicator()
+                
+                # Show welcome dialog
+                show_dialog_with_indicator_handling(
+                    QtWidgets.QMessageBox.information,
+                    None,
+                    "Welcome to Clicker!",
+                    f"Clicker is now running in the system tray.\n\n"
+                    f"• Press '{settings.toggle_key}' to toggle automation on/off\n"
+                    f"• Right-click the tray icon for more options\n"
+                    f"• Edit keystrokes.txt to customize your automation\n\n"
+                    f"Tip: You can disable these startup messages in settings.json"
+                )
+                
+        except Exception as e:
+            self.logger.error(f"Error checking new user status: {e}")
+            # Don't show dialog if we can't determine user status
     
     def _setup_hotkeys(self) -> None:
         """Set up global hotkeys."""

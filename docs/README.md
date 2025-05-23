@@ -11,7 +11,7 @@ A modern, professional Windows automation tool with clean architecture and compr
 ## Installation
 
 ### Option 1: Download the Executable (Recommended)
-Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/2.1/Clicker.exe) (direct download link). No installation required!
+Download the standalone executable: [Clicker.exe](https://github.com/hildolfr/clicker/releases/download/v2.1.2/Clicker.exe) (direct download link). No installation required!
 
 ### Option 2: Run from Source
 Follow the setup instructions below.

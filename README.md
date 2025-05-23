@@ -6,7 +6,7 @@
 
 **A lightweight Windows keystroke automation tool with system tray integration and configurable timing**
 
-[![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://github.com/hildolfr/clicker)
+[![Version](https://img.shields.io/badge/version-2.1.2-blue.svg)](https://github.com/hildolfr/clicker)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://microsoft.com/windows)
@@ -192,6 +192,35 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 Special thanks to all contributors and the open-source community for making this project possible.
+
+## 🤔 Troubleshooting
+
+### App Closes on First Run
+
+If the application appears to "crash" or close unexpectedly on first run, this is likely due to the admin privilege dialog:
+
+**What's happening:**
+- On first run, Clicker checks if it has administrator privileges
+- If not, it shows a dialog asking if you want to restart with admin privileges
+- When you click "Restart as Admin", the current instance closes and restarts elevated
+- This can appear like a crash to users
+
+**Solutions:**
+
+1. **Expected behavior**: Click "Restart as Admin" when prompted, then approve the Windows UAC dialog
+2. **Disable admin prompts**: Edit `settings.json` and set `"prompt_for_admin_privileges": false`
+3. **Run as admin manually**: Right-click the executable and select "Run as administrator"
+
+**Why admin privileges help:**
+- Allows sending keystrokes to elevated applications (games, system utilities)
+- Without admin privileges, keystrokes may only work with non-elevated programs
+- This is a Windows security feature, not a bug
+
+### Configuration
+
+The application uses two main configuration files:
+- `settings.json`: Application settings and preferences
+- `keystrokes.txt`: Keystroke definitions and automation sequences
 
 ---
 

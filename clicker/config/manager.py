@@ -42,7 +42,8 @@ class ConfigManager:
         self.config_dir = Path(config_dir) if config_dir else Path.cwd()
         self.settings_file = self.config_dir / settings_file
         self.keystrokes_file = self.config_dir / keystrokes_file
-        self.backup_dir = self.config_dir / "backups"
+        # Remove backup directory creation - users don't want excessive files
+        # self.backup_dir = self.config_dir / "backups"
         
         # Initialize default values
         self._settings = AppSettings()
@@ -68,7 +69,8 @@ class ConfigManager:
     def _ensure_directories(self) -> None:
         """Ensure required directories exist."""
         self.config_dir.mkdir(exist_ok=True)
-        self.backup_dir.mkdir(exist_ok=True)
+        # Remove backup directory creation - users don't want excessive files
+        # self.backup_dir.mkdir(exist_ok=True)
         
     @property
     def settings(self) -> AppSettings:
@@ -462,70 +464,19 @@ class ConfigManager:
     
     def _backup_current_configuration(self) -> None:
         """Create a backup of the current configuration before profile switching."""
-        try:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            
-            # Backup settings
-            if self.settings_file.exists():
-                backup_name = f"settings_before_profile_switch_{timestamp}.json"
-                backup_path = self.backup_dir / backup_name
-                shutil.copy2(self.settings_file, backup_path)
-            
-            # Backup keystrokes
-            if self.keystrokes_file.exists():
-                backup_name = f"keystrokes_before_profile_switch_{timestamp}.txt"
-                backup_path = self.backup_dir / backup_name
-                shutil.copy2(self.keystrokes_file, backup_path)
-            
-            self.logger.debug("Created backup of current configuration before profile switch")
-            
-        except Exception as e:
-            self.logger.warning(f"Failed to backup current configuration: {e}")
+        # Backup functionality disabled to reduce file clutter
+        self.logger.debug("Configuration backup skipped before profile switch (backups disabled)")
     
     def _backup_file(self, file_path: Path, category: str = "general") -> None:
         """Create a timestamped backup of a file with category support."""
-        if not file_path.exists():
-            return
-            
-        try:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            backup_name = f"{file_path.stem}_{category}_{timestamp}{file_path.suffix}"
-            backup_path = self.backup_dir / backup_name
-            
-            shutil.copy2(file_path, backup_path)
-            
-            # Clean up old backups for this file type (keep last 10)
-            self._cleanup_old_backups(file_path.stem, category)
-            
-            self.logger.debug(f"Created backup: {backup_name}")
-            
-        except Exception as e:
-            self.logger.warning(f"Failed to create backup of {file_path}: {e}")
+        # Backup functionality disabled to reduce file clutter
+        # Users can manually backup files if needed
+        self.logger.debug(f"Backup skipped for {file_path.name} (backups disabled)")
     
     def _cleanup_old_backups(self, file_stem: str, category: str, keep_count: int = 10) -> None:
         """Clean up old backup files, keeping only the most recent ones."""
-        try:
-            pattern = f"{file_stem}_{category}_*.json" if category != "general" else f"{file_stem}_*.json"
-            if file_stem == "keystrokes":
-                pattern = f"{file_stem}_{category}_*.txt" if category != "general" else f"{file_stem}_*.txt"
-            
-            backups = list(self.backup_dir.glob(pattern))
-            if len(backups) <= keep_count:
-                return
-            
-            # Sort by modification time, newest first
-            backups.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-            
-            # Delete old backups
-            for old_backup in backups[keep_count:]:
-                try:
-                    old_backup.unlink()
-                    self.logger.debug(f"Deleted old backup: {old_backup.name}")
-                except Exception as e:
-                    self.logger.warning(f"Failed to delete old backup {old_backup}: {e}")
-                    
-        except Exception as e:
-            self.logger.warning(f"Error during backup cleanup: {e}")
+        # Backup functionality disabled to reduce file clutter
+        pass
     
     def export_profile(self, name: str, export_path: Path) -> bool:
         """Export a profile to a file."""
@@ -710,13 +661,9 @@ class ConfigManager:
         """Validate file paths and accessibility."""
         import os
         
-        # Check if backup directory is writable
-        try:
-            test_file = self.backup_dir / "test_write.tmp"
-            test_file.touch()
-            test_file.unlink()
-        except (OSError, PermissionError) as e:
-            raise ConfigurationError(f"Backup directory is not writable: {e}")
+        # Backup functionality disabled to reduce file clutter
+        # Skip backup directory validation
+        self.logger.debug("Backup directory validation skipped (backups disabled)")
         
         # Check if log directory is writable (current directory)
         try:
@@ -890,68 +837,8 @@ class ConfigManager:
     
     def _restore_from_backup(self, file_type: str) -> bool:
         """Try to restore a file from the most recent backup with improved error handling."""
-        pattern = f"settings_*.json" if file_type == "settings" else f"keystrokes_*.txt"
-        backups = sorted(self.backup_dir.glob(pattern), key=lambda p: p.stat().st_mtime, reverse=True)
-        
-        if not backups:
-            self.logger.warning(f"No backup files found for {file_type}")
-            return False
-        
-        target = self.settings_file if file_type == "settings" else self.keystrokes_file
-        restored_backup = None
-        
-        # Try each backup in order (newest first)
-        for backup in backups:
-            try:
-                self.logger.info(f"Attempting to restore {file_type} from backup: {backup}")
-                
-                # Validate backup file before restoration
-                if not self._validate_backup_file(backup, file_type):
-                    self.logger.warning(f"Backup file validation failed: {backup}")
-                    continue
-                
-                # Create a temporary copy for testing
-                temp_target = target.with_suffix(f"{target.suffix}.temp")
-                shutil.copy2(backup, temp_target)
-                
-                # Try to load the temporary file to verify it's valid
-                if file_type == "settings":
-                    test_success = self._test_load_settings(temp_target)
-                else:
-                    test_success = self._test_load_keystrokes(temp_target)
-                
-                if test_success:
-                    # Move temp file to final location
-                    shutil.move(temp_target, target)
-                    restored_backup = backup
-                    
-                    # Load the restored configuration
-                    if file_type == "settings":
-                        self._load_settings()
-                    else:
-                        self._load_keystrokes()
-                    
-                    self.logger.info(f"Successfully restored {file_type} from backup: {backup}")
-                    self._notify_backup_restoration(file_type, backup)
-                    return True
-                else:
-                    # Clean up temp file
-                    if temp_target.exists():
-                        temp_target.unlink()
-                    self.logger.warning(f"Backup file is corrupted: {backup}")
-                    
-            except Exception as e:
-                self.logger.error(f"Failed to restore from backup {backup}: {e}")
-                # Clean up any temp files
-                temp_target = target.with_suffix(f"{target.suffix}.temp")
-                if temp_target.exists():
-                    try:
-                        temp_target.unlink()
-                    except:
-                        pass
-                continue
-        
-        self.logger.error(f"All backup restoration attempts failed for {file_type}")
+        # Backup functionality disabled to reduce file clutter
+        self.logger.warning(f"Backup restoration not available for {file_type} (backups disabled)")
         return False
     
     def _validate_backup_file(self, backup_path: Path, file_type: str) -> bool:
