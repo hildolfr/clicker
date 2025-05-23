@@ -4,7 +4,7 @@
 
 <img src="docs/assets/logo.png" alt="Clicker Logo" width="200" height="auto">
 
-**A powerful, feature-rich automation platform with advanced clicking capabilities, hotkey support, and modern GUI interface**
+**A lightweight Windows keystroke automation tool with system tray integration and configurable timing**
 
 [![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://github.com/hildolfr/clicker)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://python.org)
@@ -22,40 +22,40 @@
 ## 🚀 Features
 
 ### 🎯 **Core Automation**
-- **Advanced Auto-Clicking** - Precise, configurable click automation with sub-millisecond timing
-- **Multi-Pattern Support** - Complex clicking patterns with customizable intervals and sequences
-- **Smart Coordinate Detection** - Intelligent click position detection and validation
-- **Hotkey Integration** - Global hotkey support for instant control without window focus
+- **Keystroke Automation** - Send keyboard keys at configurable intervals and timing
+- **Configurable Key Sequences** - Define multiple keystrokes with individual delays and descriptions  
+- **Hotkey Toggle Control** - Start/stop automation using configurable hotkeys (default: `~`)
+- **System Integration** - Uses Windows API for reliable keystroke sending
 
-### 🖥️ **Modern Interface**
-- **Intuitive GUI** - Clean, professional interface built with modern UI frameworks
-- **System Tray Integration** - Seamless background operation with system tray controls
-- **Real-time Monitoring** - Live status updates and performance metrics
-- **Dark/Light Themes** - Customizable interface themes for optimal user experience
+### 🖥️ **User Interface**
+- **System Tray Integration** - Runs minimized in system tray with context menu access
+- **Visual Indicators** - Optional on-screen indicators showing automation status (GDI-based)
+- **Qt5-based GUI** - Clean PyQt5 interface for system tray and configuration
+- **Real-time Status** - Live status updates via tray icon tooltip
 
-### ⚙️ **Advanced Configuration**
-- **Profile Management** - Save and load different automation profiles
-- **JSON Configuration** - Human-readable configuration files with full customization
-- **Plugin Architecture** - Extensible plugin system for custom functionality
-- **Command-Line Interface** - Full CLI support for automation scripting
+### ⚙️ **Configuration Management**
+- **Profile System** - Save and load different keystroke configurations
+- **JSON Configuration** - Human-readable settings.json and profile management
+- **File-based Keystrokes** - Simple keystrokes.txt format for easy editing
+- **Command-Line Profile Tools** - CLI utilities for profile management
 
-### 🔧 **Professional Tools**
-- **Precision Timing** - High-resolution timers for exact automation control
-- **Error Handling** - Robust error detection and recovery mechanisms
-- **Logging System** - Comprehensive logging with configurable verbosity levels
-- **Performance Optimization** - Optimized for minimal system resource usage
+### 🔧 **Automation Features**
+- **Flexible Timing** - Individual delay settings per keystroke (0.1s - 1 hour)
+- **Modifier Key Support** - Ctrl, Shift, Alt combinations (e.g., C-S-a for Ctrl+Shift+A)
+- **Error Handling** - Robust error tracking with statistics and failure recovery
+- **Threading** - Background automation with proper thread management
 
-### 🛡️ **Safety & Security**
-- **Safe Mode Operations** - Built-in safeguards to prevent accidental system damage
-- **Emergency Stop** - Multiple emergency stop mechanisms (hotkeys, GUI, CLI)
-- **Process Monitoring** - Intelligent detection of target applications
-- **Resource Management** - Automatic cleanup and resource management
+### 🛡️ **Safety & Control**
+- **Emergency Stop** - Configurable emergency stop hotkey (default: Ctrl+Shift+Esc)
+- **Execution Limits** - Maximum execution time limits to prevent runaway automation
+- **Fail-safe Mode** - Built-in safeguards and error detection
+- **Logging System** - Comprehensive logging with rotation and retention settings
 
-### 🔌 **Extensibility**
-- **Plugin System** - Modular architecture supporting custom plugins
-- **API Access** - Full programmatic API for integration with other tools
-- **Scripting Support** - Python scripting interface for advanced automation
-- **Custom Actions** - Define complex multi-step automation sequences
+### 🔧 **Technical Features**
+- **Windows API Integration** - Native Windows keystroke sending via user32.dll
+- **File Watching** - Automatic configuration reload when files change
+- **Statistics Tracking** - Success/failure rates and execution monitoring
+- **Memory Management** - Configurable memory limits and resource cleanup
 
 ## 📦 Installation
 
@@ -82,104 +82,95 @@ python main.py
 
 ### Basic Operation
 1. **Launch Application**: Run `python main.py`
-2. **Configure Settings**: Set up your clicking patterns and hotkeys
-3. **Start Automation**: Use hotkeys or GUI controls to begin automation
-4. **System Tray**: Access quick controls via the system tray icon
+2. **Configure Keystrokes**: Edit `keystrokes.txt` with your desired key sequences
+3. **Adjust Settings**: Modify `settings.json` for timing and behavior preferences
+4. **Start Automation**: Press the toggle key (`~` by default) or use system tray controls
 
-### Advanced Features
-```python
-# Example: Programmatic usage via API
-from clicker import ClickerAPI
-
-api = ClickerAPI()
-api.set_pattern(clicks=10, interval=0.5, position=(100, 200))
-api.start_automation()
+### Keystroke Configuration Format
 ```
+# keystrokes.txt format
+key delay description
+1 2.0 Press number 1 every 2 seconds
+C-c 5.0 Ctrl+C every 5 seconds
+S-A-f4 10.0 Shift+Alt+F4 every 10 seconds
+```
+
+### Key Syntax
+- **Single Keys**: `a`, `1`, `space`, `enter`, `f1`-`f12`
+- **Modifiers**: `C-` (Ctrl), `S-` (Shift), `A-` (Alt)
+- **Combinations**: `C-S-a` (Ctrl+Shift+A)
 
 ## 📚 Documentation
 
-Our comprehensive documentation covers every aspect of the Clicker automation suite:
-
 ### 📖 **User Guides**
-- **[Getting Started Guide](docs/getting-started.md)** - Complete beginner's guide
-- **[Configuration Guide](docs/configuration.md)** - Advanced configuration options
-- **[Hotkey Reference](docs/hotkeys.md)** - Complete hotkey documentation
+- **[Getting Started Guide](docs/getting-started.md)** - Basic setup and configuration
+- **[Configuration Guide](docs/configuration.md)** - Detailed configuration options
+- **[Hotkey Reference](docs/hotkeys.md)** - Supported keys and combinations
 - **[Troubleshooting Guide](docs/troubleshooting.md)** - Common issues and solutions
 
 ### 🔧 **Technical Documentation**
-- **[API Reference](docs/API.md)** - Complete API documentation
-- **[Plugin Development](docs/dev/plugins.md)** - Creating custom plugins
-- **[Architecture Overview](docs/dev/architecture.md)** - System architecture details
-- **[Contributing Guide](docs/dev/contributing.md)** - Development contribution guidelines
+- **[Profile Usage](docs/PROFILE_USAGE.md)** - Profile management and CLI tools
+- **[Configuration Schema](docs/config-schema.md)** - Configuration file reference
+- **[Command Line Reference](docs/cli-reference.md)** - CLI commands and options
+- **[API Reference](docs/API.md)** - Code structure and architecture
 
 ### 📋 **References**
 - **[Release Notes](docs/release-notes.md)** - Version history and changes
-- **[Configuration Schema](docs/config-schema.md)** - Configuration file reference
-- **[Command Line Reference](docs/cli-reference.md)** - CLI commands and options
 
 ## 🛠️ Development
 
 ### Project Architecture
 
-Clicker follows a modern, modular architecture designed for maintainability and extensibility:
+Clicker follows a modular architecture for maintainability:
 
 ```
 clicker/
-├── 🏗️ core/              # Core automation engine
-├── 🖥️ ui/                # User interface components
-├── ⚙️ config/            # Configuration management
-├── 🔌 plugins/           # Plugin system
-├── 🛠️ utils/             # Utility modules
-├── 💻 cli/               # Command-line interface
-├── 🖱️ system/            # System integration
+├── 🏗️ core/              # Automation engine and keystrokes
+├── 🖥️ ui/                # System tray and visual indicators  
+├── ⚙️ config/            # Configuration management and models
+├── 🔌 plugins/           # Plugin system (framework ready)
+├── 🛠️ utils/             # Utility modules and helpers
+├── 💻 cli/               # Command-line profile management
+├── 🖱️ system/            # Windows API integration
 └── 📱 app.py             # Main application orchestrator
 ```
 
 ### Key Technologies
-- **GUI Framework**: Modern Python GUI with native Windows integration
-- **Automation Engine**: Custom-built precision automation core
-- **Plugin System**: Dynamic plugin loading and management
-- **Configuration**: JSON-based configuration with validation
-- **Logging**: Structured logging with multiple output formats
+- **PyQt5** - System tray and GUI components
+- **Windows API** - Native keystroke sending via ctypes
+- **Threading** - Background automation execution
+- **JSON** - Configuration storage and profiles
+- **File Watching** - Automatic configuration reloading
 
 ### Build & Development Tools
 
 ```bash
 # Development setup
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 
 # Run tests
 python -m pytest tests/
 
-# Build documentation
-python scripts/build/build_docs.py
+# Profile management CLI
+python -m clicker.cli.profile_manager --help
 
-# Create distribution
-python scripts/build/build_dist.py
+# Build with PyInstaller
+pyinstaller Clicker.spec
 ```
 
-### 🧪 **Quality Assurance**
-- **Comprehensive Testing** - Unit tests, integration tests, and end-to-end testing
-- **Code Quality** - Automated linting, formatting, and code analysis
-- **Performance Testing** - Benchmarking and performance regression testing
-- **Documentation Testing** - Automated documentation validation and examples
+## 🌟 What Makes Clicker Useful
 
-## 🌟 What Makes Clicker Special
+### 🎯 **Simple but Reliable**
+Clicker focuses on doing keystroke automation well with minimal complexity and reliable Windows integration.
 
-### 🎯 **Precision Engineering**
-Clicker isn't just another auto-clicker. It's a precision-engineered automation platform built with enterprise-grade reliability and performance in mind.
+### 🏗️ **Clean Architecture**
+Modular design with proper separation of concerns, making it maintainable and extensible.
 
-### 🏗️ **Professional Architecture**
-From the ground up, Clicker was designed with clean, maintainable code following industry best practices and design patterns.
-
-### 🔧 **Extensible Design**
-The modular plugin architecture allows for unlimited customization and extension of functionality.
+### 🔧 **Flexible Configuration**
+Easy-to-edit text files combined with a robust profile system for different automation scenarios.
 
 ### 🛡️ **Safety First**
-Built-in safety mechanisms and emergency stops ensure your system remains protected during automation.
-
-### 📈 **Performance Optimized**
-Optimized for minimal resource usage while maintaining maximum precision and reliability.
+Built-in safety mechanisms, error handling, and emergency stops to prevent issues during automation.
 
 ## 🤝 Contributing
 
