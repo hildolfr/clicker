@@ -6,7 +6,7 @@
 
 **A powerful, feature-rich automation platform with advanced clicking capabilities, hotkey support, and modern GUI interface**
 
-[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](https://github.com/yourusername/clicker)
+[![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://github.com/hildolfr/clicker)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://microsoft.com/windows)
@@ -60,7 +60,7 @@
 ### Quick Start
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/clicker.git
+git clone https://github.com/hildolfr/clicker.git
 cd clicker
 
 # Install dependencies

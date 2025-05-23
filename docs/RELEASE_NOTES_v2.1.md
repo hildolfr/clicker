@@ -136,8 +136,11 @@ This release focuses on maintainability and developer experience improvements fo
 - **Issue Tracker**: GitHub Issues
 - **License**: MIT License
 
----
+## 🔗 Download
 
-**Download**: [Clicker v2.1.0 Executable](https://github.com/hildolfr/clicker/releases/download/2.1/Clicker.exe)
+> **⚠️ SUPERSEDED**: This version has been superseded by **v2.1.1** which includes critical autoupdate bugfixes.  
+> **Recommended**: Download [Clicker v2.1.1](https://github.com/hildolfr/clicker/releases/download/v2.1.1/Clicker.exe) instead.
+
+**Historical Download**: [Clicker v2.1.0 Executable](https://github.com/hildolfr/clicker/releases/download/v2.1.0/Clicker.exe)
 
 This release maintains the professional-grade automation capabilities of v2.0 while providing a cleaner, more maintainable codebase structure. 

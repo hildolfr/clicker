@@ -1,10 +1,32 @@
-# Release Notes
+# Clicker Release Notes
 
-Version history and release information for Clicker.
+## Current Version: 2.1.1
 
-## Current Version: 2.1.0
+Welcome to the Clicker release notes! This document provides comprehensive information about all versions, including new features, improvements, bug fixes, and important notes for each release.
 
-For detailed release notes for the current version, see [Version 2.1 Release Notes](RELEASE_NOTES_v2.1.md).
+---
+
+### Version 2.1.1 (Current) - Bugfix Release
+**Release Date**: May 23, 2025  
+**Type**: Critical Bugfix Release
+
+- 🐛 **CRITICAL FIX**: Resolved autoupdate "Python missing" errors
+- 🛡️ **Enhanced Update System**: Complete overhaul of autoupdate functionality  
+- ✅ **Improved Validation**: Multi-layer validation for update processes
+- 📝 **Better Logging**: Enhanced error reporting and troubleshooting
+
+[View detailed 2.1.1 release notes →](RELEASE_NOTES_v2.1.1.md)
+
+### Version 2.1.0 - Post-2.0 Reorganization  
+**Release Date**: May 22, 2025  
+**Type**: Maintenance Release
+
+- 📁 **Code Reorganization**: Improved architecture and file structure
+- 📚 **Documentation Update**: Comprehensive documentation restructuring
+- 🐛 **Bugfixes**: Various stability improvements and minor bug fixes
+- 🔧 **Developer Experience**: Enhanced development tools and workflows
+
+[View detailed 2.1.0 release notes →](RELEASE_NOTES_v2.1.md)
 
 ## Version History
 
@@ -18,8 +40,6 @@ For detailed release notes for the current version, see [Version 2.1 Release Not
   - Better performance and resource usage
   - Professional system tray integration
   - Comprehensive logging system
-
-[View detailed 2.1.0 release notes →](RELEASE_NOTES_v2.1.md)
 
 ### Version 2.0.x
 - **Release Date**: 2024
@@ -58,12 +78,25 @@ Version 2.0+ is a complete rewrite. Manual migration of settings is required:
 
 ## System Requirements
 
-### Current Requirements (v2.1.0)
-- **Operating System**: Windows 10/11 (64-bit)
-- **Python**: 3.11 or higher
-- **Memory**: 50MB RAM minimum
-- **Disk Space**: 100MB free space
-- **Dependencies**: See `requirements.txt`
+### Current Requirements (v2.1.1)
+
+**System Requirements:**
+- Windows 10/11 (64-bit recommended)
+- 50MB RAM minimum
+- 100MB free disk space
+- Internet connection for autoupdates
+
+**Core Features:**
+- Modern Python-based architecture  
+- Advanced clicking automation with precision timing
+- System tray integration with background operation
+- Hotkey support for instant control
+- Profile management and configuration system
+- Comprehensive logging and error handling
+- Plugin architecture for extensibility
+
+**Current Status:**
+- **Version**: 2.1.1
 
 ### Legacy Requirements
 - **v2.0.x**: Python 3.9+, Windows 10+

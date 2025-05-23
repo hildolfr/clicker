@@ -19,7 +19,7 @@ from clicker.ui.indicators.manager import set_menu_active, hide_indicator
 class SystemTrayManager:
     """Manages system tray icon and interactions."""
     
-    def __init__(self, app_version: str = "2.1.0"):
+    def __init__(self, app_version: str = "2.1.1"):
         self.app_version = app_version
         self.logger = logging.getLogger(__name__)
         

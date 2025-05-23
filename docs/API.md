@@ -600,7 +600,7 @@ Handles automatic application updates.
 ```python
 from clicker.utils.updater import AutoUpdater, UpdateChecker
 
-updater = AutoUpdater(current_version="2.1.0")
+updater = AutoUpdater(current_version="2.1.1")
 update_checker = UpdateChecker(updater)
 ```
 
@@ -1057,6 +1057,7 @@ settings.keystroke_method = KeystrokeMethod.WINDOWS_API
 
 ## Version History
 
+- **v2.1.1**: Bugfix release with autoupdate improvements
 - **v2.1.0**: Post-2.0 reorganization and bugfix release
 - **v2.0.0**: Complete architecture refactor with clean API
 - **v1.x**: Legacy monolithic implementation

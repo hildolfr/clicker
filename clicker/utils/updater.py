@@ -284,11 +284,50 @@ class AutoUpdater:
     
     def _create_update_script(self, new_exe_path: Path, version: str) -> Path:
         """Create a batch script to handle the update process."""
-        # Get current executable path
+        # Get current executable path with improved detection
         if getattr(sys, 'frozen', False):
+            # Running as PyInstaller executable
             current_exe = Path(sys.executable)
         else:
-            current_exe = Path(sys.argv[0]).resolve()
+            # Running as Python script - need to find the actual executable
+            # This handles the case where we're running from source but need to update an exe
+            script_dir = Path(sys.argv[0]).parent.resolve()
+            
+            # Look for the executable in common locations
+            possible_exe_paths = [
+                script_dir / "Clicker.exe",  # Same directory as script
+                script_dir / "dist" / "Clicker.exe",  # In dist subdirectory
+                script_dir.parent / "Clicker.exe",  # Parent directory
+                script_dir.parent / "dist" / "Clicker.exe",  # Parent/dist
+            ]
+            
+            # Find the first existing executable
+            current_exe = None
+            for exe_path in possible_exe_paths:
+                if exe_path.exists() and exe_path.suffix.lower() == '.exe':
+                    current_exe = exe_path
+                    break
+            
+            # If no executable found, fall back to the script path but warn
+            if current_exe is None:
+                current_exe = Path(sys.argv[0]).resolve()
+                self.logger.warning(
+                    f"Could not find executable for update restart, using script path: {current_exe}"
+                )
+        
+        # Ensure we have an absolute path
+        current_exe = current_exe.resolve()
+        
+        # Log the paths for debugging
+        self.logger.info(f"Update script will replace: {current_exe}")
+        self.logger.info(f"Update script will restart: {current_exe}")
+        
+        # Validate that target path looks like an executable
+        if current_exe.suffix.lower() != '.exe':
+            self.logger.warning(
+                f"Target path '{current_exe}' is not an executable file. "
+                f"Users may experience 'Python missing' errors after update."
+            )
         
         # Create update script
         script_path = new_exe_path.parent / "update.bat"
@@ -296,20 +335,52 @@ class AutoUpdater:
         with open(script_path, 'w') as f:
             f.write(f'''@echo off
 echo Updating Clicker to version {version}...
+echo Target executable: {current_exe}
+set TARGET={current_exe}
+
+REM Validate that target is an executable
+echo %TARGET% | findstr /i ".exe" >nul
+if errorlevel 1 (
+    echo ERROR: Target path is not an executable file: %TARGET%
+    echo This could cause "Python missing" errors after update.
+    echo Please contact support or update manually.
+    pause
+    exit /b 1
+)
+
 timeout /t 2 /nobreak > nul
 
 :retry
-copy /Y "{new_exe_path}" "{current_exe}" > nul
+echo Copying new executable...
+copy /Y "{new_exe_path}" "%TARGET%" > nul
 if errorlevel 1 (
-    echo Update failed, retrying...
+    echo Update failed, retrying in 1 second...
     timeout /t 1 /nobreak > nul
     goto retry
 )
 
 echo Update successful!
-start "" "{current_exe}"
+echo Validating updated executable...
+if not exist "%TARGET%" (
+    echo ERROR: Updated executable not found at %TARGET%
+    echo Update may have failed.
+    pause
+    exit /b 1
+)
+
+echo Starting updated application...
+start "" "%TARGET%"
+if errorlevel 1 (
+    echo ERROR: Failed to start updated application.
+    echo Please manually run: %TARGET%
+    pause
+    exit /b 1
+)
+
 timeout /t 2 /nobreak > nul
+echo Cleaning up temporary files...
 rd /s /q "{new_exe_path.parent}"
+echo Update process completed successfully.
 exit
 ''')
         
@@ -319,12 +390,42 @@ exit
         """Execute the update process and exit current application."""
         script_path = self._create_update_script(new_exe_path, version)
         
-        self.logger.info(f"Launching update script: {script_path}")
+        # Validate the update script was created successfully
+        if not script_path.exists():
+            raise UpdateError(f"Update script creation failed: {script_path}")
         
-        # Start the update script
-        subprocess.Popen(str(script_path), shell=True)
+        # Validate the new executable exists and is accessible
+        if not new_exe_path.exists():
+            raise UpdateError(f"Downloaded update file not found: {new_exe_path}")
+        
+        # Check file size to ensure download completed
+        if new_exe_path.stat().st_size < 1024 * 1024:  # Less than 1MB is suspicious
+            self.logger.warning(f"Downloaded file is unusually small: {new_exe_path.stat().st_size} bytes")
+        
+        self.logger.info(f"Launching update script: {script_path}")
+        self.logger.info(f"Update file size: {new_exe_path.stat().st_size} bytes")
+        
+        try:
+            # Start the update script with better error handling
+            process = subprocess.Popen(
+                str(script_path), 
+                shell=True,
+                cwd=str(script_path.parent),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            
+            self.logger.info(f"Update script launched with PID: {process.pid}")
+            
+        except Exception as e:
+            raise UpdateError(f"Failed to launch update script: {e}")
+        
+        # Give the script a moment to start
+        import time
+        time.sleep(0.5)
         
         # Exit current application
+        self.logger.info("Exiting current application for update")
         sys.exit(0)
 
 
