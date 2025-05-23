@@ -43,7 +43,7 @@ class ConfigFileHandler(FileSystemEventHandler):
                     self.logger.info(f"Detected change in {filename}")
                     
                     try:
-                        self.callback()
+                        self.callback(filename)
                     except Exception as e:
                         self.logger.error(f"Error in file change callback: {e}")
 

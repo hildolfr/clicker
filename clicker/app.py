@@ -10,6 +10,8 @@ from __future__ import annotations
 import logging
 import sys
 import os
+import glob
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
@@ -43,9 +45,12 @@ class ClickerApp:
     """
     
     # Application version for auto-updater
-    VERSION = "2.0.0"
+    VERSION = "2.1.0"
     
     def __init__(self, config_dir: Optional[Path] = None):
+        # Initialize logger first, before any other operations
+        self.logger = logging.getLogger(__name__)
+        
         # Core dependencies - dependency injection pattern
         self.config_manager = ConfigManager(config_dir)
         self.event_system = EventSystem()
@@ -55,7 +60,17 @@ class ClickerApp:
         # System utilities
         self.admin_checker = AdminChecker()
         self.singleton_manager = SingletonManager()
-        self.hotkey_manager = HotkeyManager()
+        
+        # Initialize hotkey manager (may fail if keyboard library unavailable)
+        try:
+            self.hotkey_manager = HotkeyManager(self.event_system)
+        except ImportError as e:
+            # Use print as fallback if logger not fully configured yet
+            try:
+                self.logger.warning(f"Hotkey manager unavailable: {e}")
+            except:
+                print(f"Warning: Hotkey manager unavailable: {e}")
+            self.hotkey_manager = None
         
         # Auto-update components
         self.auto_updater = AutoUpdater(self.VERSION)
@@ -72,8 +87,6 @@ class ClickerApp:
         # State
         self._running = False
         self._shutdown_requested = False
-        
-        self.logger = logging.getLogger(__name__)
         
         # Wire up event handlers
         self._setup_event_handlers()
@@ -97,20 +110,20 @@ class ClickerApp:
             int: Exit code (0 for success, non-zero for error)
         """
         try:
-            # Initialize logging
+            # Initialize logging first
             self._setup_logging()
             
             # Startup sequence
             self.logger.info(f"Starting Clicker application v{self.VERSION}")
             
-            # Check for singleton - must be first
+            # Initialize Qt application early, before any potential Qt widgets
+            self._initialize_qt()
+            
+            # Check for singleton - must be after Qt init but before UI
             self._check_singleton()
             
             # Hide console window on Windows
             self._hide_console_window()
-            
-            # Initialize Qt application
-            self._initialize_qt()
             
             # Load configuration
             self._load_configuration()
@@ -170,62 +183,69 @@ class ClickerApp:
         max_log_size = int(1.75 * 1024 * 1024)  # 1.75MB in bytes
         backup_count = 5  # Keep 5 rotated log files
         
-        # Create rotating file handler
+        # Create formatter
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
+        
+        # Create rotating file handler with improved error handling
+        file_handler = None
         try:
-            rotating_handler = logging.handlers.RotatingFileHandler(
+            # Try to close any existing file handlers to avoid conflicts
+            root_logger = logging.getLogger()
+            for handler in root_logger.handlers[:]:
+                if isinstance(handler, (logging.FileHandler, logging.handlers.RotatingFileHandler)):
+                    handler.close()
+                    root_logger.removeHandler(handler)
+            
+            # Try rotating handler first
+            file_handler = logging.handlers.RotatingFileHandler(
                 'clicker.log',
                 maxBytes=max_log_size,
                 backupCount=backup_count,
-                encoding='utf-8'
+                encoding='utf-8',
+                delay=True  # Don't open file until first write
             )
+            file_handler.setFormatter(formatter)
+            
         except (PermissionError, OSError) as e:
-            # If rotation fails, use a simple file handler as fallback
-            print(f"Warning: Could not create rotating log handler ({e}), using simple file handler")
+            # If rotation fails, try a simple file handler as fallback
+            self.logger.warning(f"Could not create rotating log handler ({e}), trying simple file handler")
             try:
-                rotating_handler = logging.FileHandler('clicker.log', encoding='utf-8')
+                file_handler = logging.FileHandler('clicker.log', encoding='utf-8')
+                file_handler.setFormatter(formatter)
             except (PermissionError, OSError) as e2:
                 # If we can't even create a file handler, use console only
-                print(f"Warning: Could not create file handler ({e2}), using console logging only")
-                rotating_handler = None
+                self.logger.warning(f"Could not create file handler ({e2}), using console logging only")
+                file_handler = None
         
         # Create console handler
         console_handler = logging.StreamHandler()
-        
-        # Create formatter
-        formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
-        
-        # Set formatters
-        if rotating_handler:
-            rotating_handler.setFormatter(formatter)
         console_handler.setFormatter(formatter)
         
         # Configure root logger
         root_logger = logging.getLogger()
         root_logger.setLevel(log_level)
         
-        # Clear any existing handlers to avoid duplicates
+        # Clear existing handlers to avoid duplicates
         root_logger.handlers.clear()
         
-        # Add our handlers
-        if rotating_handler:
-            root_logger.addHandler(rotating_handler)
+        # Add handlers
+        if file_handler:
+            root_logger.addHandler(file_handler)
         root_logger.addHandler(console_handler)
         
-        # Clean up old log files based on retention policy
-        self._cleanup_old_logs(retention_days)
+        # Clean up old log files
+        try:
+            self._cleanup_old_logs(retention_days)
+        except Exception as e:
+            self.logger.warning(f"Log cleanup failed: {e}")
         
-        # Log the setup completion
-        logger = logging.getLogger(__name__)
-        logger.info(f"Logging configured: level={logging.getLevelName(log_level)}, max_size={max_log_size/1024/1024:.2f}MB, retention={retention_days}days")
+        self.logger.info(f"Logging configured: level={logging.getLevelName(log_level)}, max_size={max_log_size/1024/1024:.2f}MB, retention={retention_days}days")
 
     def _cleanup_old_logs(self, retention_days: int) -> None:
         """Clean up log files older than the retention period."""
-        import glob
-        import os
-        from datetime import datetime, timedelta
-        
         try:
             cutoff_date = datetime.now() - timedelta(days=retention_days)
             
@@ -392,6 +412,10 @@ class ClickerApp:
     
     def _setup_hotkeys(self) -> None:
         """Set up global hotkeys."""
+        if not self.hotkey_manager:
+            self.logger.warning("Hotkey manager not available - skipping hotkey setup")
+            return
+            
         try:
             settings = self.config_manager.settings
             self.hotkey_manager.register_hotkey("toggle", settings.toggle_key, self._toggle_automation)
@@ -404,12 +428,16 @@ class ClickerApp:
     def _setup_file_watching(self) -> None:
         """Set up file watching for configuration changes."""
         try:
-            self.file_watcher = FileWatcher(
-                paths=['settings.json', 'keystrokes.txt'],
+            self.file_watcher = FileWatcher()
+            success = self.file_watcher.start_watching(
+                files_to_watch=['settings.json', 'keystrokes.txt'],
                 callback=self._on_file_changed
             )
-            self.file_watcher.start()
-            self.logger.info("File watching started")
+            
+            if success:
+                self.logger.info("File watching started")
+            else:
+                self.logger.warning("File watching failed to start")
             
         except Exception as e:
             self.logger.error(f"Failed to set up file watching: {e}")
@@ -499,8 +527,9 @@ class ClickerApp:
             self.automation_engine.configure(keystrokes, settings)
             
             # Update hotkeys
-            self.hotkey_manager.unregister_all()
-            self.hotkey_manager.register_hotkey("toggle", settings.toggle_key, self._toggle_automation)
+            if self.hotkey_manager:
+                self.hotkey_manager.unregister_all()
+                self.hotkey_manager.register_hotkey("toggle", settings.toggle_key, self._toggle_automation)
             
             # Restart automation if it was running
             if was_running:
@@ -641,7 +670,7 @@ class ClickerApp:
             # Stop file watcher
             if self.file_watcher:
                 try:
-                    self.file_watcher.stop()
+                    self.file_watcher.stop_watching()
                 except Exception as e:
                     self.logger.error(f"Error stopping file watcher: {e}")
             

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union, Dict, Any, Set
 from pathlib import Path
@@ -685,11 +686,10 @@ class ProfileConfig:
                 
                 # Try to validate ISO format (basic check)
                 try:
-                    import datetime
                     # Allow both with and without microseconds
                     for fmt in ['%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%dT%H:%M:%S']:
                         try:
-                            datetime.datetime.strptime(value, fmt)
+                            datetime.strptime(value, fmt)
                             break
                         except ValueError:
                             continue

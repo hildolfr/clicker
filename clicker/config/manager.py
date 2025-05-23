@@ -1090,6 +1090,11 @@ class ConfigManager:
             return True
         return False
 
+    def reload(self) -> None:
+        """Reload configuration from files."""
+        self.logger.info("Manually reloading configuration")
+        self.load()
+
     def _save_with_timeout(self, file_path: Path, content: str, timeout: float = None) -> None:
         """Save content to file with timeout protection and proper resource cleanup."""
         import threading

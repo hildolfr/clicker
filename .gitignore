@@ -69,17 +69,11 @@ desktop.ini
 user_settings.json
 custom_keystrokes.txt
 
-# PyInstaller specific files
-*.spec
+# PyInstaller build output (but not the spec files in scripts/build/)
 *.manifest
 *.toc
 warn-*.txt
 xref-*.html
 
 # Distribution package
-Clicker-Portable/
-
-# Build scripts (these contain paths that may expose personal info)
-build.bat
-build_alt.bat
-build.ps1 
+Clicker-Portable/ 

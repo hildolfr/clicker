@@ -12,8 +12,6 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from PyQt5 import QtWidgets
-
 
 class SingletonManager:
     """Manages singleton application instance using Windows mutex and lockfile."""
@@ -43,24 +41,37 @@ class SingletonManager:
         """
         # Try to create mutex first - this is more reliable than file locks
         try:
-            self.mutex_handle = ctypes.windll.kernel32.CreateMutexW(None, False, self.mutex_name)
-            if not self.mutex_handle:
-                self.logger.error("Failed to create mutex handle")
-                return False
-                
-            last_error = ctypes.windll.kernel32.GetLastError()
+            # Ensure we have the proper access rights and error handling
+            MUTEX_ALL_ACCESS = 0x1F0001
             
-            if last_error == 183:  # ERROR_ALREADY_EXISTS
-                self.logger.warning("Mutex already exists - another instance is running")
-                # Clean up the handle we just created since another instance exists
-                try:
-                    ctypes.windll.kernel32.CloseHandle(self.mutex_handle)
-                except Exception as cleanup_error:
-                    self.logger.error(f"Error cleaning up mutex handle: {cleanup_error}")
-                finally:
-                    self.mutex_handle = None
-                # Don't show dialog here - let the caller handle the messaging
-                return False
+            self.mutex_handle = ctypes.windll.kernel32.CreateMutexW(
+                None,     # default security attributes
+                False,    # initially not owned
+                self.mutex_name
+            )
+            
+            if not self.mutex_handle:
+                # Get the actual error code
+                error_code = ctypes.windll.kernel32.GetLastError()
+                self.logger.error(f"Failed to create mutex handle, error code: {error_code}")
+                # Continue with file-based fallback
+            else:
+                last_error = ctypes.windll.kernel32.GetLastError()
+                
+                if last_error == 183:  # ERROR_ALREADY_EXISTS
+                    self.logger.warning("Mutex already exists - another instance is running")
+                    # Clean up the handle we just created since another instance exists
+                    try:
+                        ctypes.windll.kernel32.CloseHandle(self.mutex_handle)
+                    except Exception as cleanup_error:
+                        self.logger.error(f"Error cleaning up mutex handle: {cleanup_error}")
+                    finally:
+                        self.mutex_handle = None
+                    # Don't show dialog here - let the caller handle the messaging
+                    return False
+                else:
+                    # Successfully created new mutex
+                    self.logger.debug(f"Successfully created mutex handle: {self.mutex_handle}")
                 
         except Exception as e:
             self.logger.error(f"Error creating mutex: {e}")
@@ -234,15 +245,6 @@ class SingletonManager:
             except Exception as e2:
                 self.logger.error(f"Fallback process check also failed: {e2}")
                 return False
-    
-    def _show_already_running_message(self) -> None:
-        """Show message that another instance is already running."""
-        QtWidgets.QMessageBox.critical(
-            None, 
-            'Already Running', 
-            'Another instance of Clicker is already running.'
-        )
-        sys.exit(1)
     
     def __enter__(self):
         """Context manager entry."""

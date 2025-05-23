@@ -78,7 +78,7 @@ def test_updater_integration():
         from clicker.utils.updater import AutoUpdater
         
         # Check that AutoUpdater exists
-        updater = AutoUpdater("2.0.0")
+        updater = AutoUpdater("2.1.0")
         print("✓ AutoUpdater can be instantiated")
         
         # The actual dialog handling fix would require the corrected code
