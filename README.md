@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Clicker Logo](docs/assets/logo.png)
+<img src="docs/assets/logo.png" alt="Clicker Logo" width="200" height="auto">
 
 **A powerful, feature-rich automation platform with advanced clicking capabilities, hotkey support, and modern GUI interface**
 
