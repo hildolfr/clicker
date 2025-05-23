@@ -1,0 +1,40 @@
+Release v2.1.2: Critical startup fix and version consistency improvements
+
+🐛 Critical Fixes:
+- Fix ConfigManager backup_dir attribute error preventing new user startup
+- Resolve 'backup_dir' missing attribute crash on first application launch
+- Update _validate_path_accessibility method to handle disabled backups correctly
+
+📦 Version Updates:
+- Bump version to 2.1.2 across all project files
+- Update clicker/__init__.py __version__ to "2.1.2"
+- Update pyproject.toml version to 2.1.2
+- Update clicker/app.py VERSION constant to "2.1.2"
+- Update version badges and references in documentation
+
+📚 Documentation Updates:
+- Update README.md version badge to 2.1.2
+- Fix docs/README.md download link to use v2.1.2 tag format
+- Create docs/RELEASE_NOTES_v2.1.2.md with detailed changelog
+- Create docs/dev/COMMIT_CHECKLIST_v2.1.2.md for release tracking
+- Update docs/release-notes.md with v2.1.2 as current version
+- Update docs/API.md version references and history
+
+🔗 Link Standardization:
+- Standardize all download links to v2.1.2 tag format
+- Update scripts/fixes/test_fixes.py version reference
+- Ensure consistent version formatting across all files
+
+🏗️ Build & Distribution:
+- Rebuild executable with PyInstaller (58.3 MB)
+- Verify build includes all fixes and version updates
+- Test ConfigManager loads without backup_dir errors
+- Confirm clean startup sequence for new users
+
+This maintenance release ensures new users can start the application without
+configuration errors while maintaining full backward compatibility.
+
+Fixes: #startup-crash-new-users
+Version: 2.1.2
+Build: Clean PyInstaller build verified
+Status: Ready for distribution 
