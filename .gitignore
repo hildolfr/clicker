@@ -77,5 +77,8 @@ xref-*.html
 
 # Distribution package
 Clicker-Portable/ 
+
+# SpecStory directory
+.specstory/
 # SpecStory explanation file
 .specstory/.what-is-this.md

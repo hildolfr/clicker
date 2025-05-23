@@ -11,6 +11,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://microsoft.com/windows)
 
+[![Download Latest Release](https://img.shields.io/badge/📦%20Download-Latest%20Release-brightgreen.svg?style=for-the-badge)](https://github.com/hildolfr/clicker/releases/latest)
+
 [Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Documentation](#-documentation) • [Development](#-development)
 
 </div>
