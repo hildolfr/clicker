@@ -2,7 +2,10 @@
 
 ## Project Management
 
-- **[COMMIT_CHECKLIST_v2.0.md](COMMIT_CHECKLIST_v2.0.md)** - Pre-commit checklist and quality gates
+- **[COMMIT_CHECKLIST_v2.1.3.md](COMMIT_CHECKLIST_v2.1.3.md)** - v2.1.3 startup/shutdown improvements release checklist
+- **[COMMIT_CHECKLIST_v2.1.2.md](COMMIT_CHECKLIST_v2.1.2.md)** - v2.1.2 maintenance release checklist  
+- **[COMMIT_CHECKLIST_v2.1.1.md](COMMIT_CHECKLIST_v2.1.1.md)** - v2.1.1 bugfix release checklist
+- **[COMMIT_CHECKLIST_v2.1.md](COMMIT_CHECKLIST_v2.1.md)** - v2.1.0 post-2.0 reorganization checklist
 - **[TODO.txt](TODO.txt)** - Current development tasks and priorities
 - **[DISTRIBUTION.md](DISTRIBUTION.md)** - Distribution and packaging guidelines
 
@@ -16,6 +19,7 @@
 
 - **[FIXES_APPLIED.md](FIXES_APPLIED.md)** - Log of fixes and improvements applied
 - **[feature_suggestions.md](feature_suggestions.md)** - Proposed features and enhancements
+- **[prompts/](prompts/)** - AI development assistance prompts and conversation logs
 
 ## Archive Information
 

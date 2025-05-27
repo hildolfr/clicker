@@ -1,8 +1,6 @@
 # Clicker Keystrokes Configuration
 # Format: [KEY] [DELAY] [OPTIONAL_DESCRIPTION]
 # Use S- for Shift, C- for Control, A- for Alt
-#
+# Test change to verify timer-based reload works - MODIFIED AT $(Get-Date)
 
-1 2.0 Example key 1
-2 2.0 Example key 2
-3 2.0 Example key 3
+1 2.0 Example key 1 - MODIFIED

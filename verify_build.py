@@ -11,7 +11,7 @@ from pathlib import Path
 def verify_executable():
     """Verify that the built executable is working correctly."""
     print("=" * 60)
-    print("VERIFYING CLICKER v2.1.2 EXECUTABLE BUILD")
+    print("VERIFYING CLICKER v2.1.3 EXECUTABLE BUILD")
     print("=" * 60)
     
     # Check if executable exists
@@ -30,10 +30,10 @@ def verify_executable():
         source_version = clicker.__version__
         print(f"📦 Source version: {source_version}")
         
-        if source_version == "2.1.2":
-            print("✅ Source version is correct: 2.1.2")
+        if source_version == "2.1.3":
+            print("✅ Source version is correct: 2.1.3")
         else:
-            print(f"❌ ERROR: Expected version 2.1.2, got {source_version}")
+            print(f"❌ ERROR: Expected version 2.1.3, got {source_version}")
             return False
             
     except ImportError as e:
@@ -52,13 +52,13 @@ def verify_executable():
     print("\n" + "=" * 60)
     print("🎉 BUILD VERIFICATION SUCCESSFUL!")
     print("=" * 60)
-    print(f"Ready for release: Clicker v2.1.2")
+    print(f"Ready for release: Clicker v2.1.3")
     print(f"Location: {exe_path.absolute()}")
     print(f"Size: {exe_path.stat().st_size:,} bytes")
     print("\nYou can now:")
     print("1. Test the executable by running it")
     print("2. Create a GitHub release with this executable")
-    print("3. Update download links to point to v2.1.2")
+    print("3. Update download links to point to v2.1.3")
     
     return True
 

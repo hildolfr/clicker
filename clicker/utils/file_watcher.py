@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 from typing import Callable, Optional, List, Set
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, FileModifiedEvent
+from watchdog.events import FileSystemEventHandler, FileModifiedEvent, FileCreatedEvent, FileMovedEvent
 
 
 class ConfigFileHandler(FileSystemEventHandler):
@@ -27,25 +27,49 @@ class ConfigFileHandler(FileSystemEventHandler):
         super().__init__()
         self.watched_files = watched_files
         self.callback = callback
-        self.last_modified = 0
+        self.last_modified = {}  # Track per-file to avoid cross-file interference
         self.cooldown = 1.0  # 1 second cooldown between reloads
         self.logger = logging.getLogger(__name__)
     
+    def _handle_file_event(self, filename: str) -> None:
+        """Handle a file event with cooldown."""
+        if filename in self.watched_files:
+            current_time = time.time()
+            last_time = self.last_modified.get(filename, 0)
+            
+            if current_time - last_time > self.cooldown:
+                self.last_modified[filename] = current_time
+                self.logger.info(f"Detected change in {filename}")
+                
+                try:
+                    self.callback(filename)
+                except Exception as e:
+                    self.logger.error(f"Error in file change callback: {e}")
+    
     def on_modified(self, event):
         """Handle file modification events."""
-        if isinstance(event, FileModifiedEvent) and not event.is_directory:
+        if not event.is_directory:
             filename = Path(event.src_path).name
+            self.logger.debug(f"File modified event: {filename} (watched: {filename in self.watched_files})")
+            self._handle_file_event(filename)
+    
+    def on_created(self, event):
+        """Handle file creation events (common with text editors)."""
+        if not event.is_directory:
+            filename = Path(event.src_path).name
+            self.logger.debug(f"File created event: {filename} (watched: {filename in self.watched_files})")
+            self._handle_file_event(filename)
+    
+    def on_moved(self, event):
+        """Handle file move events (common with text editors using temp files)."""
+        if not event.is_directory:
+            # Check both source and destination in case of rename
+            src_filename = Path(event.src_path).name
+            dest_filename = Path(event.dest_path).name
             
-            if filename in self.watched_files:
-                current_time = time.time()
-                if current_time - self.last_modified > self.cooldown:
-                    self.last_modified = current_time
-                    self.logger.info(f"Detected change in {filename}")
-                    
-                    try:
-                        self.callback(filename)
-                    except Exception as e:
-                        self.logger.error(f"Error in file change callback: {e}")
+            self.logger.debug(f"File moved event: {src_filename} -> {dest_filename}")
+            self._handle_file_event(src_filename)
+            self._handle_file_event(dest_filename)
 
 
 class FileWatcher:

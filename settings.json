@@ -14,6 +14,7 @@
     "memory_limit_mb": 100,
     "minimize_to_tray": true,
     "order_obeyed": false,
+    "prompt_for_admin_privileges": true,
     "show_notifications": true,
     "start_time_stagger": 1.7,
     "thread_pool_size": 2,

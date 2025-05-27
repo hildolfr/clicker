@@ -938,44 +938,10 @@ class ConfigManager:
             return False
     
     def _notify_backup_restoration(self, file_type: str, backup_path: Path) -> None:
-        """Notify about backup restoration through callbacks."""
-        try:
-            # Extract timestamp from backup filename
-            filename = backup_path.name
-            timestamp_match = filename.split('_')[-1].split('.')[0]
-            
-            message = f"Configuration restored from backup: {file_type} ({timestamp_match})"
-            self.logger.info(message)
-            
-            # Notify change callbacks about the restoration
-            self._notify_change(f"backup_restored_{file_type}")
-            
-        except Exception as e:
-            self.logger.error(f"Error in backup restoration notification: {e}")
-    
-    def check_for_changes(self) -> bool:
-        """Check if configuration files have been modified externally."""
-        changes_detected = False
-        
-        for file_type, file_path in [
-            ('settings', self.settings_file),
-            ('keystrokes', self.keystrokes_file)
-        ]:
-            if file_path.exists():
-                current_mtime = file_path.stat().st_mtime
-                if current_mtime > self._last_modified[file_type]:
-                    self.logger.info(f"{file_type.title()} file modified externally")
-                    changes_detected = True
-                    
-        return changes_detected
-    
-    def reload_if_changed(self) -> bool:
-        """Reload configuration if files have been modified externally."""
-        if self.check_for_changes():
-            self.logger.info("Reloading configuration due to external changes")
-            self.load()
-            return True
-        return False
+        """Notify about backup restoration (placeholder for UI updates)."""
+        self.logger.info(f"Backup restored for {file_type} from {backup_path}")
+        # Here you could add a call to a registered callback for UI updates
+        self._notify_change(f"{file_type}_restored_from_backup")
 
     def reload(self) -> None:
         """Reload configuration from files."""

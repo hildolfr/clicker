@@ -1,12 +1,22 @@
 # Clicker Release Notes
 
-## Current Version: 2.1.2
+## Current Version: 2.1.3
 
 Welcome to the Clicker release notes! This document provides comprehensive information about all versions, including new features, improvements, bug fixes, and important notes for each release.
 
 ---
 
-### Version 2.1.2 (Current) - Maintenance Release
+### Version 2.1.3 (Current) - Startup/Shutdown Improvements
+
+**Released**: [To be released]
+
+- 🔧 **Improved Startup Logic**: Enhanced application initialization and error handling
+- 🛑 **Better Shutdown Handling**: More reliable application shutdown and resource cleanup
+- 📦 **Download Links**: Standardized to v2.1.3 tag format
+
+[View detailed 2.1.3 release notes →](RELEASE_NOTES_v2.1.3.md)
+
+### Version 2.1.2 - Maintenance Release
 **Release Date**: January 2025  
 **Type**: Maintenance & Version Consistency Release
 

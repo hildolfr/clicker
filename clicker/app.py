@@ -14,6 +14,8 @@ import glob
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
+import time
+import threading
 
 # PyQt5 imports
 from PyQt5 import QtWidgets, QtCore, QtGui
@@ -30,6 +32,8 @@ from clicker.ui.indicators.base import IndicatorState
 from clicker.ui.indicators.manager import set_indicator, show_dialog_with_indicator_handling, hide_indicator
 from clicker.utils.exceptions import ClickerError, ConfigurationError
 from clicker.system.hotkeys import HotkeyManager
+# File watching replaced with timer-based reload
+# from clicker.utils.file_watcher import FileWatcher
 from clicker.utils.file_watcher import FileWatcher
 from clicker.utils.updater import AutoUpdater, UpdateChecker
 from clicker.system.admin import AdminChecker
@@ -45,7 +49,7 @@ class ClickerApp:
     """
     
     # Application version for auto-updater
-    VERSION = "2.1.2"
+    VERSION = "2.2.0"
     
     def __init__(self, config_dir: Optional[Path] = None):
         # Initialize logger first, before any other operations
@@ -109,18 +113,20 @@ class ClickerApp:
         Returns:
             int: Exit code (0 for success, non-zero for error)
         """
+        startup_completed = False
         try:
             # Initialize logging first
             self._setup_logging()
-            
-            # Startup sequence
             self.logger.info(f"Starting Clicker application v{self.VERSION}")
             
-            # Initialize Qt application early, before any potential Qt widgets
-            self._initialize_qt()
+            # Check for singleton first, before any Qt operations
+            if not self._check_singleton():
+                return 1  # Another instance is running
             
-            # Check for singleton - must be after Qt init but before UI
-            self._check_singleton()
+            # Initialize Qt application
+            if not self._initialize_qt():
+                self.logger.error("Failed to initialize Qt application")
+                return 1
             
             # Hide console window on Windows
             self._hide_console_window()
@@ -128,7 +134,10 @@ class ClickerApp:
             # Load configuration
             self._load_configuration()
             
-            # Check admin privileges
+            # Set up config reload timer instead of file watching
+            self._setup_file_watcher()
+            
+            # Check admin privileges (only after Qt is ready)
             self._check_admin_privileges()
             
             # Initialize subsystems
@@ -143,11 +152,11 @@ class ClickerApp:
             # Set up hotkeys
             self._setup_hotkeys()
             
-            # Set up file watching
-            self._setup_file_watching()
-            
             # Check for updates if enabled
             self._check_for_updates()
+            
+            startup_completed = True
+            self.logger.info("Application startup completed successfully")
             
             # Start the Qt event loop
             self._running = True
@@ -159,9 +168,19 @@ class ClickerApp:
         except KeyboardInterrupt:
             self.logger.info("Application interrupted by user")
             return 0
+        except SystemExit as e:
+            # Handle explicit sys.exit() calls
+            self.logger.info(f"Application exit requested with code: {e.code}")
+            return e.code if e.code is not None else 0
         except Exception as e:
-            self.logger.error(f"Fatal application error: {e}")
-            return 1
+            if startup_completed:
+                self.logger.error(f"Runtime error: {e}", exc_info=True)
+                return 1
+            else:
+                self.logger.error(f"Startup error: {e}", exc_info=True)
+                # For startup errors, try to show a user-friendly message
+                self._show_startup_error(e)
+                return 1
         finally:
             self._shutdown()
     
@@ -172,7 +191,8 @@ class ClickerApp:
         # Get logging configuration from settings
         try:
             settings = self.config_manager.settings
-            log_level = logging.DEBUG if settings.logging_enabled else logging.WARNING
+            # Use INFO level instead of DEBUG to reduce log spam
+            log_level = logging.INFO if settings.logging_enabled else logging.WARNING
             retention_days = settings.log_retention_days
         except:
             # Fallback if config not loaded yet
@@ -274,14 +294,15 @@ class ClickerApp:
             # Don't let log cleanup failures crash the application
             print(f"Warning: Log cleanup failed: {e}")
 
-    def _check_singleton(self) -> None:
+    def _check_singleton(self) -> bool:
         """Ensure only one instance is running."""
         if not self.singleton_manager.acquire_lock():
             # Don't use Qt dialogs before Qt is initialized
             print("Error: Another instance of Clicker is already running.")
-            sys.exit(1)
+            return False
         
         self.logger.info("Singleton lock acquired")
+        return True
     
     def _hide_console_window(self) -> None:
         """Hide console window on Windows."""
@@ -295,32 +316,38 @@ class ClickerApp:
                 user32.ShowWindow(hWnd, SW_HIDE)
                 self.logger.debug("Console window hidden")
     
-    def _initialize_qt(self) -> None:
+    def _initialize_qt(self) -> bool:
         """Initialize Qt application."""
-        # Check if QApplication already exists
-        existing_app = QtWidgets.QApplication.instance()
-        if existing_app is not None:
-            self.qt_app = existing_app
-            self.logger.debug("Using existing Qt application instance")
-        else:
-            self.qt_app = QtWidgets.QApplication(sys.argv)
-            self.logger.debug("Created new Qt application instance")
-        
-        # Configure application behavior
-        self.qt_app.setQuitOnLastWindowClosed(False)
-        
-        # Set application metadata
-        self.qt_app.setApplicationName("Clicker")
-        self.qt_app.setApplicationVersion(self.VERSION)
-        self.qt_app.setOrganizationName("Clicker Team")
-        self.qt_app.setApplicationDisplayName("Clicker - Windows Automation Tool")
-        
-        # Set application icon if available
-        icon_path = Path("icon.ico")
-        if icon_path.exists():
-            self.qt_app.setWindowIcon(QtGui.QIcon(str(icon_path)))
-        
-        self.logger.info(f"Qt application initialized (version: {self.VERSION})")
+        try:
+            # Check if QApplication already exists
+            existing_app = QtWidgets.QApplication.instance()
+            if existing_app is not None:
+                self.qt_app = existing_app
+                self.logger.debug("Using existing Qt application instance")
+            else:
+                self.qt_app = QtWidgets.QApplication(sys.argv)
+                self.logger.debug("Created new Qt application instance")
+            
+            # Configure application behavior
+            self.qt_app.setQuitOnLastWindowClosed(False)
+            
+            # Set application metadata
+            self.qt_app.setApplicationName("Clicker")
+            self.qt_app.setApplicationVersion(self.VERSION)
+            self.qt_app.setOrganizationName("Clicker Team")
+            self.qt_app.setApplicationDisplayName("Clicker - Windows Automation Tool")
+            
+            # Set application icon if available
+            icon_path = Path("icon.ico")
+            if icon_path.exists():
+                self.qt_app.setWindowIcon(QtGui.QIcon(str(icon_path)))
+            
+            self.logger.info(f"Qt application initialized (version: {self.VERSION})")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed to initialize Qt application: {e}")
+            return False
     
     def _load_configuration(self) -> None:
         """Load application configuration."""
@@ -482,23 +509,60 @@ class ClickerApp:
             self.logger.error(f"Failed to set up hotkeys: {e}")
             # Non-fatal error - continue without hotkeys
     
-    def _setup_file_watching(self) -> None:
+    def _setup_file_watcher(self) -> None:
         """Set up file watching for configuration changes."""
         try:
-            self.file_watcher = FileWatcher()
-            success = self.file_watcher.start_watching(
-                files_to_watch=['settings.json', 'keystrokes.txt'],
-                callback=self._on_file_changed
+            self.file_watcher = FileWatcher(watch_directory=self.config_manager.config_dir)
+            self.file_watcher.start_watching(
+                files_to_watch=["settings.json", "keystrokes.txt"],
+                callback=self._on_config_files_changed
             )
-            
-            if success:
-                self.logger.info("File watching started")
-            else:
-                self.logger.warning("File watching failed to start")
-            
+            self.logger.info("File watching for settings.json and keystrokes.txt started.")
         except Exception as e:
-            self.logger.error(f"Failed to set up file watching: {e}")
+            self.logger.error(f"Failed to set up file watcher: {e}")
             # Non-fatal error - continue without file watching
+    
+    def _on_config_files_changed(self, filename: str) -> None:
+        """Callback for when a watched configuration file changes."""
+        self.logger.info(f"Configuration file {filename} changed, attempting to reload.")
+        try:
+            # Stop automation if running
+            was_running = self.automation_engine.state == AutomationState.RUNNING
+            if was_running:
+                self.automation_engine.stop()
+            
+            # Reload configuration from the manager
+            # The config_manager.load() should ideally handle which file to reload
+            # or reload all. For now, assume it reloads everything necessary.
+            self.config_manager.load()
+            
+            # Reconfigure automation engine with new settings
+            keystrokes = self.config_manager.get_enabled_keystrokes()
+            settings = self.config_manager.settings
+            self.automation_engine.configure(keystrokes, settings)
+            
+            # Update hotkeys
+            if self.hotkey_manager:
+                self.hotkey_manager.unregister_all()
+                self.hotkey_manager.register_hotkey("toggle", settings.toggle_key, self._toggle_automation)
+            
+            # Restart automation if it was running
+            if was_running:
+                self.automation_engine.start()
+            
+            self.logger.info(f"Configuration changes from {filename} applied successfully.")
+            # Notify listeners that config has changed (e.g. UI)
+            self.event_system.publish(AutomationEvent(EventType.CONFIG_CHANGED, {"filename": filename}))
+
+        except Exception as e:
+            self.logger.error(f"Error reloading configuration after change in {filename}: {e}", exc_info=True)
+            # Optionally, show a dialog to the user
+            # show_dialog_with_indicator_handling(
+            #     QtWidgets.QMessageBox.warning,
+            #     None,
+            #     "Configuration Reload Error",
+            #     f"Failed to reload configuration after changes to {filename}:\n{e}"
+            # )
     
     def _check_for_updates(self) -> None:
         """Check for updates on startup if enabled."""
@@ -594,13 +658,6 @@ class ClickerApp:
             
             self.logger.info("Configuration reloaded successfully")
             
-            show_dialog_with_indicator_handling(
-                QtWidgets.QMessageBox.information,
-                None,
-                "Configuration Reloaded",
-                "Configuration has been reloaded successfully."
-            )
-            
         except Exception as e:
             self.logger.error(f"Failed to reload configuration: {e}")
             show_dialog_with_indicator_handling(
@@ -632,12 +689,6 @@ class ClickerApp:
                 "File Error",
                 f"Could not open {filename}: {e}"
             )
-    
-    def _on_file_changed(self, file_path: str) -> None:
-        """Handle file change events."""
-        self.logger.info(f"File changed: {file_path}")
-        # Debounce rapid file changes
-        QtCore.QTimer.singleShot(1000, self._reload_configuration)
     
     def _on_config_changed(self, change_type: str) -> None:
         """Handle configuration change events."""
@@ -708,54 +759,73 @@ class ClickerApp:
             self.logger.error(f"Error during forced shutdown: {e}")
 
     def _shutdown(self) -> None:
-        """Clean up resources during shutdown."""
-        self.logger.info("Starting application shutdown")
+        """Gracefully shut down the application."""
+        if self._shutdown_requested:
+            self.logger.info("Shutdown already in progress.")
+            return
+            
+        self._shutdown_requested = True
+        self.logger.info("Initiating application shutdown...")
+
+        if self.file_watcher:
+            self.logger.debug("Stopping file watcher...")
+            self.file_watcher.stop_watching()
+            self.logger.info("File watcher stopped.")
+
+        # Stop automation if running
+        if self.automation_engine and self.automation_engine.state != AutomationState.STOPPED:
+            self.logger.debug("Stopping automation engine...")
+            self.automation_engine.stop()
         
+        if self.visual_indicator:
+            try:
+                self.visual_indicator.stop()
+            except Exception as e:
+                self.logger.error(f"Error stopping visual indicator: {e}")
+        
+        # Unregister hotkeys
+        if self.hotkey_manager:
+            try:
+                self.hotkey_manager.unregister_all()
+            except Exception as e:
+                self.logger.error(f"Error unregistering hotkeys: {e}")
+        
+        # Clean up system tray
+        if self.tray_manager:
+            try:
+                self.tray_manager.cleanup()
+            except Exception as e:
+                self.logger.error(f"Error cleaning up system tray: {e}")
+        
+        # Release singleton lock
+        if self.singleton_manager:
+            try:
+                self.singleton_manager.release_lock()
+            except Exception as e:
+                self.logger.error(f"Error releasing singleton lock: {e}")
+        
+        self.logger.info("Application shutdown completed")
+    
+    def _show_startup_error(self, e: Exception) -> None:
+        """Show a user-friendly startup error message."""
         try:
-            # Stop automation with timeout
-            if self.automation_engine:
-                if not self.automation_engine.stop(timeout=3.0):
-                    self.logger.warning("Automation engine did not stop within timeout")
-            
-            # Stop visual indicator
-            if self.visual_indicator:
-                try:
-                    self.visual_indicator.stop()
-                except Exception as e:
-                    self.logger.error(f"Error stopping visual indicator: {e}")
-            
-            # Stop file watcher
-            if self.file_watcher:
-                try:
-                    self.file_watcher.stop_watching()
-                except Exception as e:
-                    self.logger.error(f"Error stopping file watcher: {e}")
-            
-            # Unregister hotkeys
-            if self.hotkey_manager:
-                try:
-                    self.hotkey_manager.unregister_all()
-                except Exception as e:
-                    self.logger.error(f"Error unregistering hotkeys: {e}")
-            
-            # Clean up system tray
-            if self.tray_manager:
-                try:
-                    self.tray_manager.cleanup()
-                except Exception as e:
-                    self.logger.error(f"Error cleaning up system tray: {e}")
-            
-            # Release singleton lock
-            if self.singleton_manager:
-                try:
-                    self.singleton_manager.release_lock()
-                except Exception as e:
-                    self.logger.error(f"Error releasing singleton lock: {e}")
-            
-            self.logger.info("Application shutdown completed")
-            
-        except Exception as e:
-            self.logger.error(f"Error during shutdown: {e}")
+            # Only show dialog if Qt is available
+            if self.qt_app is not None:
+                show_dialog_with_indicator_handling(
+                    QtWidgets.QMessageBox.critical,
+                    None,
+                    "Startup Error",
+                    f"An error occurred during startup: {e}\n\nPlease check the logs for more details."
+                )
+            else:
+                # Fallback to console if Qt not available
+                print(f"Startup Error: {e}")
+                print("Please check the logs for more details.")
+        except Exception as dialog_error:
+            # If even the error dialog fails, just log it
+            print(f"Startup Error: {e}")
+            print(f"Could not show error dialog: {dialog_error}")
+            print("Please check the logs for more details.")
 
 
 def main() -> int:
