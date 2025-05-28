@@ -265,7 +265,8 @@ class AutomationEngine:
         
         # Check settings that affect scheduling
         return (self._settings.start_time_stagger != new_settings.start_time_stagger or
-                self._settings.global_cooldown != new_settings.global_cooldown)
+                self._settings.global_cooldown != new_settings.global_cooldown or
+                self._settings.order_obeyed != new_settings.order_obeyed)
 
     def _invalidate_schedule_cache(self) -> None:
         """Invalidate the cached schedule and hash when configuration changes."""
@@ -298,7 +299,8 @@ class AutomationEngine:
         
         if self._settings:
             config_str += f"stagger:{self._settings.start_time_stagger}|"
-            config_str += f"cooldown:{self._settings.global_cooldown}"
+            config_str += f"cooldown:{self._settings.global_cooldown}|"
+            config_str += f"order_obeyed:{self._settings.order_obeyed}"
         
         # Calculate and cache the hash
         self._cached_hash = hashlib.md5(config_str.encode()).hexdigest()
@@ -504,18 +506,36 @@ class AutomationEngine:
         schedule = []
         now = time.time()
         
-        for idx, keystroke in enumerate(self._keystrokes):
-            if keystroke.enabled:
-                # Apply stagger time (similar to original logic)
-                initial_time = now + (idx * self._settings.start_time_stagger)
-                heapq.heappush(schedule, (initial_time, keystroke))
+        # Determine keystroke order based on order_obeyed setting
+        if self._settings.order_obeyed:
+            # Execute in file order (top to bottom)
+            self.logger.debug("Using file order for keystrokes (order_obeyed=True)")
+            keystrokes_to_schedule = [(idx, ks) for idx, ks in enumerate(self._keystrokes) if ks.enabled]
+        else:
+            # Sort by delay (lowest to highest), preserving original indices for logging
+            self.logger.debug("Sorting keystrokes by delay value (order_obeyed=False)")
+            enabled_keystrokes = [(idx, ks) for idx, ks in enumerate(self._keystrokes) if ks.enabled]
+            keystrokes_to_schedule = sorted(enabled_keystrokes, key=lambda x: x[1].delay)
+            
+            # Log the reordering for debugging
+            if len(keystrokes_to_schedule) > 1:
+                delay_order = [f"{ks.key}({ks.delay}s)" for _, ks in keystrokes_to_schedule]
+                self.logger.debug(f"Keystroke execution order by delay: {' -> '.join(delay_order)}")
+        
+        # Schedule keystrokes with stagger times based on determined order
+        for schedule_idx, (original_idx, keystroke) in enumerate(keystrokes_to_schedule):
+            initial_time = now + (schedule_idx * self._settings.start_time_stagger)
+            heapq.heappush(schedule, (initial_time, keystroke))
+            self.logger.debug(f"Scheduled keystroke {keystroke.key} (original pos {original_idx}, delay {keystroke.delay}s) "
+                            f"to start at {initial_time - now:.2f}s from now")
         
         # Cache the schedule
         self._cached_schedule = [(time_offset, ks) for time_offset, ks in schedule]
         self._schedule_cache_hash = self._get_schedule_hash()
         self._schedule_validation_time = time.time()
         
-        self.logger.info(f"Built and cached schedule heap with {len(schedule)} keystrokes")
+        execution_order = "file order" if self._settings.order_obeyed else "delay-sorted order"
+        self.logger.info(f"Built and cached schedule heap with {len(schedule)} keystrokes in {execution_order}")
         return schedule
 
     def _refresh_schedule_times(self, schedule: List[tuple]) -> List[tuple]:
@@ -523,15 +543,34 @@ class AutomationEngine:
         now = time.time()
         refreshed_schedule = []
         
-        for idx, (old_time, keystroke) in enumerate(schedule):
-            # Recalculate initial time with current timestamp
-            new_time = now + (idx * self._settings.start_time_stagger)
+        # Extract keystrokes from cached schedule and reapply order_obeyed logic
+        cached_keystrokes = [keystroke for _, keystroke in schedule]
+        
+        # Determine keystroke order based on current order_obeyed setting
+        if self._settings.order_obeyed:
+            # Maintain original file order - find original indices
+            keystroke_order = []
+            for keystroke in cached_keystrokes:
+                for idx, original_ks in enumerate(self._keystrokes):
+                    if original_ks is keystroke:
+                        keystroke_order.append((idx, keystroke))
+                        break
+            keystroke_order.sort(key=lambda x: x[0])  # Sort by original index
+        else:
+            # Sort by delay (lowest to highest)
+            keystroke_order = [(0, ks) for ks in cached_keystrokes]  # Index doesn't matter for delay sort
+            keystroke_order.sort(key=lambda x: x[1].delay)
+        
+        # Apply new timing based on determined order
+        for schedule_idx, (_, keystroke) in enumerate(keystroke_order):
+            new_time = now + (schedule_idx * self._settings.start_time_stagger)
             refreshed_schedule.append((new_time, keystroke))
         
         # Re-heapify since we changed the times
         heapq.heapify(refreshed_schedule)
         
-        self.logger.debug(f"Refreshed {len(refreshed_schedule)} schedule times")
+        execution_order = "file order" if self._settings.order_obeyed else "delay-sorted order"
+        self.logger.debug(f"Refreshed {len(refreshed_schedule)} schedule times using {execution_order}")
         return refreshed_schedule
     
     def _execute_keystroke(self, keystroke: KeystrokeConfig) -> bool:

@@ -6,7 +6,7 @@
 
 **A lightweight Windows keystroke automation tool with system tray integration and configurable timing**
 
-[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](https://github.com/hildolfr/clicker)
+[![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](https://github.com/hildolfr/clicker)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://microsoft.com/windows)

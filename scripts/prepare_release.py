@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Release preparation script for Clicker v2.2.0.
+Release preparation script for Clicker v2.2.1.
 
 This script helps prepare the project for a new release by:
 - Validating version consistency across files
@@ -90,36 +90,31 @@ def run_tests():
 
 def generate_commit_message():
     """Generate a commit message for the release."""
-    version = "2.2.0"
+    version = "2.2.1"
     
-    commit_msg = f"""Release v{version} - Real-time File Watching
-
-🚀 Major Features:
-- Implemented watchdog-based file monitoring for instant config reload
-- Replaced timer-based approach with event-driven file watching
-- Added real-time detection of settings.json and keystrokes.txt changes
-
-🔧 Technical Improvements:
-- Enhanced file change detection with OS-native APIs
-- Added proper debouncing to prevent duplicate reloads
-- Improved shutdown sequence and resource cleanup
+    commit_msg = f"""Release v{version} - Order Obeyed Bugfix
 
 🐛 Bug Fixes:
-- Resolved persistent configuration reload issues
-- Fixed timer reliability problems
-- Corrected application shutdown sequence
+- Fixed order_obeyed setting not properly controlling keystroke execution order
+- When order_obeyed=True, keystrokes now execute in file order (top to bottom)
+- When order_obeyed=False, keystrokes now execute sorted by delay (lowest to highest)
+- Added proper schedule cache invalidation when order_obeyed setting changes
+
+🔧 Technical Improvements:
+- Enhanced schedule building logic to respect order_obeyed configuration
+- Improved schedule caching with proper hash calculation including order_obeyed
+- Added comprehensive test coverage for order_obeyed functionality
 
 📝 Documentation:
-- Updated README with real-time file watching information
-- Added comprehensive CHANGELOG.md
-- Enhanced code documentation
+- Updated test suite with order_obeyed test cases
+- Enhanced code documentation for scheduling logic
 """
     
     return commit_msg
 
 def main():
     """Main release preparation function."""
-    print("🚀 Preparing Clicker v2.2.0 Release")
+    print("🚀 Preparing Clicker v2.2.1 Release")
     print("=" * 50)
     
     checks = [
@@ -142,8 +137,8 @@ def main():
         print("-" * 40)
         print("\nNext steps:")
         print("1. git add .")
-        print("2. git commit -m 'Release v2.2.0 - Real-time File Watching'")
-        print("3. git tag -a v2.2.0 -m 'Version 2.2.0'")
+        print("2. git commit -m 'Release v2.2.1 - Order Obeyed Bugfix'")
+        print("3. git tag -a v2.2.1 -m 'Version 2.2.1'")
         print("4. git push origin main --tags")
     else:
         print("❌ Some checks failed. Please fix issues before release.")

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2024-12-28
+
+### 🐛 Fixed
+- **Order Obeyed Setting**: Fixed critical bug where `order_obeyed` setting was not properly controlling keystroke execution order
+- **File Order Execution**: When `order_obeyed=True`, keystrokes now correctly execute in file order (top to bottom)
+- **Delay Order Execution**: When `order_obeyed=False`, keystrokes now correctly execute sorted by delay value (lowest to highest)
+- **Schedule Cache Invalidation**: Fixed schedule cache not being invalidated when `order_obeyed` setting changes
+
+### 🔧 Technical Improvements
+- **Enhanced Schedule Building**: Improved schedule building logic to properly respect `order_obeyed` configuration
+- **Cache Hash Calculation**: Updated schedule cache hash to include `order_obeyed` setting for proper invalidation
+- **Test Coverage**: Added comprehensive test cases for `order_obeyed` functionality
+
+### 📝 Documentation
+- **Test Suite**: Enhanced test suite with specific test cases for order execution scenarios
+- **Code Documentation**: Improved documentation for scheduling and execution order logic
+
 ## [2.2.0] - 2024-12-28
 
 ### 🚀 Added

@@ -5,7 +5,7 @@ A modern, extensible automation tool for Windows with clean architecture,
 comprehensive testing, and professional-grade features.
 """
 
-__version__ = "2.1.3"
+__version__ = "2.2.1"
 __author__ = "Clicker Team"
 __email__ = "contact@clicker.dev"
 __license__ = "MIT"

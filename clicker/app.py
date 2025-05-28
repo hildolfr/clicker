@@ -49,7 +49,7 @@ class ClickerApp:
     """
     
     # Application version for auto-updater
-    VERSION = "2.2.0"
+    VERSION = "2.2.1"
     
     def __init__(self, config_dir: Optional[Path] = None):
         # Initialize logger first, before any other operations

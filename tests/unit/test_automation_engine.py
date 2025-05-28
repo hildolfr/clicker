@@ -61,14 +61,14 @@ class TestAutomationEngine:
         ]
         
         self.test_settings = AppSettings(
-            global_cooldown=0.05,  # Short for testing
+            global_cooldown=0.1,  # Minimum allowed value
             max_execution_time=5.0,  # Short for testing
             fail_safe_enabled=True
         )
     
     def teardown_method(self):
         """Clean up after each test."""
-        if self.engine.get_state() != AutomationState.STOPPED:
+        if self.engine.state != AutomationState.STOPPED:
             self.engine.stop()
             time.sleep(0.1)  # Give time for shutdown
     
@@ -388,6 +388,87 @@ class TestAutomationEngine:
         # Engine should end up in a consistent state
         final_state = self.engine.get_state()
         assert final_state in [AutomationState.STOPPED, AutomationState.STOPPING]
+    
+    def test_order_obeyed_true(self):
+        """Test that keystrokes execute in file order when order_obeyed=True."""
+        # Create keystrokes with different delays but specific file order
+        keystrokes = [
+            KeystrokeConfig(key='a', delay=0.3, enabled=True),   # Higher delay, but first in file
+            KeystrokeConfig(key='b', delay=0.1, enabled=True),  # Lower delay, but second in file
+            KeystrokeConfig(key='c', delay=0.2, enabled=True)    # Medium delay, but third in file
+        ]
+        
+        settings = AppSettings(
+            order_obeyed=True,
+            start_time_stagger=0.05,  # Small stagger for testing
+            global_cooldown=0.1  # Minimum allowed value
+        )
+        
+        self.engine.configure(keystrokes, settings)
+        
+        # Build schedule and check order
+        schedule = self.engine._build_schedule_heap()
+        
+        # Extract keystrokes in execution order (sorted by time)
+        schedule_sorted = sorted(schedule, key=lambda x: x[0])
+        execution_order = [ks.key for _, ks in schedule_sorted]
+        
+        # Should be in file order regardless of delay values
+        assert execution_order == ['a', 'b', 'c']
+    
+    def test_order_obeyed_false(self):
+        """Test that keystrokes execute in delay order when order_obeyed=False."""
+        # Create keystrokes with different delays
+        keystrokes = [
+            KeystrokeConfig(key='x', delay=0.3, enabled=True),    # Highest delay
+            KeystrokeConfig(key='y', delay=0.1, enabled=True),     # Lowest delay  
+            KeystrokeConfig(key='z', delay=0.2, enabled=True)   # Medium delay
+        ]
+        
+        settings = AppSettings(
+            order_obeyed=False,
+            start_time_stagger=0.05,  # Small stagger for testing
+            global_cooldown=0.1  # Minimum allowed value
+        )
+        
+        self.engine.configure(keystrokes, settings)
+        
+        # Build schedule and check order
+        schedule = self.engine._build_schedule_heap()
+        
+        # Extract keystrokes in execution order (sorted by time)
+        schedule_sorted = sorted(schedule, key=lambda x: x[0])
+        execution_order = [ks.key for _, ks in schedule_sorted]
+        
+        # Should be in delay order (lowest to highest)
+        assert execution_order == ['y', 'z', 'x']
+    
+    def test_order_obeyed_cache_invalidation(self):
+        """Test that changing order_obeyed invalidates the schedule cache."""
+        keystrokes = [
+            KeystrokeConfig(key='a', delay=0.3, enabled=True),
+            KeystrokeConfig(key='b', delay=0.1, enabled=True)
+        ]
+        
+        # Start with order_obeyed=True
+        settings_ordered = AppSettings(order_obeyed=True, start_time_stagger=0.05)
+        self.engine.configure(keystrokes, settings_ordered)
+        
+        # Build schedule - should be in file order
+        schedule1 = self.engine._build_schedule_heap()
+        schedule1_sorted = sorted(schedule1, key=lambda x: x[0])
+        order1 = [ks.key for _, ks in schedule1_sorted]
+        assert order1 == ['a', 'b']  # File order
+        
+        # Change to order_obeyed=False
+        settings_delay_sorted = AppSettings(order_obeyed=False, start_time_stagger=0.05)
+        self.engine.configure(keystrokes, settings_delay_sorted)
+        
+        # Build schedule again - should be in delay order
+        schedule2 = self.engine._build_schedule_heap()
+        schedule2_sorted = sorted(schedule2, key=lambda x: x[0])
+        order2 = [ks.key for _, ks in schedule2_sorted]
+        assert order2 == ['b', 'a']  # Delay order (b has lower delay)
 
 
 class TestExecutionStats:
