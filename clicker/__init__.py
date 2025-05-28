@@ -1,11 +1,10 @@
 """
-Clicker - Professional Windows Automation Tool
+Clicker - Professional Windows automation tool.
 
-A modern, extensible automation tool for Windows with clean architecture,
-comprehensive testing, and professional-grade features.
+A modern, efficient auto-clicker application with GUI and hotkey support.
 """
 
-__version__ = "2.2.1"
+__version__ = "2.2.2"
 __author__ = "Clicker Team"
 __email__ = "contact@clicker.dev"
 __license__ = "MIT"

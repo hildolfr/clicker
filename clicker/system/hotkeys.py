@@ -7,7 +7,7 @@ Handles global hotkeys for the Clicker application.
 from __future__ import annotations
 
 import logging
-from typing import Callable, Dict, Optional, Any
+from typing import Callable, Dict, Optional, Any, List
 import threading
 
 try:
@@ -68,6 +68,121 @@ class HotkeyManager:
             except Exception as e:
                 self._logger.error(f"Failed to register hotkey '{hotkey_id}' ({key_combination}): {e}")
                 return False
+
+    def register_tilde_combinations(self, hotkey_id: str, callback: Callable[[], None]) -> bool:
+        """
+        Register all possible tilde key combinations.
+        
+        This will register the tilde key by itself and with all common modifier combinations.
+        
+        Args:
+            hotkey_id: Base identifier for this hotkey group
+            callback: Function to call when any tilde combination is pressed
+            
+        Returns:
+            True if at least one combination was registered successfully, False otherwise
+        """
+        with self._lock:
+            # Remove any existing tilde combinations
+            self.unregister_tilde_combinations(hotkey_id)
+            
+            # Define valid tilde combinations using proper keyboard library syntax
+            tilde_combinations = [
+                '~',                    # Just tilde
+                'ctrl+~',              # Ctrl + tilde
+                'shift+~',             # Shift + tilde  
+                'alt+~',               # Alt + tilde
+                'ctrl+shift+~',        # Ctrl + Shift + tilde
+                'ctrl+alt+~',          # Ctrl + Alt + tilde
+                'shift+alt+~',         # Shift + Alt + tilde
+                'ctrl+shift+alt+~',    # All modifiers + tilde
+            ]
+            
+            # Add number combinations with tilde (these are more likely to work)
+            numbers = '0123456789'
+            for number in numbers:
+                tilde_combinations.extend([
+                    f'~+{number}',         # Tilde + number
+                    f'ctrl+~+{number}',    # Ctrl + tilde + number
+                    f'shift+~+{number}',   # Shift + tilde + number
+                    f'alt+~+{number}',     # Alt + tilde + number
+                ])
+            
+            # Add some common letter combinations (limit to reduce registration overhead)
+            common_letters = 'asdwqe'  # Common gaming/typing keys
+            for letter in common_letters:
+                tilde_combinations.extend([
+                    f'~+{letter}',         # Tilde + letter
+                    f'ctrl+~+{letter}',    # Ctrl + tilde + letter
+                    f'shift+~+{letter}',   # Shift + tilde + letter
+                    f'alt+~+{letter}',     # Alt + tilde + letter
+                ])
+            
+            successful_registrations = 0
+            failed_registrations = 0
+            
+            for i, combination in enumerate(tilde_combinations):
+                try:
+                    # Create unique ID for each combination
+                    combo_id = f"{hotkey_id}_tilde_{i}"
+                    
+                    # Register the combination
+                    handle = keyboard.add_hotkey(combination, self._on_hotkey_pressed, args=[combo_id])
+                    
+                    self._hotkeys[combo_id] = handle
+                    self._callbacks[combo_id] = callback
+                    
+                    successful_registrations += 1
+                    self._logger.debug(f"Registered tilde combination: {combination}")
+                    
+                except Exception as e:
+                    failed_registrations += 1
+                    self._logger.debug(f"Failed to register tilde combination '{combination}': {e}")
+                    # Continue trying other combinations
+            
+            self._logger.info(f"Registered {successful_registrations} tilde combinations for '{hotkey_id}' "
+                            f"({failed_registrations} failed)")
+            
+            return successful_registrations > 0
+
+    def unregister_tilde_combinations(self, hotkey_id: str) -> bool:
+        """
+        Unregister all tilde combinations for a given hotkey ID.
+        
+        Args:
+            hotkey_id: Base identifier for the hotkey group
+            
+        Returns:
+            True if any combinations were removed, False if none found
+        """
+        with self._lock:
+            removed_count = 0
+            
+            # Find all hotkeys that match the tilde pattern for this ID
+            hotkeys_to_remove = []
+            for combo_id in self._hotkeys.keys():
+                if combo_id.startswith(f"{hotkey_id}_tilde_"):
+                    hotkeys_to_remove.append(combo_id)
+            
+            # Remove each matching hotkey
+            for combo_id in hotkeys_to_remove:
+                try:
+                    handle = self._hotkeys[combo_id]
+                    keyboard.remove_hotkey(handle)
+                    
+                    del self._hotkeys[combo_id]
+                    del self._callbacks[combo_id]
+                    
+                    removed_count += 1
+                    
+                except Exception as e:
+                    self._logger.error(f"Failed to unregister tilde combination '{combo_id}': {e}")
+            
+            if removed_count > 0:
+                self._logger.info(f"Unregistered {removed_count} tilde combinations for '{hotkey_id}'")
+                return True
+            
+            return False
     
     def unregister_hotkey(self, hotkey_id: str) -> bool:
         """
@@ -136,14 +251,28 @@ class HotkeyManager:
         with self._lock:
             hotkey_ids = list(self._hotkeys.keys())
             for hotkey_id in hotkey_ids:
-                self.unregister_hotkey(hotkey_id)
+                try:
+                    handle = self._hotkeys[hotkey_id]
+                    keyboard.remove_hotkey(handle)
+                except Exception as e:
+                    self._logger.error(f"Error removing hotkey {hotkey_id}: {e}")
+            
+            self._hotkeys.clear()
+            self._callbacks.clear()
             
             self._logger.info("Unregistered all hotkeys")
     
     def _on_hotkey_pressed(self, hotkey_id: str) -> None:
         """Internal callback when a hotkey is pressed."""
         with self._lock:
+            # For tilde combinations, we need to find the base hotkey ID for events
+            base_hotkey_id = hotkey_id
+            if "_tilde_" in hotkey_id:
+                base_hotkey_id = hotkey_id.split("_tilde_")[0]
+            
+            # Look for callback using the actual hotkey_id that was registered
             callback = self._callbacks.get(hotkey_id)
+            
             if callback:
                 try:
                     self._logger.debug(f"Hotkey pressed: {hotkey_id}")
@@ -153,7 +282,7 @@ class HotkeyManager:
                         self.event_system.emit_simple(
                             EventType.HOTKEY_PRESSED, 
                             "HotkeyManager",
-                            {"hotkey_id": hotkey_id}
+                            {"hotkey_id": base_hotkey_id}
                         )
                     
                     # Call the registered callback

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] - 2025-05-27
+
+### 🐛 Fixed
+- **Tilde Key Combinations**: Fixed critical bug where tilde (~) key combinations were not being properly registered
+- **Hotkey Registration**: Enhanced hotkey registration to properly handle tilde character in key combinations
+- **Key Mapping**: Improved key mapping logic to correctly process tilde-based hotkey sequences
+- **Combination Detection**: Fixed detection and processing of complex tilde key combinations (e.g., `Ctrl+~`, `~+letter`)
+
+### 🔧 Technical Improvements
+- **Enhanced Key Processing**: Updated key combination parsing to handle special characters like tilde
+- **Improved Hotkey System**: Strengthened hotkey registration system for better compatibility with all key types
+- **Better Error Handling**: Added more robust error handling for edge cases in key combination registration
+
+### 📝 Documentation
+- **Test Coverage**: Added test cases for tilde key combination functionality
+- **Code Documentation**: Enhanced documentation for key combination processing logic
+
 ## [2.2.1] - 2024-12-28
 
 ### 🐛 Fixed

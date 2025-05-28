@@ -49,7 +49,7 @@ class ClickerApp:
     """
     
     # Application version for auto-updater
-    VERSION = "2.2.1"
+    VERSION = "2.2.2"
     
     def __init__(self, config_dir: Optional[Path] = None):
         # Initialize logger first, before any other operations
@@ -502,8 +502,9 @@ class ClickerApp:
             
         try:
             settings = self.config_manager.settings
-            self.hotkey_manager.register_hotkey("toggle", settings.toggle_key, self._toggle_automation)
-            self.logger.info(f"Hotkey registered: {settings.toggle_key}")
+            # Register all tilde combinations instead of just the configured toggle_key
+            self.hotkey_manager.register_tilde_combinations("toggle", self._toggle_automation)
+            self.logger.info(f"Tilde combination hotkeys registered for toggle")
             
         except Exception as e:
             self.logger.error(f"Failed to set up hotkeys: {e}")
@@ -544,7 +545,7 @@ class ClickerApp:
             # Update hotkeys
             if self.hotkey_manager:
                 self.hotkey_manager.unregister_all()
-                self.hotkey_manager.register_hotkey("toggle", settings.toggle_key, self._toggle_automation)
+                self.hotkey_manager.register_tilde_combinations("toggle", self._toggle_automation)
             
             # Restart automation if it was running
             if was_running:
@@ -650,7 +651,7 @@ class ClickerApp:
             # Update hotkeys
             if self.hotkey_manager:
                 self.hotkey_manager.unregister_all()
-                self.hotkey_manager.register_hotkey("toggle", settings.toggle_key, self._toggle_automation)
+                self.hotkey_manager.register_tilde_combinations("toggle", self._toggle_automation)
             
             # Restart automation if it was running
             if was_running:
